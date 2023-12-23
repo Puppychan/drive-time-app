@@ -77,9 +77,9 @@
 | -------------------- | ---------- | ----------------------------------------- | ---------------- |
 | Tran Mai Nhung       | s3879954   | [Puppychan](https://github.com/Puppychan) | 20%              |
 | Tran Nguyen Ha Khanh | s3877707   | [hakhanhne](https://github.com/hakhanhne) | 20%              |
-| Nguyen Vinh Gia Bao  |            |                                           | 20%              |
-| Ton That Huu Luan    |            |                                           | 20%              |
-| Ho Van Khoa          |            |                                           | 20%              |
+|                      |            |                                           | 20%              |
+|                      |                                                        | 20%              |
+|                      |            |                                           | 20%              |
 
 ### Third-party Attributions
 
