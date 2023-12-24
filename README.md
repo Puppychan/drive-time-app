@@ -98,3 +98,6 @@
   - Email: s3877707@rmit.edu.vn
 - Nguyen Dinh Viet - s3927291:
   - Email: s3927291@rmit.edu.vn
+    
+- Doan Huu Quoc - s3927776:
+  - Email: s3927776@student.rmit.edu.au
