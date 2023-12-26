@@ -79,7 +79,7 @@
 | Tran Nguyen Ha Khanh | s3877707   | [hakhanhne](https://github.com/hakhanhne) | 20%              |
 | Nguyen Dinh Viet     | s3927291   | [felix101003](https://github.com/felix101003) | 2.0%         |
 | Doan Huu Quoc        | s3927776   | [Mudoker](https://github.com/Mudoker)         | 20%          |
-|                      |            |                                           | 20%              |
+| Tran Vu Quang Anh    | s3916566   | [tranvuquanganhRMIT87](https://github.com/tranvuquanganhRMIT87)| 20%              |
 
 ### Third-party Attributions
 
@@ -101,3 +101,5 @@
     
 - Doan Huu Quoc - s3927776:
   - Email: s3927776@student.rmit.edu.au
+- Tran Vu Quang Anh - s3916566
+  - Email: s3916566@rmit.edu.vn
