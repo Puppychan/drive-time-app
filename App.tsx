@@ -4,7 +4,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native'
 
-import { UserProfileView } from './components/user/profile/profile.view'
+import { UserProfileView } from './src/components/user/profile/profile.view'
 
 SplashScreen.preventAutoHideAsync()
 
