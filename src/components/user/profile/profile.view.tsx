@@ -3,11 +3,12 @@ import { View } from 'react-native'
 
 import { ProfileHeaderView } from './header/header.view'
 import { styles } from './profile.style'
+import { ProfileSafetyBtn } from './safety/safety.view'
 import { ProfileRoundedButton } from './utilBtn/utilBtn'
 
 export const UserProfileView = () => {
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       <ProfileHeaderView />
 
       <View style={styles.smallBtnContainer}>
@@ -16,6 +17,7 @@ export const UserProfileView = () => {
         <ProfileRoundedButton imagePath="ic_trip" title="Trip" />
       </View>
 
+      <ProfileSafetyBtn />
     </View>
   )
 }
