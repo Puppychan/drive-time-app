@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "drive-time-app",
-    "slug": "drive-time-app",
+    "name": "driveTime",
+    "slug": "driveTime",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.driveTime"
     },
     "web": {
       "favicon": "./assets/favicon.png"
