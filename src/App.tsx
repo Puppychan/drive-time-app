@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
 
+import { ProfileHeaderView } from './components/user/profile/header/header.view'
+import { ProfileRoundedButton } from './components/user/profile/utilBtn/utilBtn'
+
+import { UserProfileView } from './components/user/profile/profile.view'
+import { SafetyBtn } from './components/user/profile/safety/safety.view'
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <SafetyBtn />
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+  safeArea: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   }
 })

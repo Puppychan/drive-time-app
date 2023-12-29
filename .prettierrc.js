@@ -16,4 +16,5 @@ module.exports = {
         '^(.*)/generated/(.*)$', // Everything generated
         '^[./]' // Absolute path imports
     ]
+
 }
