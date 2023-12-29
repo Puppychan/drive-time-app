@@ -6,6 +6,8 @@ import { ProfileRoundedButton } from './components/user/profile/utilBtn/utilBtn'
 
 import { UserProfileView } from './components/user/profile/profile.view'
 import { ProfileSafetyBtn } from './components/user/profile/safety/safety.view'
+
+
 export default function App() {
   return (
     <SafeAreaView style={styles.safeArea}>

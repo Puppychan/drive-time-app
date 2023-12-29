@@ -5,6 +5,10 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 30
   },
+    bottomContainer: {
+        marginHorizontal: 20,
+        marginTop: 10
+    },
   smallBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

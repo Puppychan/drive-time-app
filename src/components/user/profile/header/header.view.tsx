@@ -7,7 +7,7 @@ export const ProfileHeaderView = () => {
   return (
     <View style={styles.headerContainer}>
       <View>
-        <Text style={styles.userNameTxt}>John Doe</Text>
+        <Text style={styles.userNameTxt}>Quoc Doan</Text>
 
         <View style={styles.userRatingContainer}>
           <Image style={styles.ratingImg} source={require('../../../../../assets/ic_star.png')} />
