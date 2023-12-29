@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
+import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native'
 
 import { UserProfileView } from './components/user/profile/profile.view'
 
