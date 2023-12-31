@@ -3,15 +3,19 @@ module.exports = function(api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      [
-        'module-resolver',
-        {
-          root: ['.'],
-          alias: {
-            src: './src'
-          }
-        }
-      ],
-    ]
+      // Required for expo-router
+      'expo-router/babel',
+    ],
+    // plugins: [
+    //   [
+    //     'module-resolver',
+    //     {
+    //       root: ['./'],
+    //       alias: {
+    //         components: 'components'
+    //       }
+    //     }
+    //   ],
+    // ]
   };
 };
