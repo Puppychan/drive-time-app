@@ -5,6 +5,7 @@ import { store } from 'store';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
 import MapView from 'react-native-maps';
+import YourComponent from './component/LoadingBar';
 
 export default function App() {
   return (

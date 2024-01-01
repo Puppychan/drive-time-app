@@ -4,7 +4,8 @@ const initialState = {
   origin: null,
   destination: null,
   timeTravel: null,
-  isRideSelectionVisible: true, // New property for visibility
+  isRideSelectionVisible: true,
+  isLoading: false,
 };
 
 export const navSlice = createSlice({
@@ -26,14 +27,19 @@ export const navSlice = createSlice({
     toggleRideSelectionVisibility: (state) => {
       state.isRideSelectionVisible = !state.isRideSelectionVisible;
     },
+
+    toggleLoading: (state) => {
+      state.isLoading = !state.isLoading;
+    }
   },
 });
 
-export const { setOrigin, setDestination, setTimeTravel, toggleRideSelectionVisibility } = navSlice.actions;
+export const { setOrigin, setDestination, setTimeTravel, toggleRideSelectionVisibility, toggleLoading } = navSlice.actions;
 
 export const selectOrigin = (state) => state.nav.origin;
 export const selectDestination = (state) => state.nav.destination;
 export const selectTimeTravel = (state) => state.nav.timeTravel;
 export const selectIsRideSelectionVisible = (state) => state.nav.isRideSelectionVisible;
+export const selectIsLoading = (state) => state.nav.isLoading;
 
 export default navSlice.reducer;

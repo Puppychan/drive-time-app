@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapRef from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectDestination, selectIsRideSelectionVisible, selectOrigin, setTimeTravel } from 'slices/navSlice';
+import { selectDestination, selectIsLoading, selectIsRideSelectionVisible, selectOrigin, setTimeTravel } from 'slices/navSlice';
 import {useRef} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RideSelectionCard from './RideSelectionCard';
+import LoadingBar from './component/LoadingBar';
 
 const MapScreen = () => {
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
   const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible);
+  const isLoading = useSelector(selectIsLoading);
   const mapRef = useRef<MapRef | null>(null);
   const dispatch = useDispatch();
   const Stack = createStackNavigator();
@@ -34,14 +36,6 @@ const MapScreen = () => {
     getTravelTime();
   }), [origin, destination, 'AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M']
 
-  useEffect(() => {
-    if (isRideSelectionVisible) {
-      mapRef.current?.fitToCoordinates([origin], {
-        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-        animated: true,
-      });
-    }
-  }, [origin, destination, isRideSelectionVisible]);
 
 
   return (
@@ -105,6 +99,13 @@ const MapScreen = () => {
         />
       </MapView>
 
+      
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <LoadingBar />
+        </View>
+      )}
+
       <View style={{flex: isRideSelectionVisible? 0.5: 0}}>
         <Stack.Navigator
             screenOptions={{
@@ -116,5 +117,13 @@ const MapScreen = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center', // Adjust the background color and opacity as needed
+  },
+});
 
 export { MapScreen };

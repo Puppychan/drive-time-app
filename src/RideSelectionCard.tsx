@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTimeTravel, selectIsRideSelectionVisible, toggleRideSelectionVisibility } from "slices/navSlice";
+import { selectTimeTravel, selectIsRideSelectionVisible, toggleRideSelectionVisibility, toggleLoading } from "slices/navSlice";
 import {styles} from "./component/RideSelectionCardStyle"
 
 const data = [
@@ -88,7 +88,10 @@ interface ItemType {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.selectButton}
-            onPress={() => dispatch(toggleRideSelectionVisibility())}
+            onPress={() => {
+              dispatch(toggleRideSelectionVisibility());
+              dispatch(toggleLoading());
+            }}
           >
             <Text style={styles.buttonText}>Select {selected?.title}</Text>
           </TouchableOpacity>
