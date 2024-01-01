@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import MapRef from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectDestination, selectOrigin, setTimeTravel } from 'slices/navSlice';
+import { selectDestination, selectIsRideSelectionVisible, selectOrigin, setTimeTravel } from 'slices/navSlice';
 import {useRef} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import RideSelectionCard from './RideSelectionCard';
@@ -12,6 +12,7 @@ import RideSelectionCard from './RideSelectionCard';
 const MapScreen = () => {
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
+  const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible);
   const mapRef = useRef<MapRef | null>(null);
   const dispatch = useDispatch();
   const Stack = createStackNavigator();
@@ -23,7 +24,7 @@ const MapScreen = () => {
         units=imperial
         &origins=${origin.description}
         &destinations=${destination.description}
-        &key=AIzaSyBGfqCxvUaZabfEXBRa8O1Gz9VONrBaByY`
+        &key=AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M`
         ).then((res) => res.json())
         .then(data => {
             dispatch(setTimeTravel(data.rows[0].elements[0]));
@@ -31,15 +32,24 @@ const MapScreen = () => {
     }
 
     getTravelTime();
-  }), [origin, destination, 'AIzaSyBGfqCxvUaZabfEXBRa8O1Gz9VONrBaByY']
+  }), [origin, destination, 'AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M']
+
+  useEffect(() => {
+    if (isRideSelectionVisible) {
+      mapRef.current?.fitToCoordinates([origin], {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        animated: true,
+      });
+    }
+  }, [origin, destination, isRideSelectionVisible]);
 
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1 }}>
       <MapView
         ref={mapRef}
         mapType='mutedStandard'
-        style={{ flex: 0.5 }}
+        style={{flex: isRideSelectionVisible? 0.5: 1 }}
         initialRegion={{
           latitude: destination.location.lat,
           longitude: destination.location.lng,
@@ -48,23 +58,31 @@ const MapScreen = () => {
         }}
       >
 
-        {origin && destination && (
-            <MapViewDirections
-                origin={origin.description}
-                destination={destination.description}
-                strokeColor='blue'
-                strokeWidth={5}
-                apikey='AIzaSyBGfqCxvUaZabfEXBRa8O1Gz9VONrBaByY'
-                onReady={(result) => {
-                    // Get the coordinates of the direction
-                    const coordinates = result.coordinates;
-                    mapRef.current?.fitToCoordinates(coordinates, {
-                      edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                      animated: true,
-                    });
-                }}
-            />
-        )}
+      {origin && destination && (
+        isRideSelectionVisible ? (
+          <MapViewDirections
+            origin={origin.description}
+            destination={destination.description}
+            strokeColor='blue'
+            strokeWidth={5}
+            apikey='AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M'
+            onReady={(result) => {
+              // Get the coordinates of the direction
+              const coordinates = result.coordinates;
+              mapRef.current?.fitToCoordinates(coordinates, {
+                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                animated: true,
+              });
+            }}
+          />
+        ) : (
+          // Your else content goes here
+          mapRef.current?.fitToSuppliedMarkers(['origin'], {
+            edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
+            animated: true,
+          })
+        )
+      )}
 
         <Marker
         coordinate={{
@@ -87,7 +105,7 @@ const MapScreen = () => {
         />
       </MapView>
 
-      <View style={{ flex: 0.5 }}>
+      <View style={{flex: isRideSelectionVisible? 0.5: 0}}>
         <Stack.Navigator
             screenOptions={{
                 headerShown: false, // Hide the header for all screens in the navigator

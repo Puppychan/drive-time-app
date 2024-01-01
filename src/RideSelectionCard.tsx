@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Button, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
-import { selectTimeTravel } from "slices/navSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTimeTravel, selectIsRideSelectionVisible, toggleRideSelectionVisibility } from "slices/navSlice";
+import {styles} from "./component/RideSelectionCardStyle"
 
 const data = [
   {
@@ -36,98 +37,65 @@ interface ItemType {
     id: string;
     title: string;
     multiplier: number;
-    image: any; // Adjust the type of image as needed
+    image: any;
   }
 
-const RideSelectionCard = () => {
+  const RideSelectionCard = () => {
     const travelInformation = useSelector(selectTimeTravel);
+    const dispatch = useDispatch();
     const [selected, setSelected] = useState<ItemType | null>(null);
   
     return (
       <View style={{ flex: 1, padding: 16 }}>
         <View>
-          <Text style={{ textAlign: 'center', fontSize: 20, marginBottom: 15, fontWeight: 'bold' }}>Select a Drive - {travelInformation?.distance.text}</Text>
+          <Text style={styles.headerText}>Select a Drive - {travelInformation?.distance.text}</Text>
         </View>
         <FlatList
           data={data}
-          keyExtractor={(item) => item.id.toString()} // Ensure that the key is a string
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => setSelected(item)}
-              style={{
-                flexDirection: 'row',
-                backgroundColor: selected?.id === item.id ? '#99ccff' : '#ffffff',
-                borderRadius: 10,
-                paddingHorizontal: 10,
-                marginBottom: 8,
-                paddingVertical: 2,
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
+              style={[
+                styles.driveItem,
+                {
+                  backgroundColor: selected?.id === item.id ? '#99ccff' : '#ffffff',
                 },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.5,
-              }}
+              ]}
             >
-              <Image
-                style={{
-                  paddingLeft: 10,
-                  width: 65,
-                  height: 65,
-                  resizeMode: 'contain',
-                }}
-                source={item.image}
-              />
-  
-              <View
-                style={{
-                  marginLeft: 16,
-                  paddingLeft: 10,
-                  paddingRight: 15,
-                  justifyContent: 'center',
-                }}
-              >
-                <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{item.title}</Text>
+              <Image style={styles.driveImage} source={item.image} />
+              <View style={styles.driveDetails}>
+                <Text style={styles.driveTitle}>{item.title}</Text>
                 <Text>{travelInformation?.duration.text}</Text>
               </View>
-  
-              <Text style={{ fontSize: 14, fontWeight: 'bold', alignSelf: 'center', position: 'absolute', right: 12 }}>90000 VND</Text>
+              <Text style={styles.priceText}>90000 VND</Text>
             </TouchableOpacity>
           )}
         />
-
-        <View style={{ flexDirection: 'row', paddingTop: 10, justifyContent: 'space-between'}}>
-            <View style={{ flexDirection: 'row'}}>
-                <Text style={{ fontSize: 15, marginRight: 10, color: '#3498db' }}>💳</Text>
-                <Text style={{ fontSize: 15, fontWeight:"bold", color: '#333' }}>ATM 1243</Text>
-            </View>
-            <View style={{ height: '100%', width: 2, backgroundColor: '#ccc', alignItems:'center' }} />
-            <View style={{ flexDirection: 'row', right: 40}}>
-                <Text style={{ fontSize: 15, marginRight: 10, color: '#e44d26' }}>🎁</Text>
-                <Text style={{ fontSize: 15, color: '#e44d26' }}>Vouchers</Text>
-            </View>
+  
+        <View style={styles.paymentInfo}>
+          <View style={styles.paymentMethod}>
+            <Text style={styles.paymentIcon}>💳</Text>
+            <Text style={styles.paymentText}>ATM 1243</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.voucherInfo}>
+            <Text style={styles.voucherIcon}>🎁</Text>
+            <Text style={styles.voucherText}>Vouchers</Text>
+          </View>
         </View>
-
-
-        <View>
-
-            <TouchableOpacity
-                style={{
-                height: 50,
-                marginTop: 20,
-                backgroundColor: '#3498db',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 10,
-                }}
-            >
-                <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>Select {selected?.title}</Text>
-            </TouchableOpacity>
+  
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.selectButton}
+            onPress={() => dispatch(toggleRideSelectionVisibility())}
+          >
+            <Text style={styles.buttonText}>Select {selected?.title}</Text>
+          </TouchableOpacity>
         </View>
-    </View>
+      </View>
     );
-};
+  };
   
 
 export default RideSelectionCard;
