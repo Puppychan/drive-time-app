@@ -5,7 +5,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native'
 
 import { UserProfileView } from './src/components/user/profile/profile.view'
+import { ChatView } from 'src/components/chat/chat.view'
 
+import { ChatHeaderView } from 'src/components/chat/header/chat.header'
 SplashScreen.preventAutoHideAsync()
 
 export default function App() {
@@ -37,7 +39,7 @@ export default function App() {
   }
   return (
     <SafeAreaView style={styles.safeArea} onLayout={onLayoutRootView}>
-      <UserProfileView />
+      <ChatHeaderView />
     </SafeAreaView>
   )
 }

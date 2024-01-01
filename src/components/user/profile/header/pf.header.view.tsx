@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, Image } from 'react-native'
 
-import { styles } from './header.style'
+import { styles } from './pf.header.style'
 
 export const ProfileHeaderView = () => {
   return (

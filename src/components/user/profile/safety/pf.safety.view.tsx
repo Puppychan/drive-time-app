@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
 
-import { styles } from './safety.style'
+import { styles } from './pf.safety.style'
 
 export const ProfileSafetyBtn = () => {
   return (

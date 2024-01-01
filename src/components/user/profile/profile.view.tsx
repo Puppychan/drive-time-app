@@ -3,11 +3,11 @@ import { View, ScrollView } from 'react-native'
 
 import { HorizontalDivider } from 'src/components/divider/divider.horizontal'
 
-import { ProfileActionList } from './actionList/actionList'
-import { ProfileHeaderView } from './header/header.view'
+import { ProfileActionList } from './actionList/pf.actionList'
+import { ProfileHeaderView } from './header/pf.header.view'
 import { styles } from './profile.style'
-import { ProfileSafetyBtn } from './safety/safety.view'
-import { ProfileRoundedButton } from './utilBtn/utilBtn'
+import { ProfileSafetyBtn } from './safety/pf.safety.view'
+import { ProfileRoundedButton } from './utilBtn/pf.utilBtn'
 
 export const UserProfileView = () => {
   return (
