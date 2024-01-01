@@ -6,7 +6,7 @@ import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native'
 
 import { UserProfileView } from './src/components/user/profile/profile.view'
 import { ChatView } from 'src/components/chat/chat.view'
-
+import { ChatInputField } from 'src/components/chat/input/chat.input.view'
 import { ChatMessageView } from 'src/components/chat/message/chat.msg.view'
 
 SplashScreen.preventAutoHideAsync()
@@ -40,7 +40,7 @@ export default function App() {
   }
   return (
     <SafeAreaView style={styles.safeArea} onLayout={onLayoutRootView}>
-      <ChatMessageView />
+      <ChatView />
     </SafeAreaView>
   )
 }
