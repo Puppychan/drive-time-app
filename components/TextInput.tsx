@@ -1,5 +1,5 @@
 import { TextInput, View, Text, StyleSheet } from "react-native";
-import { Colors } from "./ThemeColors";
+import { Colors } from "./Colors";
 import { useState, FC } from 'react';
 import { Label } from "./Label";
 import { Constant } from "./Constant";
@@ -8,7 +8,6 @@ import { Constant } from "./Constant";
 const InputStyle = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    width: "100%"
   },
   input: {
     borderColor: Colors.silver,
@@ -18,6 +17,8 @@ const InputStyle = StyleSheet.create({
     height: Constant.inputHeight,
     padding: 10,
     fontSize: Constant.normalTextSize,
+    minWidth: 100,
+    width: "100%"
   },
   onFocus: {
     borderColor:Colors.primary,
@@ -27,26 +28,28 @@ const InputStyle = StyleSheet.create({
 interface TextInputProps {
   label? : string, 
   placeHolder?: string,
-  value?,
+  value?: any,
   required? : boolean
-  type?,
+  type?: any,
   editable? : boolean,
-  secureTextEntry?,
-  onChangeText?,
+  secureTextEntry?: boolean,
+  onChangeText?: any,
+  labelStyle?:any,
+  style?:any
 }
 
 export const Input : FC<TextInputProps> = props => {
-  const {label, placeHolder, value, required, type, editable, secureTextEntry, onChangeText} = props
+  const {label, placeHolder, value, required, type, editable, secureTextEntry, onChangeText, labelStyle, style} = props
   const [isFocused, setIsFocused] = useState(false);
   return (
     <View style={InputStyle.container}>
-      {label && <Label label={label} required={required}></Label>}
-      <TextInput style={[InputStyle.input, isFocused && InputStyle.onFocus]}
+      {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
+      <TextInput style={[InputStyle.input, isFocused && InputStyle.onFocus, style]}
         placeholder={placeHolder}
         value={value}
         editable={editable}
         secureTextEntry={secureTextEntry}
-        onChangeText={onChangeText}
+        onChangeText={text => onChangeText(text)}
         underlineColorAndroid='transparent'
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

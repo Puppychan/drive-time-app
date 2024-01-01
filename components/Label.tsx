@@ -19,12 +19,13 @@ const LabelStyle = StyleSheet.create({
 interface LabelProps {
   label: string,
   required?: boolean,
+  labelStyle?: any
 }
 
 export const Label : FC<LabelProps> = props => {
   return (
     <View style={LabelStyle.container}>
-      <Text style={LabelStyle.label}>{props.label}</Text>
+      <Text style={[LabelStyle.label, props.labelStyle]}>{props.label}</Text>
       {props.required && <Text style={LabelStyle.requiredSymbol}>*</Text>}
     </View>
   )

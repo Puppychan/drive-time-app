@@ -1,8 +1,9 @@
 export const Colors = {
-  primary: '#ff2d55',
-  // background: '#f2f2f2',
-  background: '#fff',
-  text: '#000',
+  primary: '#161A30',
+  navy_black: '#161A30',
+  navy_grey: '#31304D',
+  grey_blue: '#B6BBC4',
+  cream: '#F0ECE5',
   border: '#c7c7cc',
   disabled: '#d3d3d3',
   white: '#fff',
@@ -10,14 +11,19 @@ export const Colors = {
   silver: "#BFBFBF"
 }
 
+const Light = {
+  ...Colors,
+  background: Colors.cream,
+  opposite: Colors.navy_black
+}
 const Dark = {
   ...Colors,
-  background: '#000',
-  text: '#fff',
+  background: Colors.navy_black,
+  opposite: Colors.cream
 }
 
 export const DriveTimeColors = {
-  light: Colors,
+  light: Light,
   dark: Dark
 }
 

@@ -2,7 +2,7 @@ import {TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch, useColorS
 // import Icon from 'react-native-vector-icons/FontAwesome6';
 import { FC } from 'react';
 
-import {Colors} from './ThemeColors';
+import {Colors} from './Colors';
 import { Constant } from "./Constant";
 
 const ButtonStyle = StyleSheet.create({
@@ -14,18 +14,16 @@ const ButtonStyle = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-    // width: "100%",
+    alignItems: "center"
   },
   buttonText: {
     fontSize: Constant.normalTextSize,
-    color: Colors.white,
+    color: Colors.cream,
     fontWeight: "bold",
   },
   outlinedButton: {
-    backgroundColor: Colors.background,
-    borderColor: Colors.primary
+    backgroundColor: Colors.cream,
+    borderColor: Colors.primary,
   },
   outlinedButtonText: {
     color: Colors.primary
@@ -87,22 +85,14 @@ export const OutlineButton : FC<ButtonProps> = props => {
   );
 };
 
-// interface ToggleButtonProps {
-//   title: string,
-//   onPress?: any,
-//   disabled?: boolean,
-//   iconLeft?: any,
-//   iconRight?: any,
-//   style?: any,
-//   textStyle?: any,
-//   activeOpacity?: any,
-//   loading?: any,
-// }
+interface ToggleButtonProps {
+  value? : boolean,
+  onValueChange?: any
+  disabled?: boolean
+}
 
-export const ToggleButton = ({
-  value,
-  onValueChange
-}) => {
+export const ToggleButton : FC<ToggleButtonProps> = props => {
+  const {value, onValueChange, disabled} = props;
   return (
     <Switch
         trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -110,6 +100,7 @@ export const ToggleButton = ({
         ios_backgroundColor="#3e3e3e"
         onValueChange={onValueChange}
         value={value}
+        disabled={disabled}
       />
   );
 };

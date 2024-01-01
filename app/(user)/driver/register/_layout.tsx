@@ -1,25 +1,26 @@
-
-import { Button } from '@/components/Buttons'
+import React from 'react';
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View } from 'react-native'
-import { useRouter } from "expo-router";
 import { Colors } from '@/components/Colors';
+import { Slot } from 'expo-router';
 
-export default function App() {
-  const router = useRouter();
+export default function Layout() {
   return (
     <View style={styles.container}>
-      <Text>Open up ./app/index.tsx to start working on your app!</Text>
       <StatusBar style="auto" />
+      <Slot />
     </View>
-  )
+  );
 }
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.cream,
+    backgroundColor: Colors.navy_black,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: "100%",
+    padding: 20
   }
 })
