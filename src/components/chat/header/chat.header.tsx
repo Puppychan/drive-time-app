@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Image } from 'react-native'
+import { Text, View, Image, TouchableOpacity } from 'react-native'
 
 import { styles } from './chat.header.style'
 
@@ -19,7 +19,11 @@ export const ChatHeaderView = () => {
           </View>
         </View>
       </View>
-      <Image style={styles.callImage} source={require('../../../../assets/ic_call.png')} />
+
+      {/* Call Button */}
+      <TouchableOpacity>
+        <Image style={styles.callImage} source={require('../../../../assets/ic_call.png')} />
+      </TouchableOpacity>
     </View>
   )
 }

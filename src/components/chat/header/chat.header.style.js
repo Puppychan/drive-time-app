@@ -11,12 +11,13 @@ export const styles = StyleSheet.create({
   driverImage: {
     width: 70,
     height: 70,
-    borderRadius: 35
+    borderRadius: 35,
+    marginEnd: 20
   },
   driverInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 15
+    marginLeft: 5
   },
   driverName: {
     fontSize: 20,
