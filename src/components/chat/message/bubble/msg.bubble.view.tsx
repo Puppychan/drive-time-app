@@ -2,14 +2,14 @@ import React from 'react'
 import { Text, View } from 'react-native'
 
 import { styles } from './msg.bubble.style'
-
+import { DateToHourMinute } from 'src/utils/dateTimeConverter'
 interface MessageBubbleProps {
   content: string
   sender: number
-  createdTime: number
+  sentTime: number
 }
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ content, sender, createdTime }) => {
+export const MessageBubble: React.FC<MessageBubbleProps> = ({ content, sender, sentTime }) => {
   const isSender1 = sender !== 1
 
   return (
@@ -18,7 +18,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ content, sender, c
         <Text style={isSender1 ? styles.sender1Text : styles.sender2Text}>{content}</Text>
       </View>
       <Text style={[styles.sentTime, isSender1 ? styles.sender1Time : styles.sender2Time]}>
-        Sent 10:21
+        Sent {DateToHourMinute(sentTime)}
       </Text>
     </View>
   )
