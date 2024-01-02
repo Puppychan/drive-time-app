@@ -6,6 +6,7 @@ import { Provider as PageProvider } from 'react-native-paper'
 import { Button } from '@/components/Buttons'
 import { Colors } from '@/components/Colors'
 import InstructionCard from '@/components/cards/InstructionCard'
+import ServiceCard from '@/components/cards/ServiceCard'
 
 export default function App() {
   const router = useRouter()
@@ -13,14 +14,8 @@ export default function App() {
     <PageProvider>
       <View style={styles.container}>
         <Text>Open up ./app/index.tsx to start working on your app!</Text>
-        <InstructionCard
-          imageUrl="https://source.unsplash.com/random/transport"
-          title="Book a ride"
-          subtitle="Book a ride to your destination"
-          onShare={() => {
-            ToastAndroid.show('Booking confirmed!', ToastAndroid.SHORT)
-          }}
-        />
+        <ServiceCard title="2-Wheels" icon={ICON_2_WHEELS} />
+        <ServiceCard title="Reserve" icon={ICON_RESERVE} />
         <StatusBar style="auto" />
       </View>
     </PageProvider>

@@ -1,17 +1,16 @@
-import React from 'react'
-import { StyleSheet, Image, View, TouchableOpacity, Text } from 'react-native'
-import { Card, Title, Paragraph, Button } from 'react-native-paper'
+import { StyleSheet, Image, View, TouchableOpacity } from 'react-native'
+import { Card, Title, Paragraph } from 'react-native-paper'
 
 type InstructionCardProps = {
   imageUrl: string
-  onShare: () => void
+  onClick: () => void
   title: string
   subtitle: string
 }
 
-const InstructionCard = ({ imageUrl, onShare, title, subtitle }: InstructionCardProps) => {
+const InstructionCard = ({ imageUrl, onClick, title, subtitle }: InstructionCardProps) => {
   return (
-    <TouchableOpacity style={styles.actionContainer} onPress={onShare}>
+    <TouchableOpacity style={styles.actionContainer} onPress={onClick}>
       <Card style={styles.card}>
         <Card.Content>
           <Image source={{ uri: imageUrl }} style={styles.image} />
