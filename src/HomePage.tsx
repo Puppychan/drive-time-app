@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { ScrollView, View, StyleSheet, Image } from 'react-native'
-import { Appbar, Card, Title, Paragraph, Button, IconButton } from 'react-native-paper'
+import { Appbar, Card, Title, Paragraph, Button, IconButton, List } from 'react-native-paper'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { horizontalLeftView, verticalLeftView } from '@/common/utils/custom-view.style'
 
@@ -70,6 +70,13 @@ const HomePage = () => {
           {/* Add see more if more than 4 suggestions */}
           <Button>See more</Button>
         </View>
+        <ScrollView horizontal={true}>
+          <List.Section>
+            <List.Subheader>Some title</List.Subheader>
+            <List.Item title="First Item" left={() => <List.Icon icon="folder" />} />
+            <List.Item title="Second Item" left={() => <List.Icon icon="folder" />} />
+          </List.Section>
+        </ScrollView>
 
         {/* Ways to plan with Uber */}
         <View style={styles.planning}>
