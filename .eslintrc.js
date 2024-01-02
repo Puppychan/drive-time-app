@@ -18,6 +18,6 @@ module.exports = {
     __dirname: true
   },
   rules: {
-    'no-console': 'off'
+    'no-console': 'error'
   }
 }

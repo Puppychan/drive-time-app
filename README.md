@@ -58,6 +58,24 @@
     `npm run ios`: for ios
     `npm run web`: for web
 
+### Cautions
+- On MacOS:
+  - If you have error with `npm run android`:
+    - Make sure you have installed Android Studio and run device emulator
+    - Run:
+      `echo 'export PATH=$PATH:~/Library/Android/sdk/platform-tools' >> ~/.zshrc`
+      `source ~/.zshrc` to update echo
+      `adb devices` to check if your device is connected
+    - Make sure java version is 11 by typing `java --version`:
+      - If not version 11, install it by `brew install openjdk@11` and `brew install jenv` to set java version
+      - Run `brew --prefix openjdk@11` to find location of java 11
+      - Run `jenv add /result-of-above-command/libexec/openjdk.jdk/Contents/Home` to add java 11 to jenv
+      - Move terminal to root directory of this project and run `jenv local 11` to set java version to 11 (if 11 is not valid, run specified version of java 11)
+    - Run `npm install -g expo-cli`
+    - Run `expo-cli upgrade`
+    - Also run `npm update`
+    - Now rerun `npm run android`
+
 ### Other Commands Usage
 
 - Check if any code error: `npm run check-typescript`

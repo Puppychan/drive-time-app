@@ -1,37 +1,34 @@
-import { Button } from '@/components/Buttons';
-import { Colors } from '@/components/Colors';
-import { Input } from '@/components/TextInput';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import { Button } from '@/components/Buttons'
+import { Colors } from '@/components/Colors'
+import { Input } from '@/components/TextInput'
+import { useRouter } from 'expo-router'
+import { useState } from 'react'
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 // import { createUserWithEmailAndPassword } from "firebase/auth";
-// import { getFirestore, collection, addDoc } from "firebase/firestore"; 
+// import { getFirestore, collection, addDoc } from "firebase/firestore";
 // import { auth } from "@/lib/firebase/firebase";
 
-
-
-
 export default function Page() {
-  const router = useRouter();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState('');
+  const router = useRouter()
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState('')
 
   const handleNext = () => {
-    if (email.trim() === "" ) {
+    if (email.trim() === '') {
       // window.alert('Email is required');
 
       // ToastAndroid.show("Email is required", ToastAndroid.SHORT);
-      return;
-    } else if (password.trim() === "" ) {
+      return
+    } else if (password.trim() === '') {
       // window.alert('Password is required');
 
       // ToastAndroid.show("Password is required", ToastAndroid.SHORT);
-      return;
+      return
     }
 
     // createUserWithEmailAndPassword(auth, email, password)
     //   .then((userCredential) => {
-    //     // Signed up 
+    //     // Signed up
     //     const user = userCredential.user;
     //     router.push("/driver/register/driver-profile");
 
@@ -42,10 +39,9 @@ export default function Page() {
     //     // ..
     //   });
 
-    router.push("/driver/register/driver-profile");
-    
+    router.push('/driver/register/driver-profile')
   }
-  
+
   return (
     <View style={styles.formContainer}>
       <Text style={styles.formTitle}>Driver Sign Up</Text>
@@ -65,18 +61,11 @@ export default function Page() {
           value={password}
           onChangeText={setPassword}
         />
-        <Button
-        title='Next'
-        onPress={handleNext}
-      />
+        <Button title="Next" onPress={handleNext} />
       </View>
-      
     </View>
-      
-  );
+  )
 }
-
-
 
 const styles = StyleSheet.create({
   formContainer: {
@@ -84,7 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 30,
     backgroundColor: Colors.cream,
-    width: "100%",
+    width: '100%',
     maxWidth: 400,
     paddingVertical: 50,
     paddingHorizontal: 20,
@@ -98,6 +87,6 @@ const styles = StyleSheet.create({
   form: {
     flexDirection: 'column',
     gap: 15,
-    width: "100%"
+    width: '100%'
   }
 })
