@@ -1,48 +1,51 @@
-import React from 'react'
-import { View, StyleSheet, Text, Image } from 'react-native'
-import { Card, TouchableRipple } from 'react-native-paper'
+import { Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { Card } from 'react-native-paper'
+
+import { ellipseStyle2Lines } from '@/common/utils/custom-text.inline-style'
 
 type ServiceCardProps = {
   title: string
-  icon: any
+  iconImage: string
   onClick: () => void
 }
 
-const ServiceCard = ({ title, icon, onClick }: ServiceCardProps) => {
+const ServiceCard = ({ title, iconImage, onClick }: ServiceCardProps) => {
   return (
-    <TouchableRipple onPress={onClick}>
+    <TouchableOpacity onPress={onClick} style={{ alignItems: 'center', marginVertical: 8 }}>
       <Card style={styles.card}>
         <Card.Content style={styles.cardContent}>
-          <Image source={icon} style={styles.icon} resizeMode="contain" />
-          <Text style={styles.title}>{title}</Text>
+          <Image source={{ uri: iconImage }} style={styles.icon} resizeMode="contain" />
         </Card.Content>
       </Card>
-    </TouchableRipple>
+      <Text {...ellipseStyle2Lines} style={styles.title}>
+        {title}
+      </Text>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: 100, // Set the width of the card
-    height: 100, // Set the height of the card
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
-    margin: 8, // Add space around the card
-    elevation: 2, // Add shadow for Android (optional)
-    borderRadius: 8 // Round the corners
+    width: '25%',
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+    borderRadius: 8
   },
   cardContent: {
     justifyContent: 'center',
     alignItems: 'center'
   },
   icon: {
-    width: 50, // Set the size of the icon
-    height: 50 // Set the size of the icon
+    width: 65,
+    height: 65
   },
   title: {
-    marginTop: 4, // Space between icon and title
-    fontSize: 14, // Set the font size
-    textAlign: 'center' // Center the text
+    marginTop: 4,
+    fontSize: 14,
+    textAlign: 'center',
+    width: 100 // Width is needed to control the ellipsis
   }
 })
 

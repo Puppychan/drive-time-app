@@ -1,6 +1,8 @@
 import { StyleSheet, Image, View, TouchableOpacity } from 'react-native'
 import { Card, Title, Paragraph } from 'react-native-paper'
 
+import { ellipseStyle } from '@/common/utils/custom-text.inline-style'
+
 type InstructionCardProps = {
   imageUrl: string
   onClick: () => void
@@ -15,7 +17,9 @@ const InstructionCard = ({ imageUrl, onClick, title, subtitle }: InstructionCard
         <Card.Content>
           <Image source={{ uri: imageUrl }} style={styles.image} />
           <View style={styles.textContainer}>
-            <Title style={styles.title}>{title} -&gt;</Title>
+            <Title style={styles.title} {...ellipseStyle}>
+              {title} -&gt;
+            </Title>
             <Paragraph style={styles.paragraph}>{subtitle}</Paragraph>
           </View>
         </Card.Content>

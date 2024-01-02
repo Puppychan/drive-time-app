@@ -5,29 +5,29 @@ import { auth } from '@/lib/firebase/firebase'
 import { useRouter } from 'expo-router'
 
 export function getUser() {
-	const [user, setUser] = useState<any>()
-	const router = useRouter()
+  const [user, setUser] = useState<any>()
+  const router = useRouter()
 
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-			setUser(authUser)
-		})
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      setUser(authUser)
+    })
 
-		return () => unsubscribe()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+    return () => unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-	useEffect(() => {
-		onAuthStateChanged(auth, (authUser) => {
-			if (user === undefined) return
+  useEffect(() => {
+    onAuthStateChanged(auth, (authUser) => {
+      if (user === undefined) return
 
-			// refresh when user changed to ease testing
-			if (user?.email !== authUser?.email) {
-				// router.refresh()
-			}
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
+      // refresh when user changed to ease testing
+      if (user?.email !== authUser?.email) {
+        // router.refresh()
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
-	return user
+  return user
 }
