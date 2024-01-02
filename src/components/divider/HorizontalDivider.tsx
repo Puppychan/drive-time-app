@@ -8,13 +8,15 @@ interface HorizontalDividerProps {
 
 export const HorizontalDivider: React.FC<HorizontalDividerProps> = ({
   height = 2,
-  backgroundColor = 'rgba(128, 128, 128, 0.2)'
+  backgroundColor = 'rgba(128, 128, 128, 0.2)',
+  ...props // rest operators
 }) => {
-  return <View style={[styles.divider, { height, backgroundColor }]} />
+  return <View style={[styles.divider, { height, backgroundColor, ...props }]} />
 }
 
 const styles = StyleSheet.create({
   divider: {
-    width: '100%'
+    width: '100%',
+    borderRadius: 4
   }
 })

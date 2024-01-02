@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView } from 'react-native'
 
-import { HorizontalDivider } from 'src/components/divider/divider.horizontal'
+import { HorizontalDivider } from '@/src/components/divider/HorizontalDivider'
 
 import { ProfileActionList } from './actionList/actionList'
 import { ProfileHeaderView } from './header/header.view'

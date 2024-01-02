@@ -1,9 +1,9 @@
-import {TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch, useColorScheme} from "react-native";
+import { FC } from 'react'
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome6';
-import { FC } from 'react';
 
-import {Colors} from './Colors';
-import { Constant } from "./Constant";
+import { Colors } from './Colors'
+import { Constant } from './Constant'
 
 const ButtonStyle = StyleSheet.create({
   button: {
@@ -12,48 +12,50 @@ const ButtonStyle = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonText: {
     fontSize: Constant.normalTextSize,
     color: Colors.cream,
-    fontWeight: "bold",
+    fontWeight: 'bold'
   },
   outlinedButton: {
     backgroundColor: Colors.cream,
-    borderColor: Colors.primary,
+    borderColor: Colors.primary
   },
   outlinedButtonText: {
     color: Colors.primary
   },
   disabledButton: {
     backgroundColor: Colors.disabled
-  },
-
+  }
 })
 
 interface ButtonProps {
-  title: string,
-  onPress?: any,
-  disabled?: boolean,
-  iconLeft?: any,
-  iconRight?: any,
-  style?: any,
-  textStyle?: any,
-  activeOpacity?: any,
-  loading?: any,
+  title: string
+  onPress?: any
+  disabled?: boolean
+  iconLeft?: any
+  iconRight?: any
+  style?: any
+  textStyle?: any
+  activeOpacity?: any
+  loading?: any
 }
 
-
-export const Button : FC<ButtonProps> = props => {
+export const Button: FC<ButtonProps> = (props) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      disabled={props.disabled === true }
+      disabled={props.disabled === true}
       activeOpacity={props.activeOpacity}
-      style={[ButtonStyle.button, props.disabled === true && ButtonStyle.disabledButton, props.style]}
+      style={[
+        ButtonStyle.button,
+        props.disabled === true && ButtonStyle.disabledButton,
+        props.style
+      ]}
     >
       {props.iconLeft}
       {props.loading ? (
@@ -63,44 +65,51 @@ export const Button : FC<ButtonProps> = props => {
       )}
       {props.iconRight}
     </TouchableOpacity>
-  );
+  )
 }
 
-export const OutlineButton : FC<ButtonProps> = props => {
+export const OutlineButton: FC<ButtonProps> = (props) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      disabled={props.disabled !== true }
+      disabled={props.disabled !== true}
       activeOpacity={props.activeOpacity}
-      style={[ButtonStyle.button, ButtonStyle.outlinedButton, props.disabled !== true && ButtonStyle.disabledButton, props.style]}
+      style={[
+        ButtonStyle.button,
+        ButtonStyle.outlinedButton,
+        props.disabled !== true && ButtonStyle.disabledButton,
+        props.style
+      ]}
     >
       {props.iconLeft}
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <Text style={[ButtonStyle.buttonText, ButtonStyle.outlinedButtonText, props.textStyle]}>{props.title}</Text>
+        <Text style={[ButtonStyle.buttonText, ButtonStyle.outlinedButtonText, props.textStyle]}>
+          {props.title}
+        </Text>
       )}
       {props.iconRight}
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 interface ToggleButtonProps {
-  value? : boolean,
+  value?: boolean
   onValueChange?: any
   disabled?: boolean
 }
 
-export const ToggleButton : FC<ToggleButtonProps> = props => {
-  const {value, onValueChange, disabled} = props;
+export const ToggleButton: FC<ToggleButtonProps> = (props) => {
+  const { value, onValueChange, disabled } = props
   return (
     <Switch
-        trackColor={{false: '#767577', true: '#81b0ff'}}
-        thumbColor={value ? '#f5dd4b' : '#f4f3f4'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={onValueChange}
-        value={value}
-        disabled={disabled}
-      />
-  );
-};
+      trackColor={{ false: '#767577', true: '#81b0ff' }}
+      thumbColor={value ? '#f5dd4b' : '#f4f3f4'}
+      ios_backgroundColor="#3e3e3e"
+      onValueChange={onValueChange}
+      value={value}
+      disabled={disabled}
+    />
+  )
+}

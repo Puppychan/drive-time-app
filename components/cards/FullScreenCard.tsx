@@ -1,7 +1,8 @@
-import { ellipseStyle2Lines, ellipseStyle4Lines } from '@/common/utils/custom-text.inline-style'
-import React from 'react'
 import { TouchableOpacity, ImageBackground, View, StyleSheet } from 'react-native'
 import { Card, Title, Paragraph } from 'react-native-paper'
+
+import { ellipseStyle2Lines, ellipseStyle4Lines } from '@/common/utils/custom-text.inline-style'
+
 
 type FullScreenCardProps = {
   imageUrl: string
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject, // This will make the overlay cover the entire image
-    backgroundColor: 'rgba(0, 0, 0, 0.4)' // Semi-transparent overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.5)' // Semi-transparent overlay
   },
   backgroundImage: {
     flex: 1 // Ensures the image background takes up the entire card
