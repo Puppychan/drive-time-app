@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, Text, TouchableOpacity } from 'react-native'
 
-import { styles } from './actionList.style'
+import { styles } from './pf.actionList.style'
 
 const basePath = '../../../../../assets/'
 

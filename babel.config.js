@@ -6,6 +6,7 @@ module.exports = function (api) {
       // Required for expo-router
       'expo-router/babel',
       'react-native-paper/babel'
+      ['react-native-reanimated/plugin'],
     ]
     // plugins: [
     //   [

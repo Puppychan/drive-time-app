@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, Image, View } from 'react-native'
 
-import { styles } from './utilBtn.style'
+import { styles } from './pf.utilBtn.style'
 
 const basePath = '../../../../../assets/'
 
