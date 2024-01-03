@@ -1,11 +1,16 @@
-import { TouchableOpacity, ImageBackground, View, StyleSheet } from 'react-native'
+import {
+  TouchableOpacity,
+  ImageBackground,
+  View,
+  StyleSheet,
+  ImageSourcePropType
+} from 'react-native'
 import { Card, Title, Paragraph } from 'react-native-paper'
 
 import { ellipseStyle2Lines, ellipseStyle4Lines } from '@/common/utils/custom-text.inline-style'
 
-
 type FullScreenCardProps = {
-  imageUrl: string
+  imageUrl: ImageSourcePropType
   title: string
   subtitle: string
   onClick: () => void
@@ -14,7 +19,7 @@ type FullScreenCardProps = {
 const FullScreenCard = ({ imageUrl, title, subtitle, onClick }: FullScreenCardProps) => (
   <TouchableOpacity onPress={onClick} style={styles.actionContainer}>
     <Card style={styles.card}>
-      <ImageBackground source={{ uri: imageUrl }} style={styles.backgroundImage}>
+      <ImageBackground source={imageUrl} style={styles.backgroundImage}>
         {/* Overlay View */}
         <View style={styles.overlay} />
         <Card.Content style={styles.content}>

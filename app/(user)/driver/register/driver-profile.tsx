@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { useState } from 'react'
 import { useRouter } from "expo-router"
 import { AppDropDown } from '@/components/DropDownMenu'
-import { Button } from '@/components/Buttons'
+import { CustomButton } from '@/components/Buttons'
 import { Colors } from '@/components/Colors'
 import { Input } from '@/components/TextInput'
 
@@ -38,7 +38,7 @@ export default function Page() {
           selectedValue={gender}
           setSelectedValue={setGender}
         />
-        <Button
+        <CustomButton
           title='Submit'
           onPress={() => router.push("/")}
         />

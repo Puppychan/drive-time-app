@@ -45,7 +45,7 @@ interface ButtonProps {
   loading?: any
 }
 
-export const Button: FC<ButtonProps> = (props) => {
+export const CustomButton: FC<ButtonProps> = (props) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}

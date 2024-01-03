@@ -1,9 +1,9 @@
-import { StyleSheet, Image, View, TouchableOpacity } from 'react-native'
-import { Card, Title, Paragraph } from 'react-native-paper'
+import { StyleSheet, Image, View, TouchableOpacity, ImageSourcePropType } from 'react-native'
+import { Card, Title } from 'react-native-paper'
 
 type ServiceCardProps = {
   title: string
-  iconImage: string
+  iconImage: ImageSourcePropType
   onClick: () => void
 }
 
@@ -12,7 +12,7 @@ const ServiceCardLarge = ({ title, iconImage, onClick }: ServiceCardProps) => {
     <TouchableOpacity style={styles.actionContainer} onPress={onClick}>
       <Card style={styles.card}>
         <Card.Content>
-          <Image source={{ uri: iconImage }} style={styles.image} resizeMode="contain" />
+          <Image source={iconImage} style={styles.image} resizeMode="contain" />
           <View style={styles.textContainer}>
             <Title style={styles.title}>{title} -&gt;</Title>
           </View>

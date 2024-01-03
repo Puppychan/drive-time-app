@@ -4,8 +4,6 @@ import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import { Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
-
-import { Button } from '@/components/Buttons'
 import { Colors } from '@/components/Colors'
 
 import AppNavigator from '@/src/AppNavigator'

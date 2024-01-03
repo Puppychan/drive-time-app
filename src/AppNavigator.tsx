@@ -6,7 +6,7 @@ import { GooglePlacesInput } from 'src/GooglePlacesInput'
 import { SignInScreen } from 'src/SignInScreen'
 
 import { MapScreen } from './MapScreen'
-import HomePage from './HomePage'
+import HomePage from '../components/HomePage'
 
 const Stack = createStackNavigator()
 

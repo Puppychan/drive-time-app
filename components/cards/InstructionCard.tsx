@@ -1,10 +1,10 @@
-import { StyleSheet, Image, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, View, TouchableOpacity, ImageSourcePropType } from 'react-native'
 import { Card, Title, Paragraph } from 'react-native-paper'
 
-import { ellipseStyle } from '@/common/utils/custom-text.inline-style'
+import { ellipseStyle, ellipseStyle4Lines } from '@/common/utils/custom-text.inline-style'
 
 type InstructionCardProps = {
-  imageUrl: string
+  imageUrl: ImageSourcePropType
   onClick: () => void
   title: string
   subtitle: string
@@ -15,12 +15,14 @@ const InstructionCard = ({ imageUrl, onClick, title, subtitle }: InstructionCard
     <TouchableOpacity style={styles.actionContainer} onPress={onClick}>
       <Card style={styles.card}>
         <Card.Content>
-          <Image source={{ uri: imageUrl }} style={styles.image} />
+          <Image source={imageUrl} style={styles.image} />
           <View style={styles.textContainer}>
             <Title style={styles.title} {...ellipseStyle}>
               {title} -&gt;
             </Title>
-            <Paragraph style={styles.paragraph}>{subtitle}</Paragraph>
+            <Paragraph style={styles.paragraph} {...ellipseStyle4Lines}>
+              {subtitle}
+            </Paragraph>
           </View>
         </Card.Content>
       </Card>
@@ -30,8 +32,8 @@ const InstructionCard = ({ imageUrl, onClick, title, subtitle }: InstructionCard
 
 const styles = StyleSheet.create({
   card: {
-    margin: 10,
     minHeight: 270,
+    width: 250, // Take the full width of the card
     elevation: 5, // Shadow for Android
     paddingTop: 3, // Padding inside
     paddingBottom: 20, // Padding inside
@@ -44,6 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 8 // Rounded corners
   },
   textContainer: {
+    width: '100%', // Take the full width
     marginTop: 10 // Space between image and text
   },
   title: {

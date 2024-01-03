@@ -25,7 +25,7 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: 'cover'
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

@@ -1,20 +1,20 @@
-import { Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, Image, StyleSheet, TouchableOpacity, ImageSourcePropType } from 'react-native'
 import { Card } from 'react-native-paper'
 
 import { ellipseStyle2Lines } from '@/common/utils/custom-text.inline-style'
 
 type ServiceCardProps = {
   title: string
-  iconImage: string
+  iconImage: ImageSourcePropType
   onClick: () => void
 }
 
 const ServiceCard = ({ title, iconImage, onClick }: ServiceCardProps) => {
   return (
-    <TouchableOpacity onPress={onClick} style={{ alignItems: 'center', marginVertical: 8 }}>
+    <TouchableOpacity onPress={onClick} style={{ alignItems: 'center' }}>
       <Card style={styles.card}>
         <Card.Content style={styles.cardContent}>
-          <Image source={{ uri: iconImage }} style={styles.icon} resizeMode="contain" />
+          <Image source={iconImage} style={styles.icon} resizeMode="contain" />
         </Card.Content>
       </Card>
       <Text {...ellipseStyle2Lines} style={styles.title}>
@@ -26,7 +26,7 @@ const ServiceCard = ({ title, iconImage, onClick }: ServiceCardProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: '25%',
+    minWidth: '25%',
     height: 100,
     justifyContent: 'center',
     alignItems: 'center',

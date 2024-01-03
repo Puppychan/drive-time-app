@@ -6,5 +6,8 @@ module.exports = {
         inlineRequires: false
       }
     })
+  },
+  resolver: {
+    assetExts: ['png', 'jpg', 'jpeg', 'svg', 'gif', 'ttf', 'mp4']
   }
 }
