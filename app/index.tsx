@@ -12,11 +12,16 @@ import ServiceCardLarge from '@/components/cards/ServiceCardLarge'
 import FullScreenCard from '@/components/cards/FullScreenCard'
 import { getScreenSize } from '@/common/helpers/default-device-value.helper'
 import ServiceCardTextInside from '@/components/cards/ServiceCardTextInside'
+import { useEffect } from 'react'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
 
 export default function App() {
+  useEffect(() => {
+    ToastAndroid.show('App mounted', ToastAndroid.SHORT)
+    ToastAndroid.show(`Check API ${process.env.EXPO_PUBLIC_FIREBASE_API_KEY}`, ToastAndroid.SHORT)
+  }, [])
   const router = useRouter()
   return (
     <ReduxProvider store={store}>

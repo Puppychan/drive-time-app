@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.drivetimeapp"
+      "package": "com.anonymous.drivetimeapp",
+      "googleServicesFile": "./android/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -31,7 +32,8 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-firebase/app"
     ],
     "experiments": {
       "tsconfigPaths": true
