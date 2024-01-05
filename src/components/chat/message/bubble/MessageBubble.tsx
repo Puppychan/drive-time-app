@@ -2,7 +2,7 @@ import { Text, View } from 'react-native'
 
 import { DateToHourMinute } from '@/src/common/utils/date-time-converter'
 
-import { styles } from './msg.bubble.style'
+import { styles } from './msg-bubble-style'
 interface MessageBubbleProps {
   content: string
   sender: number

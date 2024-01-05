@@ -1,6 +1,6 @@
 import { Text, View, Image, TouchableOpacity } from 'react-native'
 
-import { styles } from './chat.header.style'
+import { styles } from './chat-header-style'
 
 export const ChatHeader = () => {
   return (
