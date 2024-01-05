@@ -18,10 +18,6 @@ import { useEffect } from 'react'
 const { width: screenWidth } = getScreenSize()
 
 export default function App() {
-  useEffect(() => {
-    ToastAndroid.show('App mounted', ToastAndroid.SHORT)
-    ToastAndroid.show(`Check API ${process.env.EXPO_PUBLIC_FIREBASE_API_KEY}`, ToastAndroid.SHORT)
-  }, [])
   const router = useRouter()
   return (
     <ReduxProvider store={store}>

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity } 
 
 const SignInScreen = () => {
   return (
-    <ImageBackground source={require('../assets/saigon.jpg')} style={styles.backgroundImage}>
+    <ImageBackground source={require('../../assets/saigon.jpg')} style={styles.backgroundImage}>
       <View style={styles.overlay} />
       <View style={styles.container}>
         <Text style={styles.titleText}>Login</Text>

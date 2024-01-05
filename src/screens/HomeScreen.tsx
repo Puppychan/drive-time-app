@@ -24,7 +24,7 @@ import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 const homeInfo = '123 Main St'
 const usernameInfo = 'John Doe'
 
-const HomePage = () => {
+const HomeScreen = () => {
   const navigation = useNavigation()
   const colorsTheme = useThemeColors(DEFAULT_THEME)
 
@@ -217,4 +217,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default HomePage
+export default HomeScreen

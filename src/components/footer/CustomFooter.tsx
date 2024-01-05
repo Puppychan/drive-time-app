@@ -1,6 +1,6 @@
-import React, { FC, useMemo, useState } from 'react'
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { FC, useMemo, useState } from 'react'
 import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
 import Animated, {
   runOnJS,
   useAnimatedProps,
@@ -8,14 +8,16 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import { interpolatePath } from 'react-native-redash'
-import { SCREEN_WIDTH } from '@/src/constants/screen.utils'
+import Svg, { Path } from 'react-native-svg'
+
+import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { usePath } from '@/src/common/hooks/use-path.hook'
 import { getPathXCenter } from '@/src/common/utils/path.utils'
-import { FooterItem } from './FooterItem'
-import { AnimatedCircle } from './AnimatedCircle'
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import AnimatedCircle from '@/src/components/footer/AnimatedCircle'
+import FooterElement from '@/src/components/footer/FooterElement'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
+const { width: screenWidth } = getScreenSize()
 
 export const CustomFooter: FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const { containerPath, curvePaths, tHeight } = usePath()
@@ -56,7 +58,7 @@ export const CustomFooter: FC<BottomTabBarProps> = ({ state, descriptors, naviga
 
   return (
     <View style={styles.footerBarContainer}>
-      <Svg style={styles.shadowMd} width={SCREEN_WIDTH} height={tHeight}>
+      <Svg style={styles.shadowMd} width={screenWidth} height={tHeight}>
         <AnimatedPath animatedProps={animatedProps} fill="black" />
       </Svg>
       <AnimatedCircle circleX={circleXCordinate} />
@@ -69,46 +71,46 @@ export const CustomFooter: FC<BottomTabBarProps> = ({ state, descriptors, naviga
         ]}
       >
         {state.routes.map((route, index) => {
-            const { options } = descriptors[route.key]
-            const label = options.tabBarLabel ? options.tabBarLabel : route.name;
-            return (
-                <FooterItem
-                    key={route.key}
-                    label={label as string}
-                    icon={selectIcon(route.name)}
-                    activeIndex={state.index + 1}
-                    index={index}
-                    onTabPress={() => handleTabPress(index + 1, route.name)}
-                />
-            );
+          const { options } = descriptors[route.key]
+          const label = options.tabBarLabel ? options.tabBarLabel : route.name
+          return (
+            <FooterElement
+              key={route.key}
+              label={label as string}
+              icon={selectIcon(route.name)}
+              activeIndex={state.index + 1}
+              index={index}
+              onTabPress={() => handleTabPress(index + 1, route.name)}
+            />
+          )
         })}
       </View>
     </View>
   )
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff'
-    },
-    footerBarContainer: {
-        position: 'absolute',
-        bottom: 0,
-       zIndex: 2,
-    },
-    footerItemsContainer: {
-        position: 'absolute',
-        flexDirection: 'row',
-        width: '100%',
-    },
-    shadowMd: {
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  footerBarContainer: {
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 2
+  },
+  footerItemsContainer: {
+    position: 'absolute',
+    flexDirection: 'row',
+    width: '100%'
+  },
+  shadowMd: {
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    shadowOffset: {
+      width: 0,
+      height: 3
     }
+  }
 })

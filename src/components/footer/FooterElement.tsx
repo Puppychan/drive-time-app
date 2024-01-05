@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { FC, useEffect } from 'react'
+import { useEffect } from 'react'
+import { Pressable, StyleSheet, Text } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,11 +7,12 @@ import Animated, {
   useAnimatedProps
 } from 'react-native-reanimated'
 import Feather from 'react-native-vector-icons/Feather'
-import { getPathXCenterByIndex } from '@/src/common/utils/path.utils'
-import { usePath } from '@/src/common/hooks/use-path.hook'
-import { SCREEN_WIDTH } from '@/src/constants/screen.utils'
 
-export type FooterItemProps = {
+import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
+import { usePath } from '@/src/common/hooks/use-path.hook'
+import { getPathXCenterByIndex } from '@/src/common/utils/path.utils'
+
+type FooterElementProps = {
   label: string
   icon: string
   index: number
@@ -20,10 +21,11 @@ export type FooterItemProps = {
 }
 
 const ICON_SIZE = 25
-const LABEL_WIDTH = SCREEN_WIDTH / 4
+const { width: screenWidth } = getScreenSize()
+const LABEL_WIDTH = screenWidth / 4
 const AnimatedIcon = Animated.createAnimatedComponent(Feather)
 
-export const FooterItem: FC<FooterItemProps> = ({ label, icon, index, onTabPress, activeIndex }) => {
+const FooterElement = ({ label, icon, index, onTabPress, activeIndex }: FooterElementProps) => {
   const { curvePaths } = usePath()
   const animatedActiveIndex = useSharedValue(activeIndex)
   const iconPosition = getPathXCenterByIndex(curvePaths, index)
@@ -78,27 +80,25 @@ export const FooterItem: FC<FooterItemProps> = ({ label, icon, index, onTabPress
           hitSlop={{ top: 30, bottom: 30, left: 50, right: 50 }}
           onPress={onTabPress}
         >
-            <AnimatedIcon name={icon} size={ICON_SIZE} animatedProps={animatedIconProps} />
-
+          <AnimatedIcon name={icon} size={ICON_SIZE} animatedProps={animatedIconProps} />
         </Pressable>
       </Animated.View>
-        <Animated.View style={[labelContainerStyle, styles.labelContainer]}>
-            <Text style={styles.label}>{label}</Text>
-        </Animated.View>
+      <Animated.View style={[labelContainerStyle, styles.labelContainer]}>
+        <Text style={styles.label}>{label}</Text>
+      </Animated.View>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-    labelContainer: {
-       position: 'absolute',
-       alignItems: 'center',
-       width: LABEL_WIDTH,
-    },
-    label: {
-        fontSize: 17,
-        color: 'rgba(128,128,128,0.8)'
-    }
+  labelContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    width: LABEL_WIDTH
+  },
+  label: {
+    fontSize: 17,
+    color: 'rgba(128,128,128,0.8)'
+  }
 })
-
-
+export default FooterElement
