@@ -5,5 +5,5 @@ export const DateToHourMinute = (timestamp: number) => {
 
   const formattedTime = `${hours}:${minutes}`
 
-  return formattedTime // Ensure that the result is a string
+  return formattedTime
 }
