@@ -29,19 +29,19 @@ const HomeScreen = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
 
   const onClickHomeSection = () => {
-    navigation.navigate('GooglePlacesInput')
+    // navigation.navigate('GooglePlacesInput')
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
 
   const onClickExploreNearby = () => {
-    navigation.navigate('Explore')
+    // navigation.navigate('Explore')
   }
   const onClickSuggestions = () => (link: string) => {
-    navigation.navigate(link)
+    // navigation.navigate(link)
   }
   const onClickInstruction = () => (link: string) => {
-    navigation.navigate(link)
+    // navigation.navigate(link)
   }
 
   return (

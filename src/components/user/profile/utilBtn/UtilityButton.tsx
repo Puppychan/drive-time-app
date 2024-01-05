@@ -1,17 +1,17 @@
 import React from 'react'
 import { Text, Image, View } from 'react-native'
 
-import { styles } from './pf.utilBtn.style'
+import { styles } from './utilBtn-style'
 
 const basePath = '../../../../../assets/'
 
-const imagePaths = {
+const imagePaths: Record<string, any> = {
   ic_help: require(`${basePath}ic_help.png`),
   ic_wallet: require(`${basePath}ic_wallet.png`),
   ic_trip: require(`${basePath}ic_time.png`)
 }
 
-export const ProfileRoundedButton = ({ imagePath = 'ic_help', title = 'Help' }) => {
+export const UtilityButton = ({ imagePath = 'ic_help', title = 'Help' }) => {
   const selectedImage = imagePaths[imagePath]
   return (
     <View style={styles.btnBackground}>

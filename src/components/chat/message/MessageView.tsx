@@ -1,7 +1,7 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
 
-import { MessageBubble } from './bubble/msg.bubble.view'
+import { MessageBubble } from './bubble/MessageBubble'
 export const ChatMessageView = () => {
   return (
     <ScrollView>

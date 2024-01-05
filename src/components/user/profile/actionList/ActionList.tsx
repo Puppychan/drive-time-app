@@ -1,11 +1,11 @@
 import React from 'react'
-import { Image, Text, TouchableOpacity } from 'react-native'
+import { Image, ImageStyle, Text, TouchableOpacity } from 'react-native'
 
-import { styles } from './pf.actionList.style'
+import { styles } from './actionList-style'
 
 const basePath = '../../../../../assets/'
 
-const imagePaths = {
+const imagePaths: Record<string, any> = {
   ic_message: require(`${basePath}ic_message.png`),
   ic_gift: require(`${basePath}ic_giftbox.png`),
   ic_voucher: require(`${basePath}ic_promotions.png`),
@@ -14,11 +14,11 @@ const imagePaths = {
   ic_about: require(`${basePath}ic_info.png`)
 }
 
-export const ProfileActionList = ({ imagePath = 'ic_message', title = 'Messages' }) => {
+export const ActionList = ({ imagePath = 'ic_message', title = 'Messages' }) => {
   const selectedImage = imagePaths[imagePath]
   return (
     <TouchableOpacity style={styles.btnContainer}>
-      <Image style={styles.btnIcon} source={selectedImage} />
+      <Image style={styles.btnIcon as ImageStyle} source={selectedImage} />
 
       <Text style={styles.btnText}> {title}</Text>
     </TouchableOpacity>

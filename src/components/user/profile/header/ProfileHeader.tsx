@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text, View, Image } from 'react-native'
 
-import { styles } from './pf.header.style'
+import { styles } from './header-style'
 
-export const ProfileHeaderView = () => {
+export const ProfileHeader = () => {
   return (
     <View style={styles.headerContainer}>
       <View>

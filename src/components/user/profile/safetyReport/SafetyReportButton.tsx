@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
 
-import { styles } from './pf.safety.style'
+import { styles } from './safety-button-style'
 
-export const ProfileSafetyBtn = () => {
+export const SafetyReportButton = () => {
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
