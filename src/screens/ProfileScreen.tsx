@@ -1,4 +1,3 @@
-import React from 'react'
 import { View, ScrollView } from 'react-native'
 
 import { HorizontalDivider } from '@/src/components/divider/HorizontalDivider'
@@ -9,7 +8,7 @@ import { styles } from '../components/user/profile/profile.style'
 import { SafetyReportButton } from '../components/user/profile/safetyReport/SafetyReportButton'
 import { UtilityButton } from '../components/user/profile/utilBtn/UtilityButton'
 
-export const UserProfileView = () => {
+export const UserProfileScreen = () => {
   return (
     <ScrollView>
       <View style={styles.topContainer}>

@@ -5,7 +5,7 @@ import { ChatInputField } from '../components/chat/input/ChatInputField'
 import { ChatMessageView } from '../components/chat/message/MessageView'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 
-export const ChatView = () => {
+export const ChatScreen = () => {
   return (
     <View style={{ height: '100%' }}>
       <ChatHeader />
