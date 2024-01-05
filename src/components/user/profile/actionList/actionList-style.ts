@@ -4,14 +4,15 @@ export const styles = StyleSheet.create({
   btnContainer: {
     height: 70,
     width: '100%',
-    justifyContent: 'start',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
   btnIcon: {
     height: 26,
     width: 26,
-    marginEnd: 25
+    marginEnd: 25,
+    overflow: 'hidden'
   },
   btnText: {
     fontSize: 22,
