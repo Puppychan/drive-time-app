@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'

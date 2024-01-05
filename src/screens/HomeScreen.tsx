@@ -1,5 +1,5 @@
 import { useNavigation } from 'expo-router'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { Appbar, Paragraph, Title } from 'react-native-paper'
 

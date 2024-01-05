@@ -5,9 +5,16 @@ module.exports = function (api) {
     plugins: [
       // Required for expo-router
       'expo-router/babel',
-      'module-resolver',
+      [
+        'module-resolver',
+        {
+          alias: {
+            '@': './src' // Adjust this path to point to your src directory
+          }
+        }
+      ],
       'react-native-paper/babel',
-      ['react-native-reanimated/plugin'],
+      ['react-native-reanimated/plugin']
     ]
   }
 }

@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   btnContainer: {
     height: 70,
     width: '100%',
-    justifyContent: 'start',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
