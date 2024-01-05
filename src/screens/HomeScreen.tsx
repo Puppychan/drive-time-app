@@ -1,4 +1,4 @@
-import { useNavigation } from 'expo-router'
+import { useNavigation, router } from 'expo-router'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { Appbar, Paragraph, Title } from 'react-native-paper'
@@ -29,13 +29,14 @@ const HomeScreen = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
 
   const onClickHomeSection = () => {
-    // navigation.navigate('GooglePlacesInput')
+    // navigation.navigate('Profile')
+    router.push('./(user)/driver/register/driver-profile')
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
 
   const onClickExploreNearby = () => {
-    // navigation.navigate('Explore')
+    router.push('./user/driver/register')
   }
   const onClickSuggestions = () => (link: string) => {
     // navigation.navigate(link)

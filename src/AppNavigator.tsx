@@ -6,6 +6,7 @@ import { SignInScreen } from '@/src/screens/SignInScreen'
 
 import HomeScreen from './screens/HomeScreen'
 import { MapScreen } from './screens/MapScreen'
+import { UserProfileScreen } from './screens/ProfileScreen'
 
 const Stack = createStackNavigator()
 
@@ -21,6 +22,7 @@ const AppNavigator = () => {
       <Stack.Screen name="GooglePlacesInput" component={GooglePlacesInput} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="Map" component={MapScreen} />
+      <Stack.Screen name="Profile" component={UserProfileScreen} />
     </Stack.Navigator>
   )
 }
