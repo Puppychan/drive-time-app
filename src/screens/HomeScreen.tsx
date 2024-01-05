@@ -29,9 +29,8 @@ const HomeScreen = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
 
   const onClickHomeSection = () => {
-    // navigation.navigate('GooglePlacesInput')
+    // navigation.navigate('Profile')
     router.push('./(user)/driver/register/driver-profile')
-
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
