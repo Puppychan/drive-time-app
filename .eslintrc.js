@@ -16,8 +16,5 @@ module.exports = {
   /* for lint-staged */
   globals: {
     __dirname: true
-  },
-  rules: {
-    'no-console': 'off'
   }
 }

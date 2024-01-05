@@ -1,49 +1,29 @@
-import Entypo from '@expo/vector-icons/Entypo'
-import * as Font from 'expo-font'
-import * as SplashScreen from 'expo-splash-screen'
-import React, { useCallback, useEffect, useState } from 'react'
-import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { StyleSheet, Text, View, StatusBar } from 'react-native'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
-import { ChatView } from 'src/components/chat/chat.view'
-
-SplashScreen.preventAutoHideAsync()
-
+import Footer from './src/components/footer/Footer'
+import Signup from './src/screens/Authen/SignUp'
+import ErrorBoundary from './src/components/ErrorBoundary'
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false)
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // Pre-load fonts + Apis
-        await Font.loadAsync(Entypo.font)
-      } catch (e) {
-        console.warn(e)
-      } finally {
-        setAppIsReady(true)
-      }
-    }
-
-    prepare()
-  }, [])
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync()
-    }
-  }, [appIsReady])
-
-  if (!appIsReady) {
-    return null
-  }
   return (
-    <SafeAreaView style={styles.safeArea} onLayout={onLayoutRootView}>
-      <ChatView />
-    </SafeAreaView>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <StatusBar barStyle={'dark-content'} />
+        <NavigationContainer>
+          {/* <Footer/> */}
+          <Signup />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   )
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
