@@ -13,10 +13,13 @@ import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import FullScreenCard from '@/src/components/cards/FullScreenCard'
 import ServiceCardLarge from '@/src/components/cards/ServiceCardLarge'
 import ServiceCardTextInside from '@/src/components/cards/ServiceCardTextInside'
+import { UserProfileScreen } from '@/src/screens/ProfileScreen'
 import { store } from '@/store'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
+
+SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
