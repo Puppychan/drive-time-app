@@ -9,7 +9,7 @@ module.exports = function (api) {
         'module-resolver',
         {
           alias: {
-            '@': './src' // Adjust this path to point to your src directory
+            '@': './' // Adjust this path to point to your src directory
           }
         }
       ],

@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome6';
 
@@ -45,7 +44,7 @@ interface ButtonProps {
   loading?: any
 }
 
-export const CustomButton: FC<ButtonProps> = (props) => {
+export const CustomButton = (props: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
@@ -68,7 +67,7 @@ export const CustomButton: FC<ButtonProps> = (props) => {
   )
 }
 
-export const OutlineButton: FC<ButtonProps> = (props) => {
+export const OutlineButton = (props: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
@@ -100,7 +99,7 @@ interface ToggleButtonProps {
   disabled?: boolean
 }
 
-export const ToggleButton: FC<ToggleButtonProps> = (props) => {
+export const ToggleButton = (props: ToggleButtonProps) => {
   const { value, onValueChange, disabled } = props
   return (
     <Switch

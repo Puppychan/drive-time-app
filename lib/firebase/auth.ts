@@ -7,8 +7,8 @@ import {
   deleteUser
 } from 'firebase/auth'
 
-import { auth, db } from '../firebase/firebase'
 import { AccountType } from '../common/model-type'
+import { auth, db } from '../firebase/firebase'
 import { addUserToDatabase } from '../services/account.service'
 
 export function onAuthStateChanged(cb: any) {
