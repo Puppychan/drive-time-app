@@ -1,6 +1,6 @@
-import { CustomButton } from '@/components/Buttons'
+import { CustomButton } from '@/src/components/button/Buttons'
 import { Colors } from '@/components/Colors'
-import { Input } from '@/components/TextInput'
+import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'

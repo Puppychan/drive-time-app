@@ -1,11 +1,10 @@
 // AppNavigator.js
 import { createStackNavigator } from '@react-navigation/stack'
-import React from 'react'
 
-import { GooglePlacesInput } from 'src/GooglePlacesInput'
-import { SignInScreen } from 'src/SignInScreen'
+import { GooglePlacesInput } from '@/src/screens/GooglePlacesInputScreen'
+import { SignInScreen } from '@/src/screens/SignInScreen'
 
-import { MapScreen } from './MapScreen'
+import { MapScreen } from './screens/MapScreen'
 import HomePage from '../components/HomePage'
 
 const Stack = createStackNavigator()

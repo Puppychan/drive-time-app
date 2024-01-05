@@ -8,10 +8,10 @@ import { Colors } from '@/components/Colors'
 
 import AppNavigator from '@/src/AppNavigator'
 import { store } from '@/store'
-import ServiceCardLarge from '@/components/cards/ServiceCardLarge'
-import FullScreenCard from '@/components/cards/FullScreenCard'
-import { getScreenSize } from '@/common/helpers/default-device-value.helper'
-import ServiceCardTextInside from '@/components/cards/ServiceCardTextInside'
+import ServiceCardLarge from '@/src/components/cards/ServiceCardLarge'
+import FullScreenCard from '@/src/components/cards/FullScreenCard'
+import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
+import ServiceCardTextInside from '@/src/components/cards/ServiceCardTextInside'
 import { useEffect } from 'react'
 
 // Get the full width and height of the screen

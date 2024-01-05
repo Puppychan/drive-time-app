@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { useState } from 'react'
 import { useRouter } from "expo-router"
-import { AppDropDown } from '@/components/DropDownMenu'
-import { CustomButton } from '@/components/Buttons'
+import { AppDropDown } from '@/src/components/menu/DropDownMenu'
+import { CustomButton } from '@/src/components/button/Buttons'
 import { Colors } from '@/components/Colors'
-import { Input } from '@/components/TextInput'
+import { Input } from '@/src/components/input/TextInput'
 
 
 const genderList = [

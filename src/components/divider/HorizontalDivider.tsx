@@ -1,4 +1,3 @@
-import React from 'react'
 import { View, StyleSheet, ColorValue } from 'react-native'
 
 interface HorizontalDividerProps {

@@ -1,29 +1,23 @@
-
 import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  deleteUser
 } from 'firebase/auth'
 
 import { auth, db } from '../firebase/firebase'
+import { AccountType } from '../common/model-type'
 import { addUserToDatabase } from '../services/account.service'
-import { AccountType } from '../model-type'
 
 export function onAuthStateChanged(cb: any) {
   return () => {}
 }
 
-export async function signInWithGoogle() {
-  return
-}
+export async function signInWithGoogle() {}
 
-export async function signOut() {
-  return
-}
-
-
+export async function signOut() {}
 
 export async function createUser(email: string, password: string, otherUserInfo: AccountType) {
   try {
@@ -33,7 +27,11 @@ export async function createUser(email: string, password: string, otherUserInfo:
         const user = userCredential.user
 
         // Add additional user info in Firestore
-        addUserToDatabase(user, otherUserInfo)
+        await addUserToDatabase(user, otherUserInfo).catch((error) => {
+          // TODO: display error message
+          console.error('Error adding user to database:', error)
+          deleteUser(user)
+        })
       })
       .catch((error) => {
         const errorCode = error.code
