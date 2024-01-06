@@ -38,8 +38,8 @@ const HomeScreen = () => {
   const onClickExploreNearby = () => {
     router.push('./user/driver/register')
   }
-  const onClickSuggestions = () => (link: string) => {
-    // navigation.navigate(link)
+  const onClickSuggestions = () => {
+    router.push('./(user)/driver/register/book_driver')
   }
   const onClickInstruction = () => (link: string) => {
     // navigation.navigate(link)
