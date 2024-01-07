@@ -25,6 +25,8 @@ const MapScreen = () => {
   const dispatch = useDispatch()
   const Stack = createStackNavigator()
 
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
+
   useEffect(() => {
     if (!origin || !destination) return
     const getTravelTime = async () => {
@@ -32,7 +34,7 @@ const MapScreen = () => {
         units=imperial
         &origins=${origin.description}
         &destinations=${destination.description}
-        &key=AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M`)
+        &key=${apiKey}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
@@ -41,14 +43,14 @@ const MapScreen = () => {
 
     getTravelTime()
   }),
-    [origin, destination, 'AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M']
+    [origin, destination, apiKey]
 
   return (
     <View style={{ flex: 1 }}>
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
-        style={{ flex: isRideSelectionVisible ? 0.5 : 1 }}
+        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth:'100%'}}
         initialRegion={{
           latitude: destination.location.lat,
           longitude: destination.location.lng,
@@ -64,7 +66,7 @@ const MapScreen = () => {
               destination={destination.description}
               strokeColor="blue"
               strokeWidth={5}
-              apikey="AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M"
+              apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
               onReady={(result) => {
                 // Get the coordinates of the direction
                 const coordinates = result.coordinates
@@ -109,10 +111,10 @@ const MapScreen = () => {
         </View>
       )}
 
-      <View style={{ flex: isRideSelectionVisible ? 0.5 : 0 }}>
+      <View style={{height: isRideSelectionVisible ? '50%' : '0%',width:'100%'}}>
         <Stack.Navigator
           screenOptions={{
-            headerShown: false // Hide the header for all screens in the navigator
+            headerShown: false
           }}
         >
           <Stack.Screen name="RideSelection" component={RideSelectionCard} />
