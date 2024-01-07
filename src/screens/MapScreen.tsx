@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -92,7 +92,21 @@ const MapScreen = () => {
           title="Origin"
           description="Origin Location"
           identifier="origin"
-        />
+        >
+        
+        <View>
+          <Image
+            source={{ uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png' }}
+            style={{ width: 40, height: 40, justifyContent:'center' }} // Adjust the size of the image inside the marker
+            resizeMode='contain'
+          />
+
+          {isLoading && (
+              <LoadingBar/>
+          )}
+        </View>
+        
+        </Marker>
 
         <Marker
           coordinate={{
@@ -105,11 +119,9 @@ const MapScreen = () => {
         />
       </MapView>
 
-      {isLoading && (
-        <View style={styles.loadingContainer}>
-          <LoadingBar />
-        </View>
-      )}
+      
+
+      
 
       <View style={{height: isRideSelectionVisible ? '50%' : '0%',width:'100%'}}>
         <Stack.Navigator
@@ -125,11 +137,10 @@ const MapScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center' // Adjust the background color and opacity as needed
-  }
-})
+  container: {
+    width: 150,
+    height: 150
+  },
+});
 
 export { MapScreen }
