@@ -2,18 +2,16 @@
 import { faker } from '@faker-js/faker'
 import { Timestamp } from 'firebase/firestore'
 
-import { createUser } from '../firebase/auth'
 import { AccountType } from '../common/model-type'
+import { createUser } from '../firebase/auth'
 import { Account, AccountRole, accountRoleList } from '../models/account.model'
-import { uploadQRCodeToStorage } from '../services/account.service'
 
 const generateRandomAccountData = async () => {
   const accountId = faker.string.uuid()
-  const createdDate = Timestamp.fromDate(new Date())
   const birthday = Timestamp.fromDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }))
 
   const randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
-  let workStartDate: Timestamp, qrCode: string
+  let workStartDate: Timestamp
   // generate work start date for admin and driver
   if (randomRole !== AccountRole.Customer) {
     workStartDate = Timestamp.fromDate(
@@ -21,12 +19,6 @@ const generateRandomAccountData = async () => {
     )
   } else {
     workStartDate = Timestamp.fromDate(new Date())
-  }
-  // generate QR code for driver
-  if (randomRole === AccountRole.Driver) {
-    qrCode = await uploadQRCodeToStorage(faker.string.uuid())
-  } else {
-    qrCode = ''
   }
   const randomNumber = faker.number.int({ max: 500 })
 
@@ -38,10 +30,10 @@ const generateRandomAccountData = async () => {
     avatar: faker.image.avatar(),
     email: `user${randomNumber}@mail.com`,
     phone: faker.phone.number(),
-    updatedDate: createdDate,
-    createdDate,
     birthday,
-    role: randomRole
+    role: randomRole,
+    updatedDate: undefined,
+    createdDate: undefined
   }
 
   let subAccount: AccountType
@@ -82,10 +74,13 @@ export const generateRandomAccounts = async (numberOfUsers: number) => {
   }
 
   try {
-    await Promise.all(userCreationPromises)
+    const promiseResult = await Promise.all(userCreationPromises)
+    console.log(promiseResult)
+    process.exit(0)
   } catch (error) {
     console.error('Error creating users:', error)
+    process.exit(1)
   }
 }
 
-const dummyUsers = generateRandomAccounts(2) // Generate 10 users
+generateRandomAccounts(2) // Generate 10 users
