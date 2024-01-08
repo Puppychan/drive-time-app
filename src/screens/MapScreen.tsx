@@ -50,7 +50,7 @@ const MapScreen = () => {
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
-        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth:'100%'}}
+        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth: '100%' }}
         initialRegion={{
           latitude: destination.location.lat,
           longitude: destination.location.lng,
@@ -92,20 +92,26 @@ const MapScreen = () => {
           title="Origin"
           description="Origin Location"
           identifier="origin"
+          style={{width: 100, height: 100, borderRadius: 50}}
         >
-        
-        <View>
-          <Image
-            source={{ uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png' }}
-            style={{ width: 40, height: 40, justifyContent:'center' }} // Adjust the size of the image inside the marker
-            resizeMode='contain'
-          />
+          <View style={{width: 100, alignItems: 'center', marginTop: 45 , position: 'absolute' }}>
 
           {isLoading && (
-              <LoadingBar/>
+            <View style={{ width: 50, height: 50,}}>
+              <LoadingBar />
+            </View>
           )}
-        </View>
-        
+          <View style={{position: 'absolute'}}>
+            <Image
+              source={{
+                uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
+              }}
+              style={{ width: 40, height: 40, justifyContent: 'center' }} // Adjust the size of the image inside the marker
+              resizeMode="contain"
+            />
+          </View>
+          </View>
+          
         </Marker>
 
         <Marker
@@ -119,11 +125,7 @@ const MapScreen = () => {
         />
       </MapView>
 
-      
-
-      
-
-      <View style={{height: isRideSelectionVisible ? '50%' : '0%',width:'100%'}}>
+      <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
         <Stack.Navigator
           screenOptions={{
             headerShown: false
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
   container: {
     width: 150,
     height: 150
-  },
-});
+  }
+})
 
 export { MapScreen }

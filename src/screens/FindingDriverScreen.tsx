@@ -10,10 +10,10 @@ const FindingDriverScreen: React.FC<YourComponentProps> = () => {
       <Pulse
         color="orange"
         numPulses={3}
-        diameter={120}
+        diameter={100}
         speed={20}
         duration={2000}
-        initialDiameter={5}
+        initialDiameter={20}
       />
     </View>
   );
