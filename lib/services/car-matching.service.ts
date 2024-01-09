@@ -1,162 +1,179 @@
-// Ref: https://mediatum.ub.tum.de/doc/1616020/b5oesenkgbt2lvf5r98ywiosv.ICMSAO19_Dynamic_CarPassenger_Matching_based_on_Tabu_SeRouteh_using_Global_Optimization_with_Time_Windows.pdf
+// Interface
+interface mLocation {
+  id: string
+  x: number
+  y: number
+}
 
-interface Route {
+interface CarRequest {
+  pickup: mLocation
+  delivery: mLocation
+  pickUpTime: number
+}
+
+interface Arc {
   from: string
   to: string
   cost: number
 }
 
-interface Passenger {
+interface Car {
   id: string
-  pickUpLocation: string
-  pickUpTime: number
+  mLocation: mLocation
 }
 
 interface DissatisfactionModel {
   piecewiseLinearDissatisfaction: (deltaT: number) => number
 }
 
-// Route
 interface Solution {
-  x: { [key: string]: { [key: string]: number } }
+  x: { [carId: string]: { [mLocationId: string]: number } }
 }
 
-// List of cars, pickups and destinations
-const C = ['C1', 'C2', 'C3']
-const P = ['P1', 'P2', 'P3']
-const D = ['D1', 'D2', 'D3']
+// Get all routes
+function generateAllArcs(locations: mLocation[]): Arc[] {
+  const arcs: Arc[] = []
 
-const vertices = [...C, ...P, ...D]
+  // Filter out arcs only between customer locations (C) and pickup locations (P)
+  const customerLocations = locations.filter((loc) => loc.id.startsWith('C'))
+  const pickupLocations = locations.filter((loc) => loc.id.startsWith('P'))
 
-// E.g.: 1 is valid route, else 0
-const solutions: Solution = {
-  x: {
-    C1: {
-      P1: 1,
-      P2: 0,
-      P3: 1,
-      D1: 1,
-      D2: 1,
-      D3: 1
-    },
-    C2: {
-      P1: 1,
-      P2: 1,
-      P3: 1,
-      D1: 1,
-      D2: 1,
-      D3: 1
-    },
-    C3: {
-      P1: 1,
-      P2: 0,
-      P3: 1,
-      D1: 0,
-      D2: 1,
-      D3: 1
+  for (const fromLocation of customerLocations) {
+    for (const toLocation of pickupLocations) {
+      const cost = Math.floor(Math.random() * 10) + 1
+      arcs.push({ from: fromLocation.id, to: toLocation.id, cost })
     }
   }
+
+  return arcs
 }
 
-// Get all possible routes
-const generateAllRoutes = (C: string[], P: string[], D: string[]): Route[] => {
-  const allRoutes: Route[] = []
+// Convert Request and car location to single Location
 
-  // Add Routes from C to P
-  C.forEach((c) => {
-    P.forEach((p) => {
-      const cost = 1 // The same cost
-      allRoutes.push({ from: c, to: p, cost })
-    })
+function generateLocations(cars: Car[], requests: CarRequest[]): mLocation[] {
+  const locations: mLocation[] = []
+
+  // Add pickup and delivery locations
+  requests.forEach((request) => {
+    locations.push(request.pickup, request.delivery)
   })
 
-  // Add Routes from P to D
-  P.forEach((p) => {
-    D.forEach((d) => {
-      const cost = 1
-      allRoutes.push({ from: p, to: d, cost })
-    })
+  // Add car locations
+  cars.forEach((car) => {
+    locations.push(car.mLocation)
   })
 
-  // Add Routes from D to P
-  D.forEach((d) => {
-    P.forEach((p) => {
-      const cost = 1
-      allRoutes.push({ from: d, to: p, cost })
-    })
-  })
+  // Remove duplicate locations based on ID
+  const uniqueLocations = Array.from(new Set(locations.map((loc) => loc.id)))
+    .map((id) => locations.find((loc) => loc.id === id)!)
+    .filter(Boolean)
 
-  return allRoutes
+  return uniqueLocations
 }
 
-const allRoutes = generateAllRoutes(C, P, D)
+// Following NNP algorithm
+function generateInitialSolution(cars: Car[], requests: CarRequest[], allArcs: Arc[]): Solution {
+  const solution: Solution = { x: {} }
 
-const Passengers: Passenger[] = [
-  { id: '1', pickUpLocation: 'P1', pickUpTime: 5 },
-  { id: '2', pickUpLocation: 'P2', pickUpTime: 18 },
-  { id: '3', pickUpLocation: 'P3', pickUpTime: 10 }
-]
+  cars.forEach((car) => {
+    solution.x[car.id] = {}
+  })
 
-// Calculate penalty for let passenger waiting
-const dissatisfactionModel: DissatisfactionModel = {
-  piecewiseLinearDissatisfaction: (deltaT: number) => {
-    if (deltaT <= 2) {
-      return 0
+  requests.forEach((request) => {
+    const nearestCar = findNearestCar(request.pickup, cars, allArcs, solution)
+
+    if (nearestCar) {
+      const { id: carId } = nearestCar
+      // Check if the car has available capacity
+      if (Object.keys(solution.x[carId]).length === 0) {
+        solution.x[carId][request.pickup.id] = 1
+        solution.x[carId][request.delivery.id] = 1
+      } else {
+        // Skip this request if the car already has a request assigned
+        console.warn(`Skipping request ${request.pickup.id} as car ${carId} is already assigned`)
+      }
+    } else {
+      throw new Error('Not enough cars to fulfill requests')
     }
+  })
 
-    const deltaTInSeconds = deltaT * 60
+  return solution
+}
 
-    const penalty =
-      deltaT <= 5
-        ? deltaTInSeconds * 60
-        : deltaT <= 7
-          ? deltaTInSeconds * 60 * 2
-          : deltaTInSeconds * 60 * 4
+function findNearestCar(
+  pickupLocation: mLocation,
+  cars: Car[],
+  allArcs: Arc[],
+  solution: Solution
+): Car | null {
+  let nearestCar: Car | null = null
+  let nearestDistance = Infinity
 
-    return penalty
+  for (const car of cars) {
+    // Only consider cars without existing requests
+    if (Object.keys(solution.x[car.id]).length === 0) {
+      const arc = allArcs.find((a) => a.from === car.mLocation.id && a.to === pickupLocation.id)
+
+      if (arc && arc.cost < nearestDistance) {
+        nearestCar = car
+        nearestDistance = arc.cost
+      }
+    }
   }
+
+  return nearestCar
+}
+function calculatePiecewiseLinearDissatisfaction(waitingTime: number) {
+  if (waitingTime <= 2) {
+    return 0
+  }
+
+  const deltaTInSeconds = waitingTime * 60
+
+  const penalty =
+    waitingTime <= 5
+      ? deltaTInSeconds * 60
+      : waitingTime <= 7
+        ? deltaTInSeconds * 60 * 2
+        : deltaTInSeconds * 60 * 4
+
+  return penalty
 }
 
 const calculateObjectiveFunction = (
   solution: Solution,
-  Routes: Route[],
-  Passengers: Passenger[]
+  arcs: Arc[],
+  requests: CarRequest[]
 ): number => {
-  // Operational cost
-  const T1 = C.reduce((acc, v) => {
-    return (
-      acc +
-      vertices.reduce((accA, a) => {
-        return (
-          accA +
-          vertices.reduce((accB, b) => {
-            const Route = Routes.find((Route) => Route.from === a && Route.to === b)
-            const xValueA = solution.x[v][a]
-            const xValueB = solution.x[v][b]
-            const cost = Route ? Route.cost : 0
+  // T1 calculation (Operational cost)
+  const operationalCost = Object.keys(solution.x).reduce((accCar, carId) => {
+    const car = solution.x[carId]
 
-            if (xValueA !== undefined && xValueB !== undefined) {
-              return accB + xValueA * xValueB * cost
-            }
+    const carCost = Object.keys(car).reduce((accLocation, locationId) => {
+      const location = car[locationId]
+      // Check if it's a pickup location
+      if (location === 1 && locationId.startsWith('P')) {
+        // Find the corresponding arc cost
+        const arc = arcs.find((route) => route.from === carId && route.to === locationId)
 
-            return accB
-          }, 0)
-        )
-      }, 0)
-    )
+        if (arc) {
+          return accLocation + arc.cost
+        }
+      }
+
+      return accLocation
+    }, 0)
+
+    return accCar + carCost
   }, 0)
 
-  // Penalty
-  const T2 = P.reduce((acc, i) => {
-    const Passenger = Passengers.find((c) => c.pickUpLocation === i)
-    if (Passenger) {
-      const deltaT = Passenger.pickUpTime
-      return acc + dissatisfactionModel.piecewiseLinearDissatisfaction(deltaT)
-    }
-    return acc
+  // T2 calculation (Penalty)
+  const penalty = requests.reduce((acc, request) => {
+    const deltaT = request.pickUpTime
+    return acc + calculatePiecewiseLinearDissatisfaction(deltaT)
   }, 0)
 
-  return T1 + T2
+  return operationalCost + penalty
 }
 
 // Get all neighborhood of a solution
@@ -197,35 +214,48 @@ function generateSwapNeighbors(currentSolution: Solution): Solution[] {
 
   return swapNeighbors
 }
-
-// Moves the last request of one car’s route to the end of another car’s route
 function generateShiftNeighbors(currentSolution: Solution): Solution[] {
-  const shiftNeighbors: Solution[] = []
+  const shiftNeighbors: Solution[] = [];
 
   for (const carId1 of Object.keys(currentSolution.x)) {
     for (const carId2 of Object.keys(currentSolution.x)) {
       if (carId1 !== carId2) {
         const pickupLocations1 = Object.keys(currentSolution.x[carId1]).filter((loc) =>
           loc.startsWith('P')
-        )
+        );
 
-        const lastPickupInCar1 = pickupLocations1[pickupLocations1.length - 1]
+        const lastPickupInCar1 = pickupLocations1[pickupLocations1.length - 1];
 
-        if (lastPickupInCar1) {
-          const neighbor = JSON.parse(JSON.stringify(currentSolution))
-          neighbor.x[carId1][lastPickupInCar1] = 0
-          neighbor.x[carId2][lastPickupInCar1] = 1
-          shiftNeighbors.push(neighbor)
+        // Check if there's more than one pickup location in carId1
+        if (lastPickupInCar1 && pickupLocations1.length > 1) {
+          const neighbor = JSON.parse(JSON.stringify(currentSolution));
+          neighbor.x[carId1][lastPickupInCar1] = 0;
+          neighbor.x[carId2][lastPickupInCar1] = 1;
+
+          // Check if each car still has at least one pickup after the shift
+          const car1PickupsRemaining = pickupLocations1.filter(
+            (loc) => neighbor.x[carId1][loc] === 1
+          );
+          const car2PickupsRemaining = Object.keys(neighbor.x[carId2]).filter(
+            (loc) => loc.startsWith('P') && neighbor.x[carId2][loc] === 1
+          );
+
+          if (car1PickupsRemaining.length > 0 && car2PickupsRemaining.length > 0) {
+            shiftNeighbors.push(neighbor);
+          }
         }
       }
     }
   }
 
-  return shiftNeighbors
+  return shiftNeighbors;
 }
+
 
 // transforms the solution by exchanging requests of two different cars’ routes
 // Each car guaranteed to have atleast 1 pickup after interchange
+// transforms the solution by exchanging requests of two different cars’ routes
+// Each car guaranteed to have at least 1 pickup after interchange
 function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
   const interchangeNeighbors: Solution[] = []
 
@@ -267,10 +297,10 @@ function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
 }
 
 // Search best solution
-const tabuSeRouteh = (
+const tabuSearchRoute = (
   initialSolution: Solution,
-  Routes: Route[],
-  Passengers: Passenger[],
+  Routes: Arc[],
+  Request: CarRequest[],
   maxIterations: number = 100
 ): Solution => {
   let bestFoundSolution: Solution = initialSolution
@@ -285,9 +315,9 @@ const tabuSeRouteh = (
     // Evaluate neighbors and choose the best non-tabu neighbor
     for (const neighbor of neighbors) {
       if (!tabuList.includes(neighbor)) {
-        const neighborObjective = calculateObjectiveFunction(neighbor, Routes, Passengers)
+        const neighborObjective = calculateObjectiveFunction(neighbor, Routes, Request)
         const bestNeighborObjective = bestNeighbor
-          ? calculateObjectiveFunction(bestNeighbor, Routes, Passengers)
+          ? calculateObjectiveFunction(bestNeighbor, Routes, Request)
           : Infinity
 
         if (neighborObjective < bestNeighborObjective) {
@@ -307,8 +337,8 @@ const tabuSeRouteh = (
       }
 
       // Update if the new solution is better
-      const currentObjective = calculateObjectiveFunction(currentSolution, Routes, Passengers)
-      const bestObjective = calculateObjectiveFunction(bestFoundSolution, Routes, Passengers)
+      const currentObjective = calculateObjectiveFunction(currentSolution, Routes, Request)
+      const bestObjective = calculateObjectiveFunction(bestFoundSolution, Routes, Request)
 
       if (currentObjective < bestObjective) {
         bestFoundSolution = currentSolution
@@ -322,5 +352,22 @@ const tabuSeRouteh = (
 }
 
 // Test
-const bestSolution = tabuSeRouteh(solutions, allRoutes, Passengers)
+const cars: Car[] = [
+  { id: 'C1', mLocation: { id: 'C1', x: 0, y: 0 } },
+  { id: 'C2', mLocation: { id: 'C2', x: 1, y: 2 } },
+  { id: 'C3', mLocation: { id: 'C3', x: 0, y: 2 } }
+]
+
+const requests: CarRequest[] = [
+  { pickup: { id: 'P1', x: 2, y: 2 }, delivery: { id: 'D1', x: 3, y: 3 }, pickUpTime: 10 },
+  { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 }, pickUpTime: 5 },
+  { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 }, pickUpTime: 4 }
+]
+
+const locations = generateLocations(cars, requests)
+const arcs = generateAllArcs(locations)
+const initialSolution = generateInitialSolution(cars, requests, arcs)
+
+// Test
+const bestSolution = tabuSearchRoute(initialSolution, arcs, requests)
 console.log('Best Solution:', bestSolution)
