@@ -52,7 +52,8 @@ const generateRandomAccountData = async () => {
         ...tempAccount,
         workStartDate,
         isBan: false,
-        banTime: undefined
+        banTime: undefined,
+        transport: undefined // register later
       }
       break
     case AccountRole.Admin:

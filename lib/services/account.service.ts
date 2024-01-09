@@ -40,7 +40,7 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
 export async function handleUserCreationError(user: User, parentError: any) {
   // Implement cleanup logic here.
   await deleteUser(user)
-    .then((value) => {
+    .then((_value) => {
       const errorCode = parentError?.code
       return new ResponseDto(
         errorCode ?? ResponseCode.BAD_GATEWAY,

@@ -9,8 +9,7 @@
     "web": "expo start --web",
     "check-typescript": "tsc --noEmit",
     "check-eslint": "eslint './**/*{js,ts,jsx,tsx}'",
-    "lint": "npm run check-typescript && npm run check-eslint",
-    "data-account": "npx ts-node -r tsconfig-paths/register ./lib/data/generate-account.data.ts"
+    "lint": "npm run check-typescript && npm run check-eslint"
   },
   "dependencies": {
     "@react-native-community/google-signin": "^5.0.0",
