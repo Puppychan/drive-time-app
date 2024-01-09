@@ -8,7 +8,7 @@
       ],
       "@components/*": [
         "components/*"
-      ]
+      ],
     },
     "jsx": "react-jsx",
     "strictNullChecks": true

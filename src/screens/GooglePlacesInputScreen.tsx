@@ -8,10 +8,11 @@ import { useDispatch } from 'react-redux'
 import { setOrigin, setDestination } from '@/src/slices/navSlice'
 
 import { styles } from '../components/google-place-input/google-places-input.style' // Import the styles
+import { useRouter } from 'expo-router'
 
 const GooglePlacesInput = () => {
-  const navigation = useNavigation()
   const dispatch = useDispatch()
+  const router = useRouter()
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,7 +21,7 @@ const GooglePlacesInput = () => {
         <GooglePlacesAutocomplete
           placeholder="Where From ..."
           query={{
-            key: 'AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M',
+            key: 'AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps',
             language: 'en'
           }}
           onPress={(data, details = null) => {
@@ -49,7 +50,7 @@ const GooglePlacesInput = () => {
         <GooglePlacesAutocomplete
           placeholder="Where To ..."
           query={{
-            key: 'AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M',
+            key: 'AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps',
             language: 'en'
           }}
           onPress={(data, details = null) => {
@@ -59,7 +60,7 @@ const GooglePlacesInput = () => {
                 description: data.description
               })
             )
-            navigation.navigate('Map' as never)
+            router.push('./map')
           }}
           onFail={(error) => console.error('Autocomplete failed:', error)}
           nearbyPlacesAPI="GooglePlacesSearch"
@@ -70,6 +71,7 @@ const GooglePlacesInput = () => {
             textInput: styles.textInput,
             predefinedPlacesDescription: styles.predefinedPlacesDescription
           }}
+          enablePoweredByContainer={false}
         />
       </View>
     </SafeAreaView>

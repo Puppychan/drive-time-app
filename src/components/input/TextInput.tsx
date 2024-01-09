@@ -1,9 +1,9 @@
 import { useState, FC } from 'react'
 import { TextInput, View, StyleSheet } from 'react-native'
 
+import { Label } from './Label'
 import { Colors } from '../../../components/Colors'
 import { Constant } from '../../../components/Constant'
-import { Label } from './Label'
 
 const InputStyle = StyleSheet.create({
   container: {
@@ -38,7 +38,7 @@ interface TextInputProps {
   style?: any
 }
 
-export const Input: FC<TextInputProps> = (props) => {
+export const Input = (props: TextInputProps) => {
   const {
     label,
     placeHolder,
@@ -61,7 +61,7 @@ export const Input: FC<TextInputProps> = (props) => {
         value={value}
         editable={editable}
         secureTextEntry={secureTextEntry}
-        onChangeText={(text) => onChangeText(text)}
+        onChangeText={(text: string) => onChangeText(text)}
         underlineColorAndroid="transparent"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

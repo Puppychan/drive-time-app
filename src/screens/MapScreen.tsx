@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import React, { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { useEffect, useRef } from 'react'
+import { Image, StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,6 +25,8 @@ const MapScreen = () => {
   const dispatch = useDispatch()
   const Stack = createStackNavigator()
 
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
+
   useEffect(() => {
     if (!origin || !destination) return
     const getTravelTime = async () => {
@@ -32,7 +34,7 @@ const MapScreen = () => {
         units=imperial
         &origins=${origin.description}
         &destinations=${destination.description}
-        &key=AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M`)
+        &key=${apiKey}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
@@ -41,14 +43,14 @@ const MapScreen = () => {
 
     getTravelTime()
   }),
-    [origin, destination, 'AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M']
+    [origin, destination, apiKey]
 
   return (
     <View style={{ flex: 1 }}>
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
-        style={{ flex: isRideSelectionVisible ? 0.5 : 1 }}
+        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth: '100%' }}
         initialRegion={{
           latitude: destination.location.lat,
           longitude: destination.location.lng,
@@ -64,7 +66,7 @@ const MapScreen = () => {
               destination={destination.description}
               strokeColor="blue"
               strokeWidth={5}
-              apikey="AIzaSyDgYL3Qv0aHXX3thFoyai6djprcF4Kla3M"
+              apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
               onReady={(result) => {
                 // Get the coordinates of the direction
                 const coordinates = result.coordinates
@@ -90,7 +92,27 @@ const MapScreen = () => {
           title="Origin"
           description="Origin Location"
           identifier="origin"
-        />
+          style={{width: 100, height: 100, borderRadius: 50}}
+        >
+          <View style={{width: 100, alignItems: 'center', marginTop: 45 , position: 'absolute' }}>
+
+          {isLoading && (
+            <View style={{ width: 50, height: 50,}}>
+              <LoadingBar />
+            </View>
+          )}
+          <View style={{position: 'absolute'}}>
+            <Image
+              source={{
+                uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
+              }}
+              style={{ width: 40, height: 40, justifyContent: 'center' }} // Adjust the size of the image inside the marker
+              resizeMode="contain"
+            />
+          </View>
+          </View>
+          
+        </Marker>
 
         <Marker
           coordinate={{
@@ -103,16 +125,10 @@ const MapScreen = () => {
         />
       </MapView>
 
-      {isLoading && (
-        <View style={styles.loadingContainer}>
-          <LoadingBar />
-        </View>
-      )}
-
-      <View style={{ flex: isRideSelectionVisible ? 0.5 : 0 }}>
+      <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
         <Stack.Navigator
           screenOptions={{
-            headerShown: false // Hide the header for all screens in the navigator
+            headerShown: false
           }}
         >
           <Stack.Screen name="RideSelection" component={RideSelectionCard} />
@@ -123,10 +139,9 @@ const MapScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center' // Adjust the background color and opacity as needed
+  container: {
+    width: 150,
+    height: 150
   }
 })
 

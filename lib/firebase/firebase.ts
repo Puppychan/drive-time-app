@@ -2,7 +2,6 @@ import { initializeApp, getApps } from 'firebase/app'
 import { getAuth, signOut } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
-import 'dotenv/config'
 
 export const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,

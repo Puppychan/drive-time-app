@@ -1,5 +1,4 @@
 import { Picker } from '@react-native-picker/picker'
-import { FC } from 'react'
 import { View, StyleSheet } from 'react-native'
 
 import { Constant } from '../../../components/Constant'
@@ -32,7 +31,7 @@ interface DropDownProps {
   setSelectedValue?: any
 }
 
-export const AppDropDown: FC<DropDownProps> = (props) => {
+export const AppDropDown = (props: DropDownProps) => {
   const { label, options, required, selectedValue, setSelectedValue } = props
   return (
     <View style={DropDownStyle.container}>
@@ -41,7 +40,7 @@ export const AppDropDown: FC<DropDownProps> = (props) => {
         <Picker
           style={DropDownStyle.picker}
           selectedValue={selectedValue}
-          onValueChange={(value) => setSelectedValue(value)}
+          onValueChange={(value: any) => setSelectedValue(value)}
           mode={'dropdown'}
         >
           {options?.map((item) => (

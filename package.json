@@ -10,7 +10,7 @@
     "check-typescript": "tsc --noEmit",
     "check-eslint": "eslint './**/*{js,ts,jsx,tsx}'",
     "lint": "npm run check-typescript && npm run check-eslint",
-    "data-account": "npx ts-node ./lib/data/generate-account.data.ts"
+    "data-account": "npx ts-node -r tsconfig-paths/register ./lib/data/generate-account.data.ts"
   },
   "dependencies": {
     "@react-native-community/google-signin": "^5.0.0",
@@ -25,7 +25,6 @@
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "d3-shape": "^3.2.0",
-    "dotenv": "^16.3.1",
     "escape-string-regexp": "^5.0.0",
     "expo": "~49.0.15",
     "expo-checkbox": "~2.4.0",
@@ -41,9 +40,11 @@
     "react-dom": "18.2.0",
     "react-native": "0.72.5",
     "react-native-animatable": "^1.4.0",
+    "react-native-config": "^1.5.1",
     "react-native-dotenv": "^3.4.9",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-google-places-autocomplete": "^2.5.6",
+    "react-native-image-picker": "^7.1.0",
     "react-native-maps": "1.7.1",
     "react-native-maps-directions": "^1.9.0",
     "react-native-paper": "^4.12.6",
@@ -79,7 +80,7 @@
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.1.1",
-    "react-native-view-shot": "^3.8.0",
+    "react-native-view-shot": "3.7.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
