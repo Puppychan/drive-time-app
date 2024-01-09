@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import { useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,7 +50,7 @@ const MapScreen = () => {
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
-        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth:'100%'}}
+        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth: '100%' }}
         initialRegion={{
           latitude: destination.location.lat,
           longitude: destination.location.lng,
@@ -92,7 +92,27 @@ const MapScreen = () => {
           title="Origin"
           description="Origin Location"
           identifier="origin"
-        />
+          style={{width: 100, height: 100, borderRadius: 50}}
+        >
+          <View style={{width: 100, alignItems: 'center', marginTop: 45 , position: 'absolute' }}>
+
+          {isLoading && (
+            <View style={{ width: 50, height: 50,}}>
+              <LoadingBar />
+            </View>
+          )}
+          <View style={{position: 'absolute'}}>
+            <Image
+              source={{
+                uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
+              }}
+              style={{ width: 40, height: 40, justifyContent: 'center' }} // Adjust the size of the image inside the marker
+              resizeMode="contain"
+            />
+          </View>
+          </View>
+          
+        </Marker>
 
         <Marker
           coordinate={{
@@ -105,13 +125,7 @@ const MapScreen = () => {
         />
       </MapView>
 
-      {isLoading && (
-        <View style={styles.loadingContainer}>
-          <LoadingBar />
-        </View>
-      )}
-
-      <View style={{height: isRideSelectionVisible ? '50%' : '0%',width:'100%'}}>
+      <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
         <Stack.Navigator
           screenOptions={{
             headerShown: false
@@ -125,10 +139,9 @@ const MapScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center' // Adjust the background color and opacity as needed
+  container: {
+    width: 150,
+    height: 150
   }
 })
 
