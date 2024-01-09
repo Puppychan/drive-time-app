@@ -215,42 +215,41 @@ function generateSwapNeighbors(currentSolution: Solution): Solution[] {
   return swapNeighbors
 }
 function generateShiftNeighbors(currentSolution: Solution): Solution[] {
-  const shiftNeighbors: Solution[] = [];
+  const shiftNeighbors: Solution[] = []
 
   for (const carId1 of Object.keys(currentSolution.x)) {
     for (const carId2 of Object.keys(currentSolution.x)) {
       if (carId1 !== carId2) {
         const pickupLocations1 = Object.keys(currentSolution.x[carId1]).filter((loc) =>
           loc.startsWith('P')
-        );
+        )
 
-        const lastPickupInCar1 = pickupLocations1[pickupLocations1.length - 1];
+        const lastPickupInCar1 = pickupLocations1[pickupLocations1.length - 1]
 
         // Check if there's more than one pickup location in carId1
         if (lastPickupInCar1 && pickupLocations1.length > 1) {
-          const neighbor = JSON.parse(JSON.stringify(currentSolution));
-          neighbor.x[carId1][lastPickupInCar1] = 0;
-          neighbor.x[carId2][lastPickupInCar1] = 1;
+          const neighbor = JSON.parse(JSON.stringify(currentSolution))
+          neighbor.x[carId1][lastPickupInCar1] = 0
+          neighbor.x[carId2][lastPickupInCar1] = 1
 
           // Check if each car still has at least one pickup after the shift
           const car1PickupsRemaining = pickupLocations1.filter(
             (loc) => neighbor.x[carId1][loc] === 1
-          );
+          )
           const car2PickupsRemaining = Object.keys(neighbor.x[carId2]).filter(
             (loc) => loc.startsWith('P') && neighbor.x[carId2][loc] === 1
-          );
+          )
 
           if (car1PickupsRemaining.length > 0 && car2PickupsRemaining.length > 0) {
-            shiftNeighbors.push(neighbor);
+            shiftNeighbors.push(neighbor)
           }
         }
       }
     }
   }
 
-  return shiftNeighbors;
+  return shiftNeighbors
 }
-
 
 // transforms the solution by exchanging requests of two different cars’ routes
 // Each car guaranteed to have atleast 1 pickup after interchange
