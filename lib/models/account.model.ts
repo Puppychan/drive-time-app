@@ -6,7 +6,7 @@ export enum AccountRole {
   Admin = 'Admin'
 }
 
-export const accountRoleList = [AccountRole.Admin, AccountRole.Customer, AccountRole.Driver];
+export const accountRoleList = [AccountRole.Admin, AccountRole.Driver, AccountRole.Customer]
 
 export interface Account {
   userId: string

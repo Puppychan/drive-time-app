@@ -76,7 +76,7 @@
     - Run `npm install -g expo-cli`
     - Run `expo-cli upgrade`
     - Also run `npm update`
-    - Now rerun `npm run android`
+    - Now rerun `npx expo start`
 
 ### Other Commands Usage
 

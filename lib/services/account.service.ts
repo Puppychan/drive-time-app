@@ -1,55 +1,22 @@
 import { User, deleteUser } from 'firebase/auth'
 import { Timestamp, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import * as QRCode from 'qrcode'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
 
 import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
-import { db, storage } from '../firebase/firebase'
+import { db } from '../firebase/firebase'
 import { AccountRole } from '../models/account.model'
 
-// Function to generate QR Code and upload it
-const generateDriverQRCode = async (driverId: string) => {
-  try {
-    // Generate QR Code as Data URL
-    const qrCodeDataUrl = await QRCode.toDataURL(driverId)
-
-    // Convert Data URL to Blob
-    const blob = await (await fetch(qrCodeDataUrl)).blob()
-
-    // Create a reference for the QR code in Firebase Storage
-    const storageRef = ref(storage, `qrcodes/${driverId}.png`)
-
-    // Upload the Blob to Firebase Storage
-    await uploadBytes(storageRef, blob)
-
-    // Get the public download URL
-    const downloadURL = await getDownloadURL(storageRef)
-
-    return downloadURL
-  } catch (error) {
-    console.error('Error generating and uploading QR code:', error)
-    throw error
-  }
-}
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
-    // generate and validate based on role
-    let qrCode: string | null = null
-    if (additionalUserInfo.role === AccountRole.Driver && 'QRCode' in additionalUserInfo) {
-      qrCode = await generateDriverQRCode(user.uid)
-      additionalUserInfo.QRCode = qrCode
-    }
     // validate
     const isUnique = await isUniqueUser(
       user.uid,
       additionalUserInfo.email,
       additionalUserInfo.username,
-      additionalUserInfo.role,
-      qrCode
+      additionalUserInfo.role
     )
     if (!isUnique) {
       throw new Error(`User with email ${additionalUserInfo.email} already exists`)

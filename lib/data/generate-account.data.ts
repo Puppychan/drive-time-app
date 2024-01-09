@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { faker } from '@faker-js/faker'
 import { Timestamp } from 'firebase/firestore'
 
@@ -7,11 +6,12 @@ import { createUser } from '../firebase/auth'
 import { Account, AccountRole, accountRoleList } from '../models/account.model'
 
 const generateRandomAccountData = async () => {
+  console.log('Starting create account data')
   const accountId = faker.string.uuid()
   const birthday = Timestamp.fromDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }))
 
-  const randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
   let workStartDate: Timestamp
+  const randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
   // generate work start date for admin and driver
   if (randomRole !== AccountRole.Customer) {
     workStartDate = Timestamp.fromDate(
@@ -20,6 +20,8 @@ const generateRandomAccountData = async () => {
   } else {
     workStartDate = Timestamp.fromDate(new Date())
   }
+  // randomRole = AccountRole.Driver
+  // workStartDate = Timestamp.fromDate(new Date())
   const randomNumber = faker.number.int({ max: 500 })
 
   const tempAccount: Account = {
@@ -49,7 +51,6 @@ const generateRandomAccountData = async () => {
       subAccount = {
         ...tempAccount,
         workStartDate,
-        QRCode: '',
         isBan: false,
         banTime: undefined
       }
@@ -74,12 +75,13 @@ export const generateRandomAccounts = async (numberOfUsers: number) => {
   }
 
   try {
-    const promiseResult = await Promise.all(userCreationPromises)
-    console.log(promiseResult)
-    process.exit(0)
+    await Promise.all(userCreationPromises)
+
+    return 'Successfully added user'
+    // process.exit(0)
   } catch (error) {
-    console.error('Error creating users:', error)
-    process.exit(1)
+    return `Error adding user ` + error
+    // process.exit(1)
   }
 }
 
