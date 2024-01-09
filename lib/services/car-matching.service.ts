@@ -1,4 +1,4 @@
-// Interface
+// Interfaces
 interface mLocation {
   id: string
   x: number
@@ -20,10 +20,6 @@ interface Arc {
 interface Car {
   id: string
   mLocation: mLocation
-}
-
-interface DissatisfactionModel {
-  piecewiseLinearDissatisfaction: (deltaT: number) => number
 }
 
 interface Solution {
@@ -49,7 +45,6 @@ function generateAllArcs(locations: mLocation[]): Arc[] {
 }
 
 // Convert Request and car location to single Location
-
 function generateLocations(cars: Car[], requests: CarRequest[]): mLocation[] {
   const locations: mLocation[] = []
 
@@ -123,6 +118,8 @@ function findNearestCar(
 
   return nearestCar
 }
+
+//Calculate time penalty
 function calculatePiecewiseLinearDissatisfaction(waitingTime: number) {
   if (waitingTime <= 2) {
     return 0
@@ -214,6 +211,9 @@ function generateSwapNeighbors(currentSolution: Solution): Solution[] {
 
   return swapNeighbors
 }
+
+// shift moves the last request of one car’s route to the end of another car’s route
+// Each car guaranteed to have atleast 1 pickup after shift
 function generateShiftNeighbors(currentSolution: Solution): Solution[] {
   const shiftNeighbors: Solution[] = []
 
@@ -253,8 +253,6 @@ function generateShiftNeighbors(currentSolution: Solution): Solution[] {
 
 // transforms the solution by exchanging requests of two different cars’ routes
 // Each car guaranteed to have atleast 1 pickup after interchange
-// transforms the solution by exchanging requests of two different cars’ routes
-// Each car guaranteed to have at least 1 pickup after interchange
 function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
   const interchangeNeighbors: Solution[] = []
 
