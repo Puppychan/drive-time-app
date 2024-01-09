@@ -1,17 +1,21 @@
-module.exports = function(api) {
-  api.cache(true);
+module.exports = function (api) {
+  api.cache(true)
   return {
-    presets: ['babel-preset-expo'],
+    presets: ['babel-preset-expo', 'module:metro-react-native-babel-preset'],
     plugins: [
+      'module:react-native-dotenv',
+      // Required for expo-router
+      'expo-router/babel',
       [
         'module-resolver',
         {
-          root: ['.'],
           alias: {
-            src: './src'
+            '@': './' // Adjust this path to point to your src directory
           }
         }
       ],
+      'react-native-paper/babel',
+      ['react-native-reanimated/plugin']
     ]
-  };
-};
+  }
+}

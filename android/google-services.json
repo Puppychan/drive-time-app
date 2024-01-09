@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "228927602830",
+    "project_id": "drive-time-9c8e7",
+    "storage_bucket": "drive-time-9c8e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228927602830:android:fded2c26247eb45b0a09df",
+        "android_client_info": {
+          "package_name": "com.drivetimeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228927602830-8jdp1nts8t75igmojssev3cjo43csngi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDDmAWaSHgm9ljOkiU6zk2W97rGE7SyYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228927602830-8jdp1nts8t75igmojssev3cjo43csngi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
