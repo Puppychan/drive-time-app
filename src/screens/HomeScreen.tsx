@@ -21,6 +21,7 @@ import SearchInput from '@/src/components/input/SearchInput'
 import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { AccountRole } from '@/lib/models/account.model'
+import ReviewScreen from './ReviewScreen'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
@@ -55,8 +56,9 @@ const HomeScreen = () => {
   const onClickSuggestions = () => {
     router.push('./(user)/driver/register/book_driver')
   }
-  const onClickInstruction = () => (link: string) => {
+  const onClickInstruction = () => {
     // navigation.navigate(link)
+    router.push('./(user)/driver/register/review')
   }
 
   return (
