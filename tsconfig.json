@@ -4,15 +4,14 @@
     "baseUrl": "./",
     "paths": {
       "@/*": [
-        "*"
+        "./*"
       ],
       "@components/*": [
         "components/*"
       ],
     },
     "jsx": "react-jsx",
-    "strictNullChecks": true,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "strictNullChecks": true
   },
   "include": [
     "**/*.ts",

@@ -1,5 +1,5 @@
 import { View, Text, Dimensions } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import StarRating from 'react-native-star-rating-widget'
 
 interface ReviewCardProps {
