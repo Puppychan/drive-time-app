@@ -1,19 +1,12 @@
-import { NavigationContainer } from '@react-navigation/native'
-import { useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import { Provider as PageProvider } from 'react-native-paper'
+import { StyleSheet, Text, View } from 'react-native'
+import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { Colors } from '@/components/Colors'
-import AppNavigator from '@/src/AppNavigator'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
-import FullScreenCard from '@/src/components/cards/FullScreenCard'
-import ServiceCardLarge from '@/src/components/cards/ServiceCardLarge'
-import ServiceCardTextInside from '@/src/components/cards/ServiceCardTextInside'
-import { UserProfileScreen } from '@/src/screens/ProfileScreen'
 import { store } from '@/store'
 
 // Get the full width and height of the screen
@@ -39,6 +32,7 @@ export default function App() {
     prepare()
   }, [])
 
+  // hide splash screen when the app is ready
   useEffect(() => {
     if (appIsReady) {
       SplashScreen.hideAsync()
@@ -52,21 +46,14 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <AppNavigator />
-
-        {/* <View style={styles.container}>
-          <Text>Open up ./app/index.tsx to start working on your app!</Text>
-          <View style={{ flexDirection: 'row', margin: 10 }}>
-            <ServiceCardTextInside
-              iconImage="https://source.unsplash.com/random?transport"
-              title="Book a ride"
-              onClick={() => {
-                ToastAndroid.show('Booking confirmed!', ToastAndroid.SHORT)
-              }}
-            />
-          </View>
-          <StatusBar style="auto" />
-        </View> */}
+        {/* <AppNavigator /> */}
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          {/* <StatusBar style="light" /> */}
+          <Text>Home Page</Text>
+          <Link href="/signin" asChild>
+            <Button>Open SignIn</Button>
+          </Link>
+        </View>
       </PageProvider>
     </ReduxProvider>
   )

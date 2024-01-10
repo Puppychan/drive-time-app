@@ -1,3 +1,6 @@
+// import { faker } from '@faker-js/faker';
+// import { Booking } from "../models/booking.model"
+
 // const userIdList = [
 //   '722281eb-2208-467f-867c-b614897507e6',
 //   'b6d0d9ec-b592-4891-a77d-6c04c351d35d',
@@ -15,8 +18,15 @@
 //   'bd747301-83d8-4495-aabf-a5d74523b11e'
 // ]
 
-// const generateRandomBookingData = async () => {
+// const adminIdList = [
 
+// ]
+
+// const generateRandomBookingData = async () => {
+//     const bookingId = faker.string.uuid()
+//     const tempBooking: Booking = {
+        
+//     }
 // }
 
 // export const generateRandomBookings = async (numberOfUsers: number) => {
