@@ -8,13 +8,13 @@ interface mLocation {
 interface CarRequest {
   pickup: mLocation
   delivery: mLocation
-  pickUpTime: number
 }
 
 interface Arc {
   from: string
   to: string
   cost: number
+  waitTime: number
 }
 
 interface Car {
@@ -37,7 +37,9 @@ function generateAllArcs(locations: mLocation[]): Arc[] {
   for (const fromLocation of customerLocations) {
     for (const toLocation of pickupLocations) {
       const cost = Math.floor(Math.random() * 10) + 1
-      arcs.push({ from: fromLocation.id, to: toLocation.id, cost })
+      const waitingTime = Math.floor(Math.random() * 10) + 1
+
+      arcs.push({ from: fromLocation.id, to: toLocation.id, cost, waitTime: waitingTime })
     }
   }
 
@@ -165,8 +167,8 @@ const calculateObjectiveFunction = (
   }, 0)
 
   // T2 calculation (Penalty)
-  const penalty = requests.reduce((acc, request) => {
-    const deltaT = request.pickUpTime
+  const penalty = arcs.reduce((acc, arc) => {
+    const deltaT = arc.waitTime
     return acc + calculatePiecewiseLinearDissatisfaction(deltaT)
   }, 0)
 
@@ -356,9 +358,9 @@ const cars: Car[] = [
 ]
 
 const requests: CarRequest[] = [
-  { pickup: { id: 'P1', x: 2, y: 2 }, delivery: { id: 'D1', x: 3, y: 3 }, pickUpTime: 10 },
-  { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 }, pickUpTime: 5 },
-  { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 }, pickUpTime: 4 }
+  { pickup: { id: 'P1', x: 2, y: 2 }, delivery: { id: 'D1', x: 3, y: 3 } },
+  { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
+  { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
 ]
 
 const locations = generateLocations(cars, requests)
