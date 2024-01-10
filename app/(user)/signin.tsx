@@ -1,7 +1,7 @@
+import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
-
-const SignInScreen = () => {
+export default function Page() {
   return (
     <ImageBackground source={require('../../assets/saigon.jpg')} style={styles.backgroundImage}>
       <View style={styles.overlay} />
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export { SignInScreen }
+// export { SignInScreen }

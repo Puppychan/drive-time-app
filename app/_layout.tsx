@@ -1,7 +1,6 @@
-import { Stack, useRouter } from 'expo-router'
+import { Stack } from 'expo-router'
 
 export default function _layout() {
-  const router = useRouter()
   return (
     <Stack screenOptions={{}}>
       <Stack.Screen
@@ -12,9 +11,9 @@ export default function _layout() {
       />
       <Stack.Screen
         name="(user)"
-        // options={{
-        //   title: 'Register'
-        // }}
+        options={{
+          headerShown: false
+        }}
       />
     </Stack>
   )
