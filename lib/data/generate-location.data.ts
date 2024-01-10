@@ -6,7 +6,7 @@ const maxLatitude = 23.39
 const minLongitude = 102.14
 const maxLongitude = 109.46
 
-export const generateRandomLocation = () => {
+export const generateRandomLocation = (count: number) => {
   const locationId = faker.string.uuid()
   const latitude = faker.location.latitude({ max: maxLatitude, min: minLatitude })
   const longitude = faker.location.longitude({ max: maxLongitude, min: minLongitude })
