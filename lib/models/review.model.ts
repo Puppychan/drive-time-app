@@ -9,8 +9,8 @@ export const reviewRoleList = [ReviewFrom.Customer, ReviewFrom.Driver]
 export interface Review {
   reviewId: string
   numStars: number
-  details: string
   fromUser: string
+  details: string
   toUser: string
   resolveBy: string
   from: ReviewFrom

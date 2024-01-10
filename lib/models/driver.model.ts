@@ -5,8 +5,7 @@ import { Transport } from './transport.model'
 
 export interface Driver extends Account {
   workStartDate: Timestamp
-  QRCode: string
   isBan: boolean
-  banTime: Timestamp
-  transport: Transport
+  banTime: Timestamp | null
+  transport: Transport | null
 }

@@ -1,5 +1,15 @@
+import { Account } from './../models/user.model'
 import { User, deleteUser } from 'firebase/auth'
-import { Timestamp, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where
+} from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
@@ -8,9 +18,11 @@ import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 import { AccountRole } from '../models/account.model'
+import { SuccessResponseDto } from '@/common/response-success.dto'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
+    console.log('Create user dbnfkjsdbsdf')
     // validate
     const isUnique = await isUniqueUser(
       user.uid,
@@ -18,21 +30,30 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
       additionalUserInfo.username,
       additionalUserInfo.role
     )
+    console.log('Is Unique result ', isUnique)
     if (!isUnique) {
       throw new Error(`User with email ${additionalUserInfo.email} already exists`)
     }
-
+    console.log('Is unique ', isUnique)
     const currentDate = new Date()
 
+    additionalUserInfo.createdDate = Timestamp.fromDate(currentDate)
+    additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
+
     // Add user to Firestore
-    const userRef = doc(db, CollectionName.ACCOUNTS, user.uid)
-    await setDoc(userRef, {
-      // email: user.email, // Email from the authenticated user
-      ...additionalUserInfo, // Additional user information
-      createdDate: Timestamp.fromDate(currentDate),
-      updatedDate: Timestamp.fromDate(currentDate)
-    })
+    let userRef
+    await addDoc(collection(db, CollectionName.ACCOUNTS), additionalUserInfo)
+      .then((value) => {
+        console.log('add doc user successfully')
+        userRef = value
+      })
+      .catch((err) => {
+        console.log('error doc user successfully', err)
+        throw err
+      })
+    return userRef
   } catch (error) {
+    console.log('Errorrr', error)
     throw error
   }
 }
@@ -75,9 +96,9 @@ const isUniqueUser = async (
     ]
 
     // specific check for role
-    if (role === AccountRole.Driver) {
-      queries.push(query(userCollection, where('QRCode', '==', props[0])))
-    }
+    // if (role === AccountRole.Driver) {
+    //   queries.push(query(userCollection, where('QRCode', '==', props[0])))
+    // }
 
     const results = await Promise.all(queries.map(getDocs))
     return results.every((querySnapshot) => querySnapshot.empty)

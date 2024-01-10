@@ -20,23 +20,22 @@ import SearchInput from '@/src/components/input/SearchInput'
 
 import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
+import { AccountRole } from '@/lib/models/account.model'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
 const usernameInfo = 'John Doe'
 
 function onClickData() {
-  // generateRandomAccounts(10)
-  //   .then((message) => {
-  //     ToastAndroid.show(message, ToastAndroid.SHORT)
-  //     console.log('Successfully ', message)
-  //   })
-  //   .catch((err) => {
-  //     ToastAndroid.show(err, ToastAndroid.SHORT)
-  //     console.log('Failed ', err)
-  //   })
-  
-
+  generateRandomAccounts(1, AccountRole.Driver)
+    .then((message) => {
+      ToastAndroid.show(message, ToastAndroid.SHORT)
+      console.log('Successfully ', message)
+    })
+    .catch((err) => {
+      ToastAndroid.show(err, ToastAndroid.SHORT)
+      console.log('Failed ', err)
+    })
 }
 
 const HomeScreen = () => {

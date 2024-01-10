@@ -6,6 +6,7 @@ import { ResponseDto } from '@/common/response.dto'
 import { CollectionName } from '../common/collection-name.enum'
 import { db } from '../firebase/firebase'
 import { Review } from '../models/review.model'
+import { SuccessResponseDto } from '@/common/response-success.dto'
 
 function handleReviewException(error: any) {
   const errorCode = error?.code
@@ -16,7 +17,7 @@ function handleReviewException(error: any) {
   )
 }
 
-async function addReview(reviewData: Review) {
+export async function addReview(reviewData: Review) {
   try {
     const currentDate = new Date()
     // Add createdAt and updatedAt timestamps
@@ -27,10 +28,11 @@ async function addReview(reviewData: Review) {
     const docRef = await addDoc(collection(db, CollectionName.REVIEWS), reviewData)
 
     console.log('Review added with ID:', docRef.id)
-    return new ResponseDto(ResponseCode.OK, 'Saving review successfully', {
-      data: reviewData,
-      docId: docRef.id
-    })
+    return new ResponseDto(
+      ResponseCode.OK,
+      'Saving review successfully',
+      new SuccessResponseDto(reviewData, docRef.id)
+    )
   } catch (error) {
     console.error('Error adding review:', error)
     return handleReviewException(error)

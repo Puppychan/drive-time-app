@@ -5,13 +5,16 @@ import { AccountType } from '../common/model-type'
 import { createUser } from '../firebase/auth'
 import { Account, AccountRole, accountRoleList } from '../models/account.model'
 
-const generateRandomAccountData = async () => {
+const generateRandomAccountData = async (type: AccountRole | null) => {
   console.log('Starting create account data')
   const accountId = faker.string.uuid()
   const birthday = Timestamp.fromDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }))
 
   let workStartDate: Timestamp
-  const randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
+  let randomRole
+  if (type == null)
+    randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
+  else randomRole = type
   // generate work start date for admin and driver
   if (randomRole !== AccountRole.Customer) {
     workStartDate = Timestamp.fromDate(
@@ -52,8 +55,8 @@ const generateRandomAccountData = async () => {
         ...tempAccount,
         workStartDate,
         isBan: false,
-        banTime: undefined,
-        transport: undefined // register later
+        banTime: null,
+        transport: null // register later
       }
       break
     case AccountRole.Admin:
@@ -63,14 +66,18 @@ const generateRandomAccountData = async () => {
       }
       break
   }
+  console.log('Sub Account', subAccount)
   return subAccount
 }
 
-export const generateRandomAccounts = async (numberOfUsers: number) => {
+export const generateRandomAccounts = async (
+  numberOfUsers: number,
+  type: AccountRole | null = null
+) => {
   const userCreationPromises = []
 
   for (let i = 0; i < numberOfUsers; i++) {
-    const subAccount = await generateRandomAccountData()
+    const subAccount = await generateRandomAccountData(type)
     const userPromise = createUser(subAccount.email, '1234567', subAccount)
     userCreationPromises.push(userPromise)
   }
@@ -85,5 +92,3 @@ export const generateRandomAccounts = async (numberOfUsers: number) => {
     // process.exit(1)
   }
 }
-
-generateRandomAccounts(2) // Generate 10 users

@@ -12,6 +12,7 @@ import { ResponseDto } from './../../common/response.dto'
 import { AccountType } from '../common/model-type'
 import { auth } from '../firebase/firebase'
 import { addUserToDatabase, handleUserCreationError } from '../services/account.service'
+import { SuccessResponseDto } from '@/common/response-success.dto'
 
 export function onAuthStateChanged(cb: any) {
   return () => {}
@@ -29,10 +30,11 @@ export async function createUser(email: string, password: string, otherUserInfo:
       await addUserToDatabase(user, otherUserInfo)
         .then((value) => {
           // if add user information to database successfully
-          return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
-            ...user,
-            ...otherUserInfo
-          })
+          return new ResponseDto(
+            ResponseCode.OK,
+            'Signing up user successfully',
+            new SuccessResponseDto(otherUserInfo, value.id)
+          )
         })
         .catch(async (error) => {
           return await handleUserCreationError(user, error)
