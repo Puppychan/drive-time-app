@@ -7,12 +7,12 @@ import {
 } from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
+import { SuccessResponseDto } from '@/common/response-success.dto'
 
 import { ResponseDto } from './../../common/response.dto'
 import { AccountType } from '../common/model-type'
 import { auth } from '../firebase/firebase'
 import { addUserToDatabase, handleUserCreationError } from '../services/account.service'
-import { SuccessResponseDto } from '@/common/response-success.dto'
 
 export function onAuthStateChanged(cb: any) {
   return () => {}

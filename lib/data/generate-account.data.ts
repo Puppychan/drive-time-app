@@ -56,7 +56,7 @@ const generateRandomAccountData = async (type: AccountRole | null) => {
         workStartDate,
         isBan: false,
         banTime: null,
-        transport: null // register later
+        transport: null
       }
       break
     case AccountRole.Admin:
@@ -66,7 +66,6 @@ const generateRandomAccountData = async (type: AccountRole | null) => {
       }
       break
   }
-  console.log('Sub Account', subAccount)
   return subAccount
 }
 

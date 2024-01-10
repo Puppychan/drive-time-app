@@ -1,15 +1,5 @@
-import { Account } from './../models/user.model'
 import { User, deleteUser } from 'firebase/auth'
-import {
-  Timestamp,
-  addDoc,
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where
-} from 'firebase/firestore'
+import { Timestamp, addDoc, collection, getDocs, query, where } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
@@ -17,8 +7,6 @@ import { ResponseDto } from '@/common/response.dto'
 import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
-import { AccountRole } from '../models/account.model'
-import { SuccessResponseDto } from '@/common/response-success.dto'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -27,21 +15,18 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
     const isUnique = await isUniqueUser(
       user.uid,
       additionalUserInfo.email,
-      additionalUserInfo.username,
-      additionalUserInfo.role
+      additionalUserInfo.username
     )
-    console.log('Is Unique result ', isUnique)
     if (!isUnique) {
       throw new Error(`User with email ${additionalUserInfo.email} already exists`)
     }
-    console.log('Is unique ', isUnique)
     const currentDate = new Date()
 
     additionalUserInfo.createdDate = Timestamp.fromDate(currentDate)
     additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
 
     // Add user to Firestore
-    let userRef
+    let userRef = { id: '' }
     await addDoc(collection(db, CollectionName.ACCOUNTS), additionalUserInfo)
       .then((value) => {
         console.log('add doc user successfully')
@@ -80,13 +65,7 @@ export async function handleUserCreationError(user: User, parentError: any) {
 }
 
 // ------------------------------------
-const isUniqueUser = async (
-  userId: string,
-  email: string,
-  username: string,
-  role: AccountRole,
-  ...props: unknown[]
-) => {
+const isUniqueUser = async (userId: string, email: string, username: string) => {
   try {
     const userCollection = collection(db, CollectionName.ACCOUNTS)
     const queries = [

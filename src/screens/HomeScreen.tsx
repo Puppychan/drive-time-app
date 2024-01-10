@@ -27,7 +27,7 @@ const homeInfo = '123 Main St'
 const usernameInfo = 'John Doe'
 
 function onClickData() {
-  generateRandomAccounts(1, AccountRole.Driver)
+  generateRandomAccounts(10, AccountRole.Driver)
     .then((message) => {
       ToastAndroid.show(message, ToastAndroid.SHORT)
       console.log('Successfully ', message)

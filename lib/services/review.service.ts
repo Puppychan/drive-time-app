@@ -27,7 +27,6 @@ export async function addReview(reviewData: Review) {
     // Add the review to the 'reviews' collection
     const docRef = await addDoc(collection(db, CollectionName.REVIEWS), reviewData)
 
-    console.log('Review added with ID:', docRef.id)
     return new ResponseDto(
       ResponseCode.OK,
       'Saving review successfully',
