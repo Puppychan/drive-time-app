@@ -32,8 +32,8 @@ const ReviewScreen = () => {
         resolveBy: 'abc',
         from: ReviewFrom.Customer,
         bookingId: '123abc',
-        // createdAt: new Date(),
-        // updatedAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
   
       console.log('Review added with ID: ', docRef.id);
@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <CustomButton title="Arrive" style={styles.customButtonStyle} />
+      <CustomButton title="Arrive" style={styles.customButtonStyle } onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>
