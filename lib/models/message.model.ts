@@ -1,10 +1,11 @@
 import { Timestamp } from "firebase/firestore"
+import { User } from "react-native-gifted-chat"
 
 export interface Message {
     messageId: string
-    participantId: string
+    user: string
     chatId: string
-    content: string
+    text: string
     createdAt?: Timestamp
     updatedAt?: Timestamp
 }

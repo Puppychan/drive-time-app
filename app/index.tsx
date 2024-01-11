@@ -50,7 +50,7 @@ export default function App() {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {/* <StatusBar style="light" /> */}
           <Text>Home Page</Text>
-          <Link href="/signin" asChild>
+          <Link href="../driver/register/chat" asChild>
             <Button>Open SignIn</Button>
           </Link>
         </View>
