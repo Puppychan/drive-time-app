@@ -1,5 +1,15 @@
 import { User, deleteUser } from 'firebase/auth'
-import { Timestamp, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import {
+  Timestamp,
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where
+} from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
@@ -7,6 +17,7 @@ import { ResponseDto } from '@/common/response.dto'
 import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
+import { FavoriteLocation } from '../models/favorite-location.model'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -58,6 +69,15 @@ export async function handleUserCreationError(user: User, parentError: any) {
         `Failed to delete user after unsuccessful info addition: ${error}`
       )
     })
+}
+
+function handleUserException(error: any, type: string) {
+  const errorCode = error?.code
+  return new ResponseDto(
+    errorCode ?? ResponseCode.BAD_GATEWAY,
+    `${type} review unsuccessfully`,
+    `${type} review unsuccessfully: ${error}`
+  )
 }
 
 // ------------------------------------

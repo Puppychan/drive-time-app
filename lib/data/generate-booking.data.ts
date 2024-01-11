@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 
 import { Booking } from '../models/booking.model'
-import { customerIdList } from '../common/account-id.constant'
+import { customerIdList } from '../common/id-list.constant'
 import { Timestamp } from 'firebase/firestore'
 
 

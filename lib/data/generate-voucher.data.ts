@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import { Timestamp } from 'firebase/firestore'
 
 import { VOUCHERS_LIST } from './../common/vouchers.constant'
-import { adminIdList } from '../common/account-id.constant'
+import { adminIdList } from '../common/id-list.constant'
 import { Voucher } from '../models/voucher.model'
 import { addVoucher } from '../services/voucher.service'
 

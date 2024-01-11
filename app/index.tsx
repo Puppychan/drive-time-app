@@ -1,7 +1,7 @@
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Button as ReactNativeButton } from 'react-native'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -14,6 +14,7 @@ import { store } from '@/store'
 const { width: screenWidth } = getScreenSize()
 
 function onClickData() {
+  console.log("Calldls;fnk");
   generateData()
 }
 
@@ -57,7 +58,7 @@ export default function App() {
           <Text>Home Page</Text>
           <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
-            <Button>Open SignIn</Button>
+            <ReactNativeButton title="Open Signin" />
           </Link>
         </View>
       </PageProvider>

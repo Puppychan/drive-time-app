@@ -49,7 +49,6 @@ const generateRandomAccountData = async (type: AccountRole | null) => {
         ...tempAccount,
         membershipId: '1',
         membershipPoints: 0,
-        recentSearchs: [],
         description: faker.lorem.paragraphs()
       }
       break

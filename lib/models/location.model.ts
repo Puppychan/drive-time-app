@@ -1,9 +1,8 @@
-import { Timestamp } from "firebase/firestore"
+import { GeoPoint, Timestamp } from 'firebase/firestore'
 
 export interface Location {
-    locationId: string
-    longitude: string
-    latitude: string
-    createdAt?: Timestamp
-    updatedAt?: Timestamp
+  locationId: string
+  geoLocation: GeoPoint
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
 }
