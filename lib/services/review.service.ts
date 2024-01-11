@@ -1,19 +1,19 @@
-import { Timestamp, addDoc, collection } from 'firebase/firestore'
+import { Timestamp, doc, setDoc } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
+import { SuccessResponseDto } from '@/common/response-success.dto'
 import { ResponseDto } from '@/common/response.dto'
 
 import { CollectionName } from '../common/collection-name.enum'
 import { db } from '../firebase/firebase'
 import { Review } from '../models/review.model'
-import { SuccessResponseDto } from '@/common/response-success.dto'
 
-function handleReviewException(error: any) {
+function handleReviewException(error: any, type: string) {
   const errorCode = error?.code
   return new ResponseDto(
     errorCode ?? ResponseCode.BAD_GATEWAY,
-    'Saving review unsuccessfully',
-    `Saving review unsuccessfully: ${error}`
+    `${type} review unsuccessfully`,
+    `${type} review unsuccessfully: ${error}`
   )
 }
 
@@ -24,8 +24,10 @@ export async function addReview(reviewData: Review) {
     reviewData.updatedAt = Timestamp.fromDate(currentDate)
     reviewData.createdAt = Timestamp.fromDate(currentDate)
 
-    // Add the review to the 'reviews' collection
-    const docRef = await addDoc(collection(db, CollectionName.REVIEWS), reviewData)
+    // Create a reference to the document with the custom ID
+    const docRef = doc(db, CollectionName.REVIEWS, reviewData.reviewId)
+    // Set the data for the document with the custom ID
+    await setDoc(docRef, reviewData)
 
     return new ResponseDto(
       ResponseCode.OK,
@@ -34,6 +36,6 @@ export async function addReview(reviewData: Review) {
     )
   } catch (error) {
     console.error('Error adding review:', error)
-    return handleReviewException(error)
+    return handleReviewException(error, 'Saving')
   }
 }

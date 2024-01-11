@@ -1,4 +1,11 @@
 export enum CollectionName {
+  MEMBERSHIPS = 'memberships',
   ACCOUNTS = 'accounts',
-  REVIEWS = 'reviews'
+  VOUCHERS = 'vouchers',
+  REVIEWS = 'reviews',
+  CHATS = 'chats',
+  MESSAGES = 'messages',
+  LOCATIONS = 'locations',
+  BOOKINGS = 'bookings',
+  SEARCHS = 'searchs'
 }

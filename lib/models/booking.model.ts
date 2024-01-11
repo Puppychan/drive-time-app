@@ -18,12 +18,13 @@ export const bookingStatusList = [
 
 export interface Booking {
   bookingId: string
-  customerId: string
+  customerIdList: string[]
+  driverId: string
   bookingTime: Timestamp
   price: number
-  driverId: string
-  voucherId?: string
+  voucherId: string | null
   departure: string
+  destinationList: string[]
   status: BookingStatus
   createdAt: Timestamp
   updatedAt: Timestamp

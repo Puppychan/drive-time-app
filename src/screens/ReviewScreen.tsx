@@ -32,8 +32,8 @@ const ReviewScreen = () => {
         resolveBy: 'abc',
         from: ReviewFrom.Customer,
         bookingId: '123abc',
-        // createdAt: new Date(),
-        // updatedAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
   
       console.log('Review added with ID: ', docRef.id);

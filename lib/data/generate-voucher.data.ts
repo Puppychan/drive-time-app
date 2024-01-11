@@ -1,4 +1,10 @@
 import { faker } from '@faker-js/faker'
+import { Timestamp } from 'firebase/firestore'
+
+import { VOUCHERS_LIST } from './../common/vouchers.constant'
+import { adminIdList } from '../common/account-id.constant'
+import { Voucher } from '../models/voucher.model'
+import { addVoucher } from '../services/voucher.service'
 
 // Voucher atleast 1 days and max 1 year
 const minDaysDifference = 1
@@ -6,27 +12,46 @@ const maxDaysDifference = 365
 const randomDaysDifference =
   minDaysDifference + Math.random() * (maxDaysDifference - minDaysDifference)
 
-export const generateRandomVoucherData = (superUserId: string) => {
-  const voucherId = faker.string.uuid()
-  const name = faker.lorem.words({ min: 2, max: 5 })
-  const discountPercent = faker.number.float({ min: 1, max: 100 })
-  const startDate = faker.date.recent()
+export const generateRandomVoucherData = () => {
+  const voucherList = VOUCHERS_LIST.map((voucher) => {
+    const voucherId = faker.string.uuid()
+    const startDate = faker.date.recent()
+    const expireDate = new Date(startDate.getDate() + randomDaysDifference)
+    const currentDate = new Date()
 
-  const expireDate = new Date(startDate)
-  expireDate.setDate(startDate.getDate() + randomDaysDifference)
+    const tempVoucher: Voucher = {
+      voucherId,
+      name: voucher.name,
+      discountPercent: voucher.discountPercent,
+      startDate,
+      expireDate,
+      code: voucher.code,
+      generatedByAdmin: adminIdList[faker.number.int({ min: 0, max: adminIdList.length - 1 })],
+      createdAt: Timestamp.fromDate(currentDate),
+      updatedAt: Timestamp.fromDate(currentDate),
+      customerUsed: []
+    }
+    return tempVoucher
+  })
 
-  // 6 digits code
-  const code = faker.number.int({ min: 100000, max: 999999 })
+  return voucherList
+}
+export const generateRandomVouchers = async () => {
+  const voucherCreationPromises = []
+  const voucherList = generateRandomVoucherData()
 
-  return {
-    voucherId,
-    name,
-    discountPercent,
-    startDate,
-    expireDate,
-    code
+  for (let i = 0; i < VOUCHERS_LIST.length; i++) {
+    const voucherPromise = addVoucher(voucherList[i])
+    voucherCreationPromises.push(voucherPromise)
+  }
+
+  try {
+    await Promise.all(voucherCreationPromises)
+
+    return 'Successfully added voucher'
+    // process.exit(0)
+  } catch (error) {
+    return `Error adding voucher ` + error
+    // process.exit(1)
   }
 }
-
-// Gen 5 vouchers
-const vouchers = Array.from({ length: 5 }, () => generateRandomVoucherData('1'))

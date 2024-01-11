@@ -1,4 +1,4 @@
-import { Stack, Tabs } from 'expo-router'
+import { Stack } from 'expo-router'
 
 export default function _layout() {
   return (
@@ -6,25 +6,9 @@ export default function _layout() {
       <Stack.Screen
         name="signin"
         options={{
-          title: 'Sign In',
-          // This tab will no longer show up in the tab bar.
+          title: 'Sign In'
         }}
       />
-      {/* <Tabs.Screen
-        name="two"
-        options={{
-          headerTitle: 'Two',
-          tabBarLabel: 'Two'
-        }}
-      />
-      <Tabs.Screen
-        name="posts"
-        options={{
-          headerTitle: 'Posts',
-          tabBarLabel: 'Posts',
-          headerShown: false
-        }}
-      /> */}
     </Stack>
   )
 }

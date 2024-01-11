@@ -14,7 +14,7 @@ import { AccountType } from '../common/model-type'
 import { auth } from '../firebase/firebase'
 import { addUserToDatabase, handleUserCreationError } from '../services/account.service'
 
-export function onAuthStateChanged(cb: any) {
+export function onAuthStateChanged() {
   return () => {}
 }
 
@@ -52,7 +52,6 @@ export async function createUser(email: string, password: string, otherUserInfo:
 
 export async function signIn(email: string, password: string) {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
     // console.log('User signed in:', userCredential.user)
   } catch (error) {
     // console.error('Error signing in:', error)

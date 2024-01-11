@@ -27,18 +27,6 @@ import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 const homeInfo = '123 Main St'
 const usernameInfo = 'John Doe'
 
-function onClickData() {
-  // generateRandomAccounts(10, AccountRole.Driver)
-  //   .then((message) => {
-  //     ToastAndroid.show(message, ToastAndroid.SHORT)
-  //     console.log('Successfully ', message)
-  //   })
-  //   .catch((err) => {
-  //     ToastAndroid.show(err, ToastAndroid.SHORT)
-  //     console.log('Failed ', err)
-  //   })
-}
-
 const HomeScreen = () => {
   const navigation = useNavigation()
   const colorsTheme = useThemeColors(DEFAULT_THEME)
@@ -65,7 +53,6 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Button onPress={onClickData}>Generate Data</Button>
           <Title style={styles.welcome}>Welcome, {usernameInfo}</Title>
 
           <SearchInput />

@@ -6,36 +6,37 @@ import { ResponseDto } from '@/common/response.dto'
 
 import { CollectionName } from '../common/collection-name.enum'
 import { db } from '../firebase/firebase'
-import { Booking } from '../models/booking.model'
+import { Voucher } from '../models/voucher.model'
 
-function handleBookingException(error: any, type: string) {
+function handleVoucherException(error: any, type: string) {
   const errorCode = error?.code
   return new ResponseDto(
     errorCode ?? ResponseCode.BAD_GATEWAY,
-    `${type} booking unsuccessfully`,
-    `${type} booking unsuccessfully: ${error}`
+    `${type} voucher unsuccessfully`,
+    `${type} voucher unsuccessfully: ${error}`
   )
 }
 
-export async function addBooking(bookingData: Booking) {
+export async function addVoucher(voucherData: Voucher) {
   try {
+    // find if admin exist
     const currentDate = new Date()
     // Add createdAt and updatedAt timestamps
-    bookingData.updatedAt = Timestamp.fromDate(currentDate)
-    bookingData.createdAt = Timestamp.fromDate(currentDate)
+    voucherData.updatedAt = Timestamp.fromDate(currentDate)
+    voucherData.createdAt = Timestamp.fromDate(currentDate)
 
     // Create a reference to the document with the custom ID
-    const docRef = doc(db, CollectionName.REVIEWS, bookingData.bookingId)
+    const docRef = doc(db, CollectionName.VOUCHERS, voucherData.voucherId)
     // Set the data for the document with the custom ID
-    await setDoc(docRef, bookingData)
+    await setDoc(docRef, voucherData)
 
     return new ResponseDto(
       ResponseCode.OK,
-      'Saving booking successfully',
-      new SuccessResponseDto(bookingData, docRef.id)
+      'Saving voucher successfully',
+      new SuccessResponseDto(voucherData, docRef.id)
     )
   } catch (error) {
-    console.error('Error adding booking:', error)
-    return handleBookingException(error, 'Saving')
+    console.error('Error adding voucher:', error)
+    return handleVoucherException(error, 'Saving')
   }
 }

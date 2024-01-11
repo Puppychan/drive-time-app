@@ -6,11 +6,16 @@ import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { Colors } from '@/components/Colors'
+import { generateData } from '@/lib/data/generate-all.data'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
+
+function onClickData() {
+  generateData()
+}
 
 SplashScreen.preventAutoHideAsync()
 
@@ -50,6 +55,7 @@ export default function App() {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {/* <StatusBar style="light" /> */}
           <Text>Home Page</Text>
+          <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
             <Button>Open SignIn</Button>
           </Link>

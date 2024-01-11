@@ -1,5 +1,5 @@
 import { User, deleteUser } from 'firebase/auth'
-import { Timestamp, addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import { Timestamp, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
@@ -20,23 +20,19 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
     if (!isUnique) {
       throw new Error(`User with email ${additionalUserInfo.email} already exists`)
     }
-    const currentDate = new Date()
 
+    // add created at and updated at
+    const currentDate = new Date()
     additionalUserInfo.createdDate = Timestamp.fromDate(currentDate)
     additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
+    additionalUserInfo.userId = user.uid
 
-    // Add user to Firestore
-    let userRef = { id: '' }
-    await addDoc(collection(db, CollectionName.ACCOUNTS), additionalUserInfo)
-      .then((value) => {
-        console.log('add doc user successfully')
-        userRef = value
-      })
-      .catch((err) => {
-        console.log('error doc user successfully', err)
-        throw err
-      })
-    return userRef
+    // Create a reference to the document with the custom ID
+    const accountRef = doc(db, CollectionName.ACCOUNTS, additionalUserInfo.userId)
+    // Set the data for the document with the custom ID
+    await setDoc(accountRef, additionalUserInfo)
+
+    return accountRef
   } catch (error) {
     console.log('Errorrr', error)
     throw error
