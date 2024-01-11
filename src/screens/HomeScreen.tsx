@@ -41,9 +41,11 @@ const HomeScreen = () => {
   const onClickExploreNearby = () => {
     router.push('./user/driver/register')
   }
+
   const onClickSuggestions = () => {
     router.push('./(user)/driver/register/book_driver')
   }
+  
   const onClickInstruction = () => {
     // navigation.navigate(link)
     router.push('./(user)/driver/register/review')

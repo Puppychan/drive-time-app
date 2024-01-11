@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <CustomButton title="Arrive" style={styles.customButtonStyle} />
+      <CustomButton title="Arrive" style={styles.customButtonStyle } onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>
