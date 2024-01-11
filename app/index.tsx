@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -28,7 +29,6 @@ export default function App() {
   useEffect(() => {
     const prepare = async () => {
       try {
-        // Pre-load fonts + APIs
       } catch (e) {
         console.warn(e)
       } finally {
@@ -52,7 +52,18 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <AppNavigator />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'lightblue',
+              padding: 20
+            }}
+          >
+            <Text>Hello world</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* <View style={styles.container}>
           <Text>Open up ./app/index.tsx to start working on your app!</Text>
