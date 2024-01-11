@@ -1,5 +1,15 @@
 import { User, deleteUser } from 'firebase/auth'
-import { Timestamp, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import {
+  Timestamp,
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where
+} from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
@@ -7,39 +17,42 @@ import { ResponseDto } from '@/common/response.dto'
 import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
-import { AccountRole } from '../models/account.model'
+import { FavoriteLocation } from '../models/favorite-location.model'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
+    console.log('Create user dbnfkjsdbsdf')
     // validate
     const isUnique = await isUniqueUser(
       user.uid,
       additionalUserInfo.email,
-      additionalUserInfo.username,
-      additionalUserInfo.role
+      additionalUserInfo.username
     )
     if (!isUnique) {
       throw new Error(`User with email ${additionalUserInfo.email} already exists`)
     }
 
+    // add created at and updated at
     const currentDate = new Date()
+    additionalUserInfo.createdDate = Timestamp.fromDate(currentDate)
+    additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
+    additionalUserInfo.userId = user.uid
 
-    // Add user to Firestore
-    const userRef = doc(db, CollectionName.ACCOUNTS, user.uid)
-    await setDoc(userRef, {
-      // email: user.email, // Email from the authenticated user
-      ...additionalUserInfo, // Additional user information
-      createdDate: Timestamp.fromDate(currentDate),
-      updatedDate: Timestamp.fromDate(currentDate)
-    })
+    // Create a reference to the document with the custom ID
+    const accountRef = doc(db, CollectionName.ACCOUNTS, additionalUserInfo.userId)
+    // Set the data for the document with the custom ID
+    await setDoc(accountRef, additionalUserInfo)
+
+    return accountRef
   } catch (error) {
+    console.log('Errorrr', error)
     throw error
   }
 }
 
-export async function handleUserCreationError(user: User, parentError: any) {
+export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
-  await deleteUser(user)
+  return deleteUser(user)
     .then((value) => {
       const errorCode = parentError?.code
       return new ResponseDto(
@@ -58,14 +71,17 @@ export async function handleUserCreationError(user: User, parentError: any) {
     })
 }
 
+function handleUserException(error: any, type: string) {
+  const errorCode = error?.code
+  return new ResponseDto(
+    errorCode ?? ResponseCode.BAD_GATEWAY,
+    `${type} review unsuccessfully`,
+    `${type} review unsuccessfully: ${error}`
+  )
+}
+
 // ------------------------------------
-const isUniqueUser = async (
-  userId: string,
-  email: string,
-  username: string,
-  role: AccountRole,
-  ...props: unknown[]
-) => {
+const isUniqueUser = async (userId: string, email: string, username: string) => {
   try {
     const userCollection = collection(db, CollectionName.ACCOUNTS)
     const queries = [
@@ -75,9 +91,9 @@ const isUniqueUser = async (
     ]
 
     // specific check for role
-    if (role === AccountRole.Driver) {
-      queries.push(query(userCollection, where('QRCode', '==', props[0])))
-    }
+    // if (role === AccountRole.Driver) {
+    //   queries.push(query(userCollection, where('QRCode', '==', props[0])))
+    // }
 
     const results = await Promise.all(queries.map(getDocs))
     return results.every((querySnapshot) => querySnapshot.empty)

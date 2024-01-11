@@ -86,6 +86,11 @@
 - Combine both commands above: `npm run lint`
 
 ## Features
+- If driver has not register car -> they cannot receive passenger
+- Filter inside account: filter list of drivers, list of customers, list of admins, filter based on membership
+- Sort account list (by name, by created, by updated, by review rate)
+- Update account, update nested entity - transport inside account
+- Delete account
 
 ## Future Improvement
 

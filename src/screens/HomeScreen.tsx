@@ -5,6 +5,7 @@ import { Appbar, Button, Paragraph, Title } from 'react-native-paper'
 
 import { useThemeColors } from '@/components/Colors'
 import { generateRandomAccounts } from '@/lib/data/generate-account.data'
+import { AccountRole } from '@/lib/models/account.model'
 import { DEFAULT_THEME } from '@/src/common/constants/default-value.constant'
 import {
   INSTRUCTION_LIST,
@@ -18,26 +19,13 @@ import ServiceCard from '@/src/components/cards/ServiceCard'
 import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
 
+import ReviewScreen from './ReviewScreen'
 import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
 const usernameInfo = 'John Doe'
-
-function onClickData() {
-  // generateRandomAccounts(10)
-  //   .then((message) => {
-  //     ToastAndroid.show(message, ToastAndroid.SHORT)
-  //     console.log('Successfully ', message)
-  //   })
-  //   .catch((err) => {
-  //     ToastAndroid.show(err, ToastAndroid.SHORT)
-  //     console.log('Failed ', err)
-  //   })
-  
-
-}
 
 const HomeScreen = () => {
   const navigation = useNavigation()
@@ -53,18 +41,20 @@ const HomeScreen = () => {
   const onClickExploreNearby = () => {
     router.push('./user/driver/register')
   }
+
   const onClickSuggestions = () => {
     router.push('./(user)/driver/register/book_driver')
   }
-  const onClickInstruction = () => (link: string) => {
+  
+  const onClickInstruction = () => {
     // navigation.navigate(link)
+    router.push('./(user)/driver/register/review')
   }
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Button onPress={onClickData}>Generate Data</Button>
           <Title style={styles.welcome}>Welcome, {usernameInfo}</Title>
 
           <SearchInput />

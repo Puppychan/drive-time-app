@@ -4,3 +4,5 @@ export const Constant = {
   heading1: 30,
   heading2: 26
 }
+
+export const AVATAR_REF = `images/users_avatar`

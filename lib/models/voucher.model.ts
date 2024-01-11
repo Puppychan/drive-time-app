@@ -1,13 +1,21 @@
-import { Timestamp } from "firebase/firestore"
+import { Timestamp } from 'firebase/firestore'
+
+import { TransportType } from './transport.model'
+export enum AddtionalApplyType {
+  ALL = 'All'
+}
+export type VoucherApplyType = AddtionalApplyType | TransportType
 
 export interface Voucher {
-    voucherId: string
-    name: string
-    discountPercent: number
-    expireDate: Date
-    startDate: Date
-    code: string
-    generatedByAdmin: string
-    createdAt?: Timestamp
-    updatedAt?: Timestamp
+  voucherId: string
+  name: string
+  discountPercent: number
+  expireDate: Date
+  startDate: Date
+  code: string
+  applyType: VoucherApplyType
+  generatedByAdmin: string
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
+  customerUsed: string[]
 }
