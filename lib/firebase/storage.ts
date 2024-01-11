@@ -1,16 +1,15 @@
+import { ResponseCode } from "@/common/response-code.enum";
+import { ResponseDto } from "@/common/response.dto";
 import { storage } from "@/lib/firebase/firebase";
 
-import {ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
-import { ToastAndroid } from "react-native/types";
+import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
-async function uploadImage(imageUri: any, imageRef: string) {
+export async function uploadImage(imageUri: any, imageRef: string): Promise<ResponseDto> {
   const response = await fetch(imageUri);
   const blob = await response.blob();
   // const fileRef = ref(storage, `images/user_avatars/${userid}.jpg`);
   const fileRef = ref(storage, imageRef);
   const uploadTask = uploadBytesResumable(fileRef, blob);
-
-  let imgDownloadUrl : string | undefined;
 
   uploadTask.on('state_changed', 
     (snapshot) => {
@@ -20,24 +19,34 @@ async function uploadImage(imageUri: any, imageRef: string) {
       // console.log('Upload is ' + progress + '% done');
       switch (snapshot.state) {
         case 'paused':
-          ToastAndroid.show("Upload paused", ToastAndroid.SHORT);
+          return new ResponseDto(
+            ResponseCode.BAD_REQUEST,
+            'Upload paused'
+          )
+        default:
           break;
+          
       }
     }, 
     (error) => {
       switch (error.code) {
         case 'storage/unauthorized':
-          ToastAndroid.show("Upload failed, unthorized", ToastAndroid.SHORT);
-          // User doesn't have permission to access the object
-          break;
+          return new ResponseDto(
+            ResponseCode.UNAUTHORIZED,
+            'Upload failed. Unauthorized'
+          )
+
         case 'storage/canceled':
-          // User canceled the upload
-          ToastAndroid.show("Upload canceled", ToastAndroid.SHORT);
-          break;
-        case 'storage/unknown':
-          // Unknown error occurred, inspect error.serverResponse
-          ToastAndroid.show("Upload failed, unknow error", ToastAndroid.SHORT);
-          break;
+          return new ResponseDto(
+            ResponseCode.BAD_REQUEST,
+            'Upload canceled'
+          )
+        
+        default:
+          return new ResponseDto(
+            ResponseCode.BAD_GATEWAY,
+            'Upload failed: ' + error.message
+          )
       }
       
     }, 
@@ -46,12 +55,22 @@ async function uploadImage(imageUri: any, imageRef: string) {
       // For instance, get the download URL: https://firebasestorage.googleapis.com/...
       getDownloadURL(uploadTask.snapshot.ref)
       .then((downloadUrl) => {
-        imgDownloadUrl = downloadUrl;
+        return new ResponseDto(
+          ResponseCode.OK,
+          'Upload successfully',
+          downloadUrl
+        )
       })
       .catch((e) => {
-        ToastAndroid.show("Cannot get download url. Please try again", ToastAndroid.SHORT);
+        return new ResponseDto(
+          ResponseCode.BAD_GATEWAY,
+          'Cannot get download url: ' + e
+        )
       })
     }
   );
-  return imgDownloadUrl;
+  return new ResponseDto(
+    ResponseCode.BAD_GATEWAY,
+    'Something went wrong. Please try again'
+  );
 }

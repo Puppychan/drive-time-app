@@ -70,9 +70,9 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
   }
 }
 
-export async function handleUserCreationError(user: User, parentError: any) {
+export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
-  await deleteUser(user)
+  return deleteUser(user)
     .then((value) => {
       const errorCode = parentError?.code
       return new ResponseDto(

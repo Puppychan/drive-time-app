@@ -4,42 +4,36 @@ import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-// import { createUserWithEmailAndPassword } from "firebase/auth";
-// import { getFirestore, collection, addDoc } from "firebase/firestore";
-// import { auth } from "@/lib/firebase/firebase";
+import  {createAuthAccount} from "@/lib/firebase/auth";
+import { ResponseCode } from '@/common/response-code.enum'
 
 export default function Page() {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (email.trim() === '') {
-      // window.alert('Email is required');
-
-      // ToastAndroid.show("Email is required", ToastAndroid.SHORT);
+      ToastAndroid.show("Email is required", ToastAndroid.SHORT);
       return
     } else if (password.trim() === '') {
-      // window.alert('Password is required');
-
-      // ToastAndroid.show("Password is required", ToastAndroid.SHORT);
+      ToastAndroid.show("Password is required", ToastAndroid.SHORT);
       return
     }
 
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed up
-    //     const user = userCredential.user;
-    //     router.push("/driver/register/driver-profile");
-
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     // ..
-    //   });
-
-    router.push('/driver/register/driver-profile')
+    createAuthAccount(email, password)
+    .then((res) => {
+      if (res.code === ResponseCode.OK) {
+        const {user} = res.body
+        router.push(`/driver/register/driver-profile?id=${user.uid}`);
+      }
+      else {
+        ToastAndroid.show(`Register account failed: ${res.message}`, ToastAndroid.SHORT);
+      }
+    })
+    .catch((error) => {
+      ToastAndroid.show(`Register account failed: ${error.message}`, ToastAndroid.SHORT);
+    })
   }
 
   return (
