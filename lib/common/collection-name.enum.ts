@@ -4,8 +4,9 @@ export enum CollectionName {
   VOUCHERS = 'vouchers',
   LOCATIONS = 'locations',
   FAVOURITE_LOCATIONS = 'favourite-locations',
+  RECENT_SEARCHES = 'recent-searches',
   REVIEWS = 'reviews',
-  CHATS = 'chats',
+  CHATS = 'chat',
   MESSAGES = 'messages',
   BOOKINGS = 'bookings'
 }

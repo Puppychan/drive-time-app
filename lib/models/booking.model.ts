@@ -20,12 +20,13 @@ export interface Booking {
   bookingId: string
   customerIdList: string[]
   driverId: string
-  bookingTime: Timestamp
+  preScheduleTime: Timestamp | null // if null: no pre-schedule
   price: number
+  discountPrice: number
   voucherId: string | null
   departure: string
   destinationList: string[]
   status: BookingStatus
-  createdAt: Timestamp
-  updatedAt: Timestamp
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
 }

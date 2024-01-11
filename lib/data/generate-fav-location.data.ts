@@ -40,6 +40,7 @@ const generateRandomFavLocation = (accountId: string) => {
   return favoriteList
 }
 export const generateRandomFavoriteLocations = async () => {
+  console.log('Add favorite locations')
   const favoriteLocationCreationPromises = []
   const totalFavoriteList: FavoriteLocation[] = []
   try {

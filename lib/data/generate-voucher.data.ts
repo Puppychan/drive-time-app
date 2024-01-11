@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 import { Timestamp } from 'firebase/firestore'
 
 import { VOUCHERS_LIST } from './../common/vouchers.constant'
+import { AddtionalApplyType, Voucher } from './../models/voucher.model'
 import { adminIdList } from '../common/id-list.constant'
-import { Voucher } from '../models/voucher.model'
 import { addVoucher } from '../services/voucher.service'
 
 // Voucher atleast 1 days and max 1 year
@@ -26,6 +26,7 @@ export const generateRandomVoucherData = () => {
       startDate,
       expireDate,
       code: voucher.code,
+      applyType: AddtionalApplyType.ALL,
       generatedByAdmin: adminIdList[faker.number.int({ min: 0, max: adminIdList.length - 1 })],
       createdAt: Timestamp.fromDate(currentDate),
       updatedAt: Timestamp.fromDate(currentDate),

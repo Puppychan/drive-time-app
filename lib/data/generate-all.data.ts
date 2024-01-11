@@ -6,6 +6,7 @@ import { generateRandomLocations } from './generate-location.data'
 import { generateMembershipData } from './generate-membership.data'
 import { generateRandomVouchers } from './generate-voucher.data'
 import { AccountRole } from '../models/account.model'
+import { generateRandomBookings } from './generate-booking.data'
 
 export function generateData() {
   // generate membership
@@ -15,10 +16,10 @@ export function generateData() {
   //   })
 
   // generate accounts
-  //   generateRandomAccounts(10).then((message) => {
-  //     ToastAndroid.show(message, ToastAndroid.SHORT)
-  //     console.log('Successfully ', message)
-  //   })
+    // generateRandomAccounts(3, AccountRole.Customer).then((message) => {
+    //   ToastAndroid.show(message, ToastAndroid.SHORT)
+    //   console.log('Successfully ', message)
+    // })
 
   // generate voucher
   // generateRandomVouchers().then((message) => {
@@ -33,9 +34,14 @@ export function generateData() {
   //   })
 
   // generate favorite location
-  console.log("Ciosnfosdklnfds");
-  generateRandomFavoriteLocations().then((message) => {
+//   generateRandomFavoriteLocations().then((message) => {
+//     ToastAndroid.show(message, ToastAndroid.LONG)
+//     console.log('Favourite Location', message)
+//   })
+
+  // generate booking
+  generateRandomBookings(5).then((message) => {
     ToastAndroid.show(message, ToastAndroid.LONG)
-    console.log('Favourite Location', message)
+    console.log('Booking', message)
   })
 }
