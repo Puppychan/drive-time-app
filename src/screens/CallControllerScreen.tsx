@@ -8,7 +8,7 @@ import { HomeScreen } from './HomeCallScreen'
 const apiKey = 'zz984t9cyrwj'
 const userId_1 = 'Quoc_123'
 const userId_2 = 'mudoker'
-const callId = 'default_01c8d175-a56c-4cf1-9e86-559d255a5b33'
+const callId = 'default_648cb08e-499a-4c0d-a668-36c5173357ba'
 
 // JWT
 const token_1 =

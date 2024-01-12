@@ -1,4 +1,3 @@
-import React from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native'
 
 type Props = {
@@ -8,8 +7,8 @@ type Props = {
 export const HomeScreen = ({ goToCallScreen }: Props) => {
   return (
     <View>
-      <Text style={styles.text}>Welcome to Video Calling Tutorial</Text>
-      <Button title="Join Video Call ☎️ 🤙" onPress={goToCallScreen} />
+      <Text style={styles.text}>Test call</Text>
+      <Button title="Join Video Call" onPress={goToCallScreen} />
     </View>
   )
 }
