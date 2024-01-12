@@ -5,17 +5,17 @@ import { SafeAreaView, StyleSheet, PermissionsAndroid, Platform } from 'react-na
 import { CallScreen } from './CallScreen'
 import { HomeScreen } from './HomeCallScreen'
 
-const apiKey = 'jpenjjsk4773'
+const apiKey = 'zz984t9cyrwj'
 const userId_1 = 'Quoc_123'
-const userId_2 = 'Quoc_456'
-const callId = 'test_call_ring'
+const userId_2 = 'mudoker'
+const callId = 'default_01c8d175-a56c-4cf1-9e86-559d255a5b33'
 
 // JWT
 const token_1 =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiUXVvY18xMjMifQ.hVpyEKnZaC-wXVHwdRDKhZyG8jyshJvAI6g-eToWbvE'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiUXVvY18xMjMifQ.1CF0krC8Ap-Ge0Sq1NY_Yf2_P7bDE0Rbv2FrLZKgfzA'
 
 const token_2 =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiUXVvY180NTYifQ.ZdQTA4_t3bthx6ow5jinEKTw8gIuolD9XtfbGSzinf4'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibXVkb2tlciJ9.TaA6CiYPBP-xPF2lawDkaIeqSqW420v9QLyFsg5qQg0'
 
 // 3. Create user objects
 const user_1 = {
@@ -32,7 +32,7 @@ const user_2 = {
 
 // 4. Create StreamVideoClient instances
 const client_1 = new StreamVideoClient({ apiKey, user: user_1, token: token_1 })
-// const client_2 = new StreamVideoClient({ apiKey, user: user_2, token: token_2 })
+const client_2 = new StreamVideoClient({ apiKey, user: user_2, token: token_2 })
 
 export const CallControllerScreen = () => {
   const [activeScreen, setActiveScreen] = useState('home')

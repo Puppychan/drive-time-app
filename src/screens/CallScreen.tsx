@@ -9,36 +9,36 @@ import {
   IncomingCall,
   OutgoingCall
 } from '@stream-io/video-react-native-sdk'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 type Props = { goToHomeScreen: () => void; callId: string }
+const filterCalls = (calls: Call[], createdByMe: boolean, callingState: CallingState) =>
+  calls.filter(
+    (call) => call.isCreatedByMe === createdByMe && call.state.callingState === callingState
+  )
 
 export const CallScreen = ({ goToHomeScreen, callId }: Props) => {
   const [call, setCall] = React.useState<Call | null>(null)
+  const [callAccepted, setCallAccepted] = useState(false)
+
   const client = useStreamVideoClient()
 
   const calls = useCalls()
 
   useEffect(() => {
     if (client) {
+      // Create call object directly for clarity
       const call = client.call('default', callId)
 
       try {
         call
           .getOrCreate({
             ring: true,
-            data: {
-              members: [{ user_id: 'Quoc_123' }, { user_id: 'Quoc_456' }]
-            }
+            data: { members: [{ user_id: 'mudoker' }, { user_id: 'Quoc_123' }] }
           })
           .then(() => {
-            // Check if the call is still active before setting it
-            if (call.state.callingState !== CallingState.LEFT) {
-              setCall(call)
-            } else {
-              console.warn('The call has already been left.')
-            }
+            setCall(call)
           })
           .catch((error) => {
             console.error('Error creating the call:', error)
@@ -58,25 +58,45 @@ export const CallScreen = ({ goToHomeScreen, callId }: Props) => {
   }
 
   // handle incoming ring calls
-  const incomingCalls = calls.filter(
-    (call) => call.isCreatedByMe === false && call.state.callingState === CallingState.RINGING
-  )
-
+  const incomingCalls = filterCalls(calls, false, CallingState.RINGING)
   const [incomingCall] = incomingCalls
 
   if (incomingCall) {
-    // render the incoming call UI
     return (
-      <StreamCall call={call}>
+      <StreamCall call={incomingCall}>
         <View style={styles.container}>
-          <IncomingCall
-            onRejectCallHandler={goToHomeScreen}
-            onAcceptCallHandler={() => {
-              return (
-                <StreamCall call={call}>
-                  <CallContent onHangupCallHandler={call.endCall} />
-                </StreamCall>
-              )
+          {callAccepted === false ? (
+            <IncomingCall
+              onRejectCallHandler={goToHomeScreen}
+              onAcceptCallHandler={() => setCallAccepted(true)}
+            />
+          ) : (
+            <CallContent onHangupCallHandler={goToHomeScreen} />
+          )}
+        </View>
+      </StreamCall>
+    )
+  }
+
+  // handle outgoing ring calls
+  const outgoingCalls = filterCalls(calls, true, CallingState.RINGING)
+  const [outgoingCall] = outgoingCalls
+
+  if (outgoingCall) {
+    return (
+      <StreamCall call={outgoingCall}>
+        <View style={styles.container}>
+          <OutgoingCall
+            onHangupCallHandler={async () => {
+              try {
+                if (outgoingCall.state.callingState !== CallingState.LEFT) {
+                  await outgoingCall.endCall()
+                } else {
+                  console.warn('The call has already been left.')
+                }
+              } catch (error) {
+                console.error('Error hanging up the call:', error)
+              }
             }}
           />
         </View>
@@ -84,28 +104,9 @@ export const CallScreen = ({ goToHomeScreen, callId }: Props) => {
     )
   }
 
-  // handle outgoing ring calls
-  const outgoingCalls = calls.filter(
-    (call) => call.isCreatedByMe === true && call.state.callingState === CallingState.RINGING
-  )
+  goToHomeScreen()
 
-  const [outgoingCall] = outgoingCalls
-  if (outgoingCall) {
-    // render the outgoing call UI
-    return (
-      <StreamCall call={call}>
-        <View style={styles.container}>
-          <OutgoingCall onHangupCallHandler={call.endCall} />
-        </View>
-      </StreamCall>
-    )
-  } else {
-    try {
-      goToHomeScreen()
-    } catch (error) {
-      console.warn(error)
-    }
-  }
+  return null
 }
 
 const styles = StyleSheet.create({
