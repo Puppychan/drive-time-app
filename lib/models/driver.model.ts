@@ -6,5 +6,5 @@ export interface Driver extends Account {
   workStartDate: Timestamp
   QRCode: string
   isBan: boolean
-  banTime: Timestamp
+  banTime?: Timestamp | null
 }

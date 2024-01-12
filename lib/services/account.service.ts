@@ -39,10 +39,10 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
   try {
     // generate and validate based on role
     let qrCode: string | null = null
-    if (additionalUserInfo.role === AccountRole.Driver && 'QRCode' in additionalUserInfo) {
-      qrCode = await generateDriverQRCode(user.uid)
-      additionalUserInfo.QRCode = qrCode
-    }
+    // if (additionalUserInfo.role === AccountRole.Driver && 'QRCode' in additionalUserInfo) {
+    //   qrCode = await generateDriverQRCode(user.uid)
+    //   additionalUserInfo.QRCode = qrCode
+    // }
     // validate
     const isUnique = await isUniqueUser(
       user.uid,

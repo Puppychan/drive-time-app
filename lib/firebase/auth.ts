@@ -21,6 +21,26 @@ export async function signInWithGoogle() {}
 
 export async function signOut() {}
 
+
+export async function signIn(email: string, password: string): Promise<ResponseDto> {
+  return (
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user
+      return new ResponseDto(ResponseCode.OK, 'Login successfully', {...user})
+    })
+    .catch((error) => {
+      // TODO: display to UI
+      return new ResponseDto(
+        error.code ?? ResponseCode.BAD_GATEWAY,
+        `Login failed: ${error}`,
+        `Login failed: ${error}`
+      )
+    })
+  );
+
+}
+
 export async function createAuthAccount(email: string, password: string): Promise<ResponseDto>{
   return (
     createUserWithEmailAndPassword(auth, email, password)
@@ -50,6 +70,7 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
       })
     })
     .catch(async (error) => {
+      console.log(`~ ~ ~ ~ auth.ts, line 73: `,error)
       return await handleUserCreationError(user, error)
     })
   );
@@ -82,11 +103,3 @@ export async function createUser(email: string, password: string, otherUserInfo:
     })
 }
 
-export async function signIn(email: string, password: string) {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    // console.log('User signed in:', userCredential.user)
-  } catch (error) {
-    // console.error('Error signing in:', error)
-  }
-}

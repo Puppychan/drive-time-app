@@ -7,7 +7,7 @@ import { CustomButton, OutlineButton } from '@/src/components/button/Buttons'
 import { Input } from '@/src/components/input/TextInput'
 import { AppDropDown } from '@/src/components/menu/DropDownMenu'
 import { auth } from '@/lib/firebase/firebase'
-import { deleteUser, User } from 'firebase/auth'
+import { deleteUser, updateProfile, User } from 'firebase/auth'
 import { addUser } from '@/lib/firebase/auth'
 import { Account, AccountRole } from '@/lib/models/account.model'
 import { uploadImage } from '@/lib/firebase/storage'
@@ -33,7 +33,7 @@ export default function Page() {
   const [phone, setPhone] = useState<string>('')
   const [dob, setDob] = useState<Date>()
   const [avatarUri, setAvatarUri] = useState<any>()
-  const [avatarUrl, setAvatarUrl] = useState<string>()
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
 
   useEffect(() => {
     let user = auth.currentUser || undefined;
@@ -67,8 +67,8 @@ export default function Page() {
       lastName: lastName,
       role: AccountRole.Driver,
       phone: phone,
-      avatar: avatarUrl,
-      birthday: dob && Timestamp.fromDate(dob),
+      avatar: avatarUrl || null,
+      birthday: (dob && Timestamp.fromDate(dob)) || null,
       createdDate: Timestamp.fromDate(new Date())
     }
 
@@ -77,15 +77,29 @@ export default function Page() {
       workStartDate: Timestamp.fromDate(new Date()),
       QRCode: '',
       isBan: false,
-      banTime: undefined
+      banTime: null
     }
 
+    console.log(authUser.uid)
     addUser(authUser, driverAccount)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
-        ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
-        auth.signOut();
-        router.push(`/login`);
+        updateProfile(authUser, {
+          displayName: firstName,
+          photoURL: avatarUrl
+        })
+        .then(() => {
+          ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
+          auth.signOut();
+          router.push(`/login`);
+        })
+        .catch(error => {
+          console.log(`~ ~ ~ ~ driver-profile.ts, line 97: `,error)
+          ToastAndroid.show(`Please login`, ToastAndroid.SHORT);
+          auth.signOut();
+          router.push(`/login`);
+        }) 
+
       }
       else {
         auth.signOut();

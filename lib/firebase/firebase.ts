@@ -3,10 +3,7 @@ import { getAuth, signOut, initializeAuth, getReactNativePersistence } from 'fir
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-// const dotenv = require('dotenv')
-// dotenv.config()
 // import 'dotenv/config'
-console.log(process.env.EXPO_PUBLIC_FIREBASE_API_KEY)
 
 export const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,

@@ -32,9 +32,9 @@ export default async function Page() {
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
-  const [dob, setDob] = useState<Date>()
+  const [dob, setDob] = useState<Date | null>(null)
   const [avatarUri, setAvatarUri] = useState<any>()
-  const [avatarUrl, setAvatarUrl] = useState<string>()
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
 
   useEffect(() => {
     let user = auth.currentUser;
@@ -60,7 +60,7 @@ export default async function Page() {
       if (avatarUri) {
         const res = await uploadImage(avatarUri, `${AVATAR_REF}/${authUser?.uid}.jpg`);
         if (res.code === ResponseCode.OK) {
-          const {downloadUrl} = res.body
+          const downloadUrl = res.body
           setAvatarUrl(downloadUrl)
         }
       }
@@ -74,7 +74,7 @@ export default async function Page() {
         role: AccountRole.Driver,
         phone: phone,
         avatar: avatarUrl,
-        birthday: dob && Timestamp.fromDate(dob),
+        birthday: (dob && Timestamp.fromDate(dob)) || null,
         createdDate: Timestamp.fromDate(new Date())
       }
 
