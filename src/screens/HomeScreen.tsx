@@ -30,16 +30,16 @@ const HomeScreen = () => {
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.push('./(user)/driver/register/driver-profile')
+    router.push('/driver/register/driver-profile')
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
 
   const onClickExploreNearby = () => {
-    router.push('./user/driver/register')
+    router.push('/driver/register')
   }
   const onClickSuggestions = () => {
-    router.push('./(user)/driver/register/book_driver')
+    router.push('/driver/register/book_driver')
   }
   const onClickInstruction = () => (link: string) => {
     // navigation.navigate(link)
@@ -73,6 +73,10 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {/* Recent card */}
+          <CustomButton
+            title='Register Driver'
+            onPress={() => {router.push('/driver/register')}}
+          />
 
           {/* Explore Nearby Card */}
           <FullScreenCard

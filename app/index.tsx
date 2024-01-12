@@ -15,6 +15,7 @@ import ServiceCardLarge from '@/src/components/cards/ServiceCardLarge'
 import ServiceCardTextInside from '@/src/components/cards/ServiceCardTextInside'
 import { UserProfileScreen } from '@/src/screens/ProfileScreen'
 import { store } from '@/store'
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
@@ -29,6 +30,8 @@ export default function App() {
     const prepare = async () => {
       try {
         // Pre-load fonts + APIs
+        firebaseApp
+        auth
       } catch (e) {
         console.warn(e)
       } finally {

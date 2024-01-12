@@ -7,7 +7,8 @@ import { Constant } from '../../../components/Constant'
 
 const InputStyle = StyleSheet.create({
   container: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    minWidth: 100
   },
   input: {
     borderColor: Colors.silver,
@@ -17,7 +18,6 @@ const InputStyle = StyleSheet.create({
     height: Constant.inputHeight,
     padding: 10,
     fontSize: Constant.normalTextSize,
-    minWidth: 100,
     width: '100%'
   },
   onFocus: {
@@ -53,10 +53,10 @@ export const Input = (props: TextInputProps) => {
   } = props
   const [isFocused, setIsFocused] = useState(false)
   return (
-    <View style={InputStyle.container}>
+    <View style={[InputStyle.container, style]}>
       {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
       <TextInput
-        style={[InputStyle.input, isFocused && InputStyle.onFocus, style]}
+        style={[InputStyle.input, isFocused && InputStyle.onFocus]}
         placeholder={placeHolder}
         value={value}
         editable={editable}

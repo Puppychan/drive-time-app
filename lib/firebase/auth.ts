@@ -1,6 +1,5 @@
 import {
   GoogleAuthProvider,
-  signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,10 +8,10 @@ import {
 
 import { ResponseCode } from '@/common/response-code.enum'
 
-import { ResponseDto } from './../../common/response.dto'
-import { AccountType } from '../common/model-type'
-import { auth } from '../firebase/firebase'
-import { addUserToDatabase, handleUserCreationError } from '../services/account.service'
+import { ResponseDto } from '@/common/response.dto'
+import { AccountType } from '@/lib/common/model-type'
+import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
+import { auth } from '@/lib/firebase/firebase'
 
 export function onAuthStateChanged(cb: any) {
   return () => {}
@@ -25,17 +24,16 @@ export async function signOut() {}
 export async function createAuthAccount(email: string, password: string): Promise<ResponseDto>{
   return (
     createUserWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential) => {
-      // Signed up
+    .then((userCredential) => {
       const user = userCredential.user
-      return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', user)
+      return new ResponseDto(ResponseCode.OK, 'Register user successfully', {...user})
     })
     .catch((error) => {
       // TODO: display to UI
       return new ResponseDto(
         error.code ?? ResponseCode.BAD_GATEWAY,
-        'Signing up user unsuccessfully',
-        `Failed to signing up the user: ${error}`
+        `Failed to register user: ${error}`,
+        `Failed to register user: ${error}`
       )
     })
   );
