@@ -17,6 +17,8 @@ import ServiceCardTextInside from '@/src/components/cards/ServiceCardTextInside'
 import { UserProfileScreen } from '@/src/screens/ProfileScreen'
 import { store } from '@/store'
 
+import { CallControllerScreen } from '../src/screens/CallControllerScreen'
+
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
 
@@ -52,18 +54,7 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'lightblue',
-              padding: 20
-            }}
-          >
-            <Text>Hello world</Text>
-          </TouchableOpacity>
-        </View>
+        <CallControllerScreen />
 
         {/* <View style={styles.container}>
           <Text>Open up ./app/index.tsx to start working on your app!</Text>
