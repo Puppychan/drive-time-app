@@ -1,6 +1,5 @@
 import {
   GoogleAuthProvider,
-  signInWithPopup,
   onAuthStateChanged as _onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -10,10 +9,10 @@ import {
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
 
-import { ResponseDto } from './../../common/response.dto'
-import { AccountType } from '../common/model-type'
-import { auth } from '../firebase/firebase'
-import { addUserToDatabase, handleUserCreationError } from '../services/account.service'
+import { ResponseDto } from '@/common/response.dto'
+import { AccountType } from '@/lib/common/model-type'
+import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
+import { auth } from '@/lib/firebase/firebase'
 
 export function onAuthStateChanged() {
   return () => {}
@@ -23,20 +22,39 @@ export async function signInWithGoogle() {}
 
 export async function signOut() {}
 
-export async function createAuthAccount(email: string, password: string): Promise<ResponseDto>{
+
+export async function signIn(email: string, password: string): Promise<ResponseDto> {
   return (
-    createUserWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential) => {
-      // Signed up
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
       const user = userCredential.user
-      return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', user)
+      return new ResponseDto(ResponseCode.OK, 'Login successfully', {...user})
     })
     .catch((error) => {
       // TODO: display to UI
       return new ResponseDto(
         error.code ?? ResponseCode.BAD_GATEWAY,
-        'Signing up user unsuccessfully',
-        `Failed to signing up the user: ${error}`
+        `Login failed: ${error}`,
+        `Login failed: ${error}`
+      )
+    })
+  );
+
+}
+
+export async function createAuthAccount(email: string, password: string): Promise<ResponseDto>{
+  return (
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user
+      return new ResponseDto(ResponseCode.OK, 'Register user successfully', {...user})
+    })
+    .catch((error) => {
+      // TODO: display to UI
+      return new ResponseDto(
+        error.code ?? ResponseCode.BAD_GATEWAY,
+        `Failed to register user: ${error}`,
+        `Failed to register user: ${error}`
       )
     })
   );
@@ -53,6 +71,7 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
       })
     })
     .catch(async (error) => {
+      console.log(`~ ~ ~ ~ auth.ts, line 73: `,error)
       return await handleUserCreationError(user, error)
     })
   );

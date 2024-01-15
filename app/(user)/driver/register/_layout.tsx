@@ -1,15 +1,14 @@
+import { Colors } from '@/components/Colors'
 import { Slot } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
-
-import { Colors } from '../../../../components/Colors'
 
 export default function Layout() {
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Slot />
-    </View>
+    <>
+      <View style={styles.container}>
+        <Slot />
+      </View>
+    </>
   )
 }
 
@@ -18,5 +17,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 30
   }
 })
