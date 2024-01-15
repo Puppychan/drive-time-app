@@ -1,6 +1,7 @@
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
+import { Provider as PageProvider } from 'react-native-paper'
 import { StyleSheet, Text, View, Button as ReactNativeButton } from 'react-native'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -11,8 +12,9 @@ import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 import { auth, firebaseApp } from '@/lib/firebase/firebase'
 
+import { CallControllerScreen } from '../src/screens/CallControllerScreen'
+
 // Get the full width and height of the screen
-const { width: screenWidth } = getScreenSize()
 
 function onClickData() {
   console.log("Calldls;fnk");
@@ -23,14 +25,11 @@ SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
-  const router = useRouter()
 
   useEffect(() => {
     const prepare = async () => {
       try {
         // Pre-load fonts + APIs
-        firebaseApp
-        auth
       } catch (e) {
         console.warn(e)
       } finally {
@@ -67,17 +66,8 @@ export default function App() {
             <Button>Open SignIn</Button>
           </Link>
         </View>
+        <CallControllerScreen />
       </PageProvider>
     </ReduxProvider>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: screenWidth,
-    backgroundColor: Colors.cream,
-    alignItems: 'center',
-    overflow: 'scroll'
-  }
-})
