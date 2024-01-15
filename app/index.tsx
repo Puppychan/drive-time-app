@@ -59,6 +59,9 @@ export default function App() {
           <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
             <ReactNativeButton title="Open Signin" />
+            </Link>
+          <Link href="../driver/register/chat" asChild>
+            <Button>Open SignIn</Button>
           </Link>
         </View>
       </PageProvider>
