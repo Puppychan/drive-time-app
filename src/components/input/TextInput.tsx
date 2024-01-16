@@ -7,7 +7,8 @@ import { Constant } from '../../../components/Constant'
 
 const InputStyle = StyleSheet.create({
   container: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    minWidth: 100
   },
   input: {
     borderColor: Colors.silver,
@@ -17,7 +18,6 @@ const InputStyle = StyleSheet.create({
     height: Constant.inputHeight,
     padding: 10,
     fontSize: Constant.normalTextSize,
-    minWidth: 100,
     width: '100%'
   },
   onFocus: {

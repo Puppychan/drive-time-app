@@ -13,12 +13,12 @@ export interface Account {
   username: string
   firstName: string
   lastName: string
-  avatar?: string
+  avatar?: string | null
   email: string
   phone: string
   updatedDate?: Timestamp // add after create account
   createdDate?: Timestamp // add after create account
-  birthday?: Timestamp
+  birthday?: Timestamp | null
   role: AccountRole
   // address - can be optional because sometimes user doesn't have address
   locationId?: string // This field is optional as denoted by '?'

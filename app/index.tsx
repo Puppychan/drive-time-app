@@ -9,6 +9,7 @@ import { Colors } from '@/components/Colors'
 import { generateData } from '@/lib/data/generate-all.data'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
@@ -28,6 +29,8 @@ export default function App() {
     const prepare = async () => {
       try {
         // Pre-load fonts + APIs
+        firebaseApp
+        auth
       } catch (e) {
         console.warn(e)
       } finally {

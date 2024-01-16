@@ -6,34 +6,40 @@ import { useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import  {createAuthAccount} from "@/lib/firebase/auth";
 import { ResponseCode } from '@/common/response-code.enum'
+import { StatusBar } from 'expo-status-bar'
 
 export default function Page() {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
+  const [btnDisable, setBtnDisable] = useState<boolean>(false)
 
   const handleNext = async () => {
+    setBtnDisable(true)
     if (email.trim() === '') {
       ToastAndroid.show("Email is required", ToastAndroid.SHORT);
+      setBtnDisable(false)
       return
     } else if (password.trim() === '') {
       ToastAndroid.show("Password is required", ToastAndroid.SHORT);
+      setBtnDisable(false)
       return
     }
 
     createAuthAccount(email, password)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
-        const {user} = res.body
-        router.push(`/driver/register/driver-profile?id=${user.uid}`);
+        // ToastAndroid.show(`Register successfully`, ToastAndroid.SHORT);
+        const user = res.body
+        console.log(user)
+        router.push(`driver/register/driver-profile`);
       }
       else {
-        ToastAndroid.show(`Register account failed: ${res.message}`, ToastAndroid.SHORT);
+        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT);
       }
     })
-    .catch((error) => {
-      ToastAndroid.show(`Register account failed: ${error.message}`, ToastAndroid.SHORT);
-    })
+
+    setBtnDisable(false)
   }
 
   return (
@@ -55,7 +61,7 @@ export default function Page() {
           value={password}
           onChangeText={setPassword}
         />
-        <CustomButton title="Next" onPress={handleNext} />
+        <CustomButton title="Next" onPress={handleNext} disabled={btnDisable} />
       </View>
     </View>
   )
