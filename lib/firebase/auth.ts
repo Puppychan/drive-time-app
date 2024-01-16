@@ -3,7 +3,10 @@ import {
   onAuthStateChanged as _onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  User
+  User,
+  setPersistence,
+  inMemoryPersistence,
+  AuthErrorCodes
 } from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -13,6 +16,8 @@ import { ResponseDto } from '@/common/response.dto'
 import { AccountType } from '@/lib/common/model-type'
 import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
 import { auth } from '@/lib/firebase/firebase'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
 
 export function onAuthStateChanged() {
   return () => {}
@@ -20,21 +25,49 @@ export function onAuthStateChanged() {
 
 export async function signInWithGoogle() {}
 
-export async function signOut() {}
+export async function signOut() {
+  auth.signOut();
+  await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.FALSE)
+  await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, Constant.FALSE)
+  await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, '')
+}
 
 
-export async function signIn(email: string, password: string): Promise<ResponseDto> {
+export async function signIn(email: string, password: string, remember: boolean): Promise<ResponseDto> {
+  if (!remember) setPersistence(auth, inMemoryPersistence);
   return (
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       const user = userCredential.user
+      await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
+      await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, remember ? Constant.TRUE : Constant.FALSE)
+      await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, email)
       return new ResponseDto(ResponseCode.OK, 'Login successfully', {...user})
     })
-    .catch((error) => {
+    .catch(async (error) => {
+      await signOut();
+
+      let message = "Cannot login. Please try again"
+      if (error.code) {
+        switch (error.code) {
+          case AuthErrorCodes.INVALID_EMAIL:
+            message = "Invalid email"
+            break
+          case AuthErrorCodes.INVALID_LOGIN_CREDENTIALS:
+            message = "Invalid login credentials"
+            break
+          case AuthErrorCodes.INVALID_PASSWORD:
+            message = "Wrong password" 
+            break
+          default:
+            message = error.message
+        }
+          
+      }
       // TODO: display to UI
       return new ResponseDto(
         error.code ?? ResponseCode.BAD_GATEWAY,
-        `Login failed: ${error}`,
+        `${message}`,
         `Login failed: ${error}`
       )
     })
@@ -53,8 +86,8 @@ export async function createAuthAccount(email: string, password: string): Promis
       // TODO: display to UI
       return new ResponseDto(
         error.code ?? ResponseCode.BAD_GATEWAY,
-        `Failed to register user: ${error}`,
-        `Failed to register user: ${error}`
+        `${error.message}`,
+        `Failed to register user:  ${error}`
       )
     })
   );

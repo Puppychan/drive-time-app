@@ -1,31 +1,35 @@
 import { ResponseCode } from '@/common/response-code.enum'
 import { Colors } from '@/components/Colors'
 import { signIn } from '@/lib/firebase/auth'
-import { CustomButton } from '@/src/components/button/Buttons'
+import { CustomButton, OutlineButton } from '@/src/components/button/Buttons'
+import CheckBox from '@/src/components/input/Checkbox'
 import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, ToastAndroid } from 'react-native'
-export default function Page() {
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ToastAndroid } from 'react-native'
+export default function SignInScreen() {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
-  const [btnDisable, setBtnDisable] = useState<boolean>(false)
+  const [loginDisable, setLoginDisable] = useState<boolean>(false)
+  const [rememberMe, setRememberMe] = useState<boolean>(true)
+
+  const handleRegister = () => {router.push("/driver/register")}
 
   const handleLogin = async () => {
-    setBtnDisable(true)
+    setLoginDisable(true)
     if (email.trim() === '') {
       ToastAndroid.show("Email is required", ToastAndroid.SHORT);
-      setBtnDisable(false)
+      setLoginDisable(false)
       return
     } else if (password.trim() === '') {
       ToastAndroid.show("Password is required", ToastAndroid.SHORT);
-      setBtnDisable(false)
+      setLoginDisable(false)
       return
     }
 
-    signIn(email, password)
+    signIn(email, password, rememberMe)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
         const user = res.body
@@ -38,7 +42,7 @@ export default function Page() {
       }
     })
 
-    setBtnDisable(false)
+    setLoginDisable(false)
   }
 
   return (
@@ -62,12 +66,20 @@ export default function Page() {
             onChangeText={setPassword}
             style={styles.input}
           />
-          <CustomButton style={styles.loginButton} title="Login" onPress={handleLogin} disabled={btnDisable} />
+          <CheckBox 
+            title='Remember me'
+            isChecked={rememberMe}
+            onPress={() => setRememberMe(!rememberMe)}
+            style={{color: Colors.sky_blue}}
+            textStyle={{color: Colors.white}}
+          />
+          <CustomButton style={styles.loginButton} title="Login" onPress={handleLogin} disabled={loginDisable} />
+          {/* <OutlineButton style={styles.loginButton} title="Continue without login" onPress={handleLogin}/> */}
           <TouchableOpacity style={styles.forgotPasswordButton}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
-        <CustomButton style={styles.registerButton} title="Don't have an account? Register now!" onPress={handleLogin} disabled={btnDisable} />
+        <CustomButton style={styles.registerButton} title="Don't have an account? REGISTER NOW!" onPress={handleRegister}/>
         <StatusBar style="auto" />
       </View>
     </ImageBackground>
@@ -87,7 +99,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
-    // paddingBottom: 250,
     paddingHorizontal: 30,
     flexDirection: 'column'
   },
@@ -102,16 +113,20 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   loginButton: {
-    backgroundColor: '#3498db',
-    padding: 10,
+    backgroundColor: Colors.sky_blue,
     borderRadius: 8,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center'
+  withoutLoginButton: {
+    backgroundColor: Colors.sky_blue,
+    borderColor: '#3498db',
+    borderRadius: 8,
   },
+  // buttonText: {
+  //   color: '#fff',
+  //   fontSize: 20,
+  //   fontWeight: 'bold',
+  //   textAlign: 'center'
+  // },
   forgotPasswordButton: {
     alignSelf: 'center'
   },

@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch } from 'r
 import { Colors } from '@/components/Colors'
 import { Constant } from '@/components/Constant'
 
-const ButtonStyle = StyleSheet.create({
+const styles = StyleSheet.create({
   button: {
     elevation: 8,
     backgroundColor: Colors.primary,
@@ -56,8 +56,8 @@ export const CustomButton = (props: ButtonProps) => {
       disabled={props.disabled === true}
       activeOpacity={props.activeOpacity}
       style={[
-        ButtonStyle.button,
-        props.disabled === true && ButtonStyle.disabledButton,
+        styles.button,
+        props.disabled === true && styles.disabledButton,
         props.style
       ]}
     >
@@ -66,7 +66,7 @@ export const CustomButton = (props: ButtonProps) => {
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <Text style={[ButtonStyle.buttonText, props.textStyle]}>{props.title}</Text>
+        <Text style={[styles.buttonText, props.textStyle]}>{props.title}</Text>
       )}
       {props.iconRight}
       {props.childrenRight}
@@ -81,9 +81,9 @@ export const OutlineButton = (props: ButtonProps) => {
       disabled={props.disabled === true}
       activeOpacity={props.activeOpacity}
       style={[
-        ButtonStyle.button,
-        ButtonStyle.outlinedButton,
-        props.disabled === true && ButtonStyle.disabledButton,
+        styles.button,
+        styles.outlinedButton,
+        props.disabled === true && styles.disabledButton,
         props.style
       ]}
     >
@@ -92,7 +92,7 @@ export const OutlineButton = (props: ButtonProps) => {
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <Text style={[ButtonStyle.buttonText, ButtonStyle.outlinedButtonText, props.textStyle]}>
+        <Text style={[styles.buttonText, styles.outlinedButtonText, props.textStyle]}>
           {props.title}
         </Text>
       )}

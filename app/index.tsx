@@ -10,6 +10,7 @@ import { generateData } from '@/lib/data/generate-all.data'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 import { auth, firebaseApp } from '@/lib/firebase/firebase'
+import { User } from 'firebase/auth'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
@@ -24,6 +25,8 @@ SplashScreen.preventAutoHideAsync()
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
   const router = useRouter()
+  const [authUser, setAuthUser] = useState<User>()
+
 
   useEffect(() => {
     const prepare = async () => {
@@ -31,6 +34,8 @@ export default function App() {
         // Pre-load fonts + APIs
         firebaseApp
         auth
+        let user = auth.currentUser || undefined;
+        setAuthUser(user)
       } catch (e) {
         console.warn(e)
       } finally {
@@ -59,6 +64,10 @@ export default function App() {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {/* <StatusBar style="light" /> */}
           <Text>Home Page</Text>
+          <Text>
+            Hi
+            {authUser && <Text>{", " + authUser.displayName}</Text>}
+          </Text>
           <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
             <ReactNativeButton title="Open Signin" />

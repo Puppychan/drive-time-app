@@ -1,11 +1,11 @@
-import { useState, FC } from 'react'
+import { useState } from 'react'
 import { TextInput, View, StyleSheet } from 'react-native'
 
 import { Label } from './Label'
-import { Colors } from '../../../components/Colors'
-import { Constant } from '../../../components/Constant'
+import { Colors } from '@/components/Colors'
+import { Constant } from '@/components/Constant'
 
-const InputStyle = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     minWidth: 100
@@ -53,10 +53,10 @@ export const Input = (props: TextInputProps) => {
   } = props
   const [isFocused, setIsFocused] = useState(false)
   return (
-    <View style={InputStyle.container}>
+    <View style={styles.container}>
       {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
       <TextInput
-        style={[InputStyle.input, isFocused && InputStyle.onFocus, style]}
+        style={[styles.input, isFocused && styles.onFocus, style]}
         placeholder={placeHolder}
         value={value}
         editable={editable}
