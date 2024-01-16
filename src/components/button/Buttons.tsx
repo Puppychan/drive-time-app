@@ -1,14 +1,15 @@
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome6';
 
-import { Colors } from '../../../components/Colors'
-import { Constant } from '../../../components/Constant'
+import { Colors } from '@/components/Colors'
+import { Constant } from '@/components/Constant'
 
 const ButtonStyle = StyleSheet.create({
   button: {
     elevation: 8,
     backgroundColor: Colors.primary,
     borderRadius: 5,
+    borderWidth: 1,
     paddingVertical: 10,
     paddingHorizontal: 20,
     flexDirection: 'row',
@@ -42,6 +43,9 @@ interface ButtonProps {
   textStyle?: any
   activeOpacity?: any
   loading?: any
+  childrenLeft?: any
+  childrenRight?: any
+
 }
 
 export const CustomButton = (props: ButtonProps) => {
@@ -57,12 +61,14 @@ export const CustomButton = (props: ButtonProps) => {
       ]}
     >
       {props.iconLeft}
+      {props.childrenLeft}
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
         <Text style={[ButtonStyle.buttonText, props.textStyle]}>{props.title}</Text>
       )}
       {props.iconRight}
+      {props.childrenRight}
     </TouchableOpacity>
   )
 }
@@ -71,16 +77,17 @@ export const OutlineButton = (props: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      disabled={props.disabled !== true}
+      disabled={props.disabled === true}
       activeOpacity={props.activeOpacity}
       style={[
         ButtonStyle.button,
         ButtonStyle.outlinedButton,
-        props.disabled !== true && ButtonStyle.disabledButton,
+        props.disabled === true && ButtonStyle.disabledButton,
         props.style
       ]}
     >
       {props.iconLeft}
+      {props.childrenLeft}
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
@@ -89,6 +96,7 @@ export const OutlineButton = (props: ButtonProps) => {
         </Text>
       )}
       {props.iconRight}
+      {props.childrenRight}
     </TouchableOpacity>
   )
 }

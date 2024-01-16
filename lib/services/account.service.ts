@@ -21,7 +21,12 @@ import { FavoriteLocation } from '../models/favorite-location.model'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
-    console.log('Create user dbnfkjsdbsdf')
+    // generate and validate based on role
+    let qrCode: string | null = null
+    // if (additionalUserInfo.role === AccountRole.Driver && 'QRCode' in additionalUserInfo) {
+    //   qrCode = await generateDriverQRCode(user.uid)
+    //   additionalUserInfo.QRCode = qrCode
+    // }
     // validate
     const isUnique = await isUniqueUser(
       user.uid,
