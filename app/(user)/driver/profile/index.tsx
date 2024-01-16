@@ -81,7 +81,6 @@ export default async function Page() {
       const driverAccount: AccountType = {
         ...account,
         workStartDate: Timestamp.fromDate(new Date()),
-        QRCode: '',
         isBan: false,
         banTime: undefined
       }

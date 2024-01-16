@@ -8,7 +8,11 @@ export const Colors = {
   disabled: '#d3d3d3',
   white: '#fff',
   black: '#000',
-  silver: '#BFBFBF'
+  silver: '#BFBFBF',
+  hot_pink: '#f603a3',
+  coral: '#fe7d6a',
+  peach: '#fc7a83',
+  yellow: '#f5c54c',
 }
 
 const Light = {

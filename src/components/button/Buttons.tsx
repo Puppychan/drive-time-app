@@ -9,7 +9,7 @@ const ButtonStyle = StyleSheet.create({
     elevation: 8,
     backgroundColor: Colors.primary,
     borderRadius: 5,
-    borderWidth: 1,
+    borderWidth: 0,
     paddingVertical: 10,
     paddingHorizontal: 20,
     flexDirection: 'row',
@@ -23,7 +23,8 @@ const ButtonStyle = StyleSheet.create({
   },
   outlinedButton: {
     backgroundColor: Colors.cream,
-    borderColor: Colors.primary
+    borderColor: Colors.primary,
+    borderWidth: 1
   },
   outlinedButtonText: {
     color: Colors.primary
