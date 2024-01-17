@@ -9,10 +9,14 @@ export const Colors = {
   white: '#fff',
   black: '#000',
   silver: '#BFBFBF',
-  hot_pink: '#f603a3',
+  dark: "#626262",
+  blue: "#1F41BB",
+  gray: "#ECECEC",
+  lightBlue: "#f1f4ff",
   coral: '#fe7d6a',
   peach: '#fc7a83',
   yellow: '#f5c54c',
+  hot_pink: '#f603a3',
 }
 
 const Light = {
@@ -39,3 +43,14 @@ export const useThemeColors = (colorScheme: any) => {
   const colors = DriveTimeColors[isLightTheme ? 'light' : 'dark']
   return colors
 }
+export const specialColors = {
+  darkText: Colors.dark,
+  text: Colors.black,
+  background: Colors.white,
+  primary: Colors.blue,
+  onPrimary: Colors.white,
+  active: Colors.blue,
+  borderWithOpacity: "#1f41bb",
+  lightPrimary: Colors.lightBlue,
+  gray: Colors.gray,
+};

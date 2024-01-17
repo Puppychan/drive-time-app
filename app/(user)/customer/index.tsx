@@ -4,8 +4,9 @@ import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import  {createAuthAccount, signIn} from "@/lib/firebase/auth";
+import  {createAuthAccount} from "@/lib/firebase/auth";
 import { ResponseCode } from '@/common/response-code.enum'
+import { StatusBar } from 'expo-status-bar'
 
 export default function Page() {
   const router = useRouter()
@@ -13,7 +14,7 @@ export default function Page() {
   const [password, setPassword] = useState('')
   const [btnDisable, setBtnDisable] = useState<boolean>(false)
 
-  const handleLogin = async () => {
+  const handleNext = async () => {
     setBtnDisable(true)
     if (email.trim() === '') {
       ToastAndroid.show("Email is required", ToastAndroid.SHORT);
@@ -25,16 +26,14 @@ export default function Page() {
       return
     }
 
-    signIn(email, password)
+    createAuthAccount(email, password)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
-        const user = res.body
-        console.log(user)
-        ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT);
-        router.push(`/`);
+        const {user} = res.body
+        // router.push(`/driver/register/driver-profile?id=${user.uid}`);
       }
       else {
-        ToastAndroid.show(`Login failed: ${res.message}`, ToastAndroid.SHORT);
+        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT);
       }
     })
 
@@ -42,40 +41,31 @@ export default function Page() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Login</Text>
-        <View style={styles.form}>
-          <Input
-            label="Email"
-            placeHolder="Email"
-            required={true}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <Input
-            label="Password"
-            placeHolder="Password"
-            secureTextEntry={true}
-            required={true}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <CustomButton title="Login" onPress={handleLogin} disabled={btnDisable} />
-        </View>
+    <View style={styles.formContainer}>
+      <Text style={styles.formTitle}>Driver Sign Up</Text>
+      <View style={styles.form}>
+        <Input
+          label="Email"
+          placeHolder="Email"
+          required={true}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <Input
+          label="Password"
+          placeHolder="Password"
+          secureTextEntry={true}
+          required={true}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <CustomButton title="Next" onPress={handleNext} disabled={btnDisable} />
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.navy_black,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 30
-  },
   formContainer: {
     flexDirection: 'column',
     alignItems: 'center',

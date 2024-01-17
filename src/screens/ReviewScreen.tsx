@@ -1,18 +1,18 @@
-import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import ReviewCard from '../components/review/ReviewCard/ReviewCard'
 import { router } from 'expo-router'
+import firebase from 'firebase/app'
+import { Timestamp, collection, doc, setDoc, addDoc } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Alert } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+
+import { auth, db } from '../../lib/firebase/firebase'
+import { Review, ReviewFrom } from '../../lib/models/review.model'
+import { CustomButton } from '../components/button/Buttons'
 import DriverInfoCard from '../components/review/ReviewCard/DriverInfoCard'
+import PaymentInfo from '../components/review/ReviewCard/PaymentInfo'
+import ReviewCard from '../components/review/ReviewCard/ReviewCard'
 import RouteInfo from '../components/review/ReviewCard/RouteInfo'
 import TripInsurance from '../components/review/ReviewCard/TripInsurance'
-import PaymentInfo from '../components/review/ReviewCard/PaymentInfo'
-import { CustomButton } from '../components/button/Buttons'
-import { Review, ReviewFrom } from '../../lib/models/review.model'
-import { auth, db } from '../../lib/firebase/firebase'
-import { Timestamp, collection, doc, setDoc, addDoc } from 'firebase/firestore'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
 
 const ReviewScreen = () => {
   const screenWidth = Dimensions.get('window').width
@@ -33,16 +33,16 @@ const ReviewScreen = () => {
         from: ReviewFrom.Customer,
         bookingId: '123abc',
         createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-  
-      console.log('Review added with ID: ', docRef.id);
+        updatedAt: new Date()
+      })
+
+      console.log('Review added with ID: ', docRef.id)
     } catch (error) {
-      console.error('Error adding review:', error);
-      Alert.alert('Error', 'Failed to add review. Please try again.');
+      console.error('Error adding review:', error)
+      Alert.alert('Error', 'Failed to add review. Please try again.')
     }
-  };
-  
+  }
+
   const goBack = () => {
     router.back()
     // console.log('Go back');
@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <CustomButton title="Arrive" style={styles.customButtonStyle } onPress={addReview} />
+      <CustomButton title="Arrive" style={styles.customButtonStyle} onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>
