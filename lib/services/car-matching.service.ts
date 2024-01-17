@@ -10,11 +10,18 @@ interface CarRequest {
   delivery: mLocation
 }
 
+interface DriverMetrics {
+  id: string
+  totalIncomeToday: number
+  totalDistanceTraveled: number
+}
+
 interface Arc {
   from: string
   to: string
   cost: number
   waitTime: number
+  loadBalanceScore: number
 }
 
 interface Car {
@@ -39,7 +46,16 @@ function generateAllArcs(locations: mLocation[]): Arc[] {
       const cost = Math.floor(Math.random() * 10) + 1
       const waitingTime = Math.floor(Math.random() * 10) + 1
 
-      arcs.push({ from: fromLocation.id, to: toLocation.id, cost, waitTime: waitingTime })
+      const driverMetrics = driverMetricsArray.find((metrics) => metrics.id === fromLocation.id)
+      const loadBalanceScore = driverMetrics ? calculateLoadBalanceScore(driverMetrics) : 0
+
+      arcs.push({
+        from: fromLocation.id,
+        to: toLocation.id,
+        cost,
+        waitTime: waitingTime,
+        loadBalanceScore
+      })
     }
   }
 
@@ -139,6 +155,19 @@ function calculatePiecewiseLinearDissatisfaction(waitingTime: number) {
   return penalty
 }
 
+function calculateLoadBalanceScore(driverMetrics: DriverMetrics): number {
+  const incomeWeight = 0.6
+  const distanceWeight = 0.4
+
+  const normalizedIncome = driverMetrics.totalIncomeToday / 1000
+  const normalizedDistance = driverMetrics.totalDistanceTraveled / 100
+
+  // Combine income and distance metrics with weights
+  const score = incomeWeight * normalizedIncome + distanceWeight * normalizedDistance
+
+  return Math.abs(1 - score) * 100
+}
+
 const calculateObjectiveFunction = (
   solution: Solution,
   arcs: Arc[],
@@ -172,7 +201,10 @@ const calculateObjectiveFunction = (
     return acc + calculatePiecewiseLinearDissatisfaction(deltaT)
   }, 0)
 
-  return operationalCost + penalty
+  // T3 calculation (Load balancer)
+  const loadBalanceScore = arcs.reduce((acc, arc) => acc + arc.loadBalanceScore, 0)
+
+  return operationalCost + penalty + loadBalanceScore
 }
 
 // Get all neighborhood of a solution
@@ -242,7 +274,7 @@ function generateShiftNeighbors(currentSolution: Solution): Solution[] {
             (loc) => loc.startsWith('P') && neighbor.x[carId2][loc] === 1
           )
 
-          if (car1PickupsRemaining.length > 0 && car2PickupsRemaining.length > 0) {
+          if (car1PickupsRemaining.length <= 1 && car2PickupsRemaining.length <= 1) {
             shiftNeighbors.push(neighbor)
           }
         }
@@ -283,7 +315,7 @@ function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
               (loc) => neighbor.x[carId2][loc] === 1
             )
 
-            if (car1PickupsRemaining.length > 0 && car2PickupsRemaining.length > 0) {
+            if (car1PickupsRemaining.length <= 1 && car2PickupsRemaining.length <= 1) {
               interchangeNeighbors.push(neighbor)
             }
           }
@@ -354,7 +386,15 @@ const tabuSearchRoute = (
 const cars: Car[] = [
   { id: 'C1', mLocation: { id: 'C1', x: 0, y: 0 } },
   { id: 'C2', mLocation: { id: 'C2', x: 1, y: 2 } },
-  { id: 'C3', mLocation: { id: 'C3', x: 0, y: 2 } }
+  { id: 'C3', mLocation: { id: 'C3', x: 0, y: 2 } },
+  { id: 'C4', mLocation: { id: 'C4', x: 0, y: 2 } }
+]
+
+const driverMetricsArray: DriverMetrics[] = [
+  { id: 'C1', totalIncomeToday: 800, totalDistanceTraveled: 120 },
+  { id: 'C2', totalIncomeToday: 1000, totalDistanceTraveled: 150 },
+  { id: 'C3', totalIncomeToday: 1200, totalDistanceTraveled: 90 },
+  { id: 'C4', totalIncomeToday: 500, totalDistanceTraveled: 180 }
 ]
 
 const requests: CarRequest[] = [
