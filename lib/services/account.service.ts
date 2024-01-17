@@ -4,7 +4,9 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
+  increment,
   query,
   setDoc,
   updateDoc,
@@ -18,6 +20,7 @@ import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 import { FavoriteLocation } from '../models/favorite-location.model'
+import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -47,6 +50,24 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
   } catch (error) {
     console.log('Errorrr', error)
     throw error
+  }
+}
+
+export const updateCustomerMembership = async (userId: string) => {
+  try {
+    const customerRef = doc(db, CollectionName.ACCOUNTS, userId)
+    const customerSnapshot = await getDoc(customerRef)
+    if (customerSnapshot.exists()) {
+      await updateDoc(customerRef, {
+        membership: increment(ADD_MEMBERSHIP_POINT),
+        updatedAt: Timestamp.fromDate(new Date())
+      })
+    }
+
+    return new ResponseDto(ResponseCode.OK, 'Membership updated successfully', null)
+  } catch (error) {
+    console.error('Error updating membership:', error)
+    return handleUserException(error, 'Updating membership point')
   }
 }
 
