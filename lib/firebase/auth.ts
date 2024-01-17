@@ -105,10 +105,3 @@ export async function createUser(email: string, password: string, otherUserInfo:
     })
 }
 
-export async function signIn(email: string, password: string) {
-  try {
-    // console.log('User signed in:', userCredential.user)
-  } catch (error) {
-    // console.error('Error signing in:', error)
-  }
-}

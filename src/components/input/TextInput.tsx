@@ -53,10 +53,10 @@ export const Input = (props: TextInputProps) => {
   } = props
   const [isFocused, setIsFocused] = useState(false)
   return (
-    <View style={[InputStyle.container, style]}>
+    <View style={InputStyle.container}>
       {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
       <TextInput
-        style={[InputStyle.input, isFocused && InputStyle.onFocus]}
+        style={[InputStyle.input, isFocused && InputStyle.onFocus, style]}
         placeholder={placeHolder}
         value={value}
         editable={editable}
