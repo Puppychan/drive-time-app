@@ -1,23 +1,18 @@
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { useEffect, useState } from 'react'
-import { Provider as PageProvider } from 'react-native-paper'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Button as ReactNativeButton } from 'react-native'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { Colors } from '@/components/Colors'
-import { generateData } from '@/lib/data/generate-all.data'
-import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
-import { store } from '@/store'
-import { auth, firebaseApp } from '@/lib/firebase/firebase'
-
+import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
+import { store } from '../store'
 
 // Get the full width and height of the screen
 
 function onClickData() {
-  console.log("Calldls;fnk");
+  console.log('Calldls;fnk')
   generateData()
 }
 
@@ -61,7 +56,7 @@ export default function App() {
           <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
             <ReactNativeButton title="Open Signin" />
-            </Link>
+          </Link>
           <Link href="../driver/register/chat" asChild>
             <Button>Open SignIn</Button>
           </Link>

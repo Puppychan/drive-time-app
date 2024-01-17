@@ -77,6 +77,9 @@
     - Run `expo-cli upgrade`
     - Also run `npm update`
     - Now rerun `npx expo start`
+  - If there is error which is relevant to `CommandError: No development build (com.drivetimeapp) for this project is installed. Please make and install a development build on the device first.`:
+    - Rerun `expo run:android`
+  - If still cannot rerun: run `npm run --reset-cache` and rerun `npx expo start`
 
 ### Other Commands Usage
 
