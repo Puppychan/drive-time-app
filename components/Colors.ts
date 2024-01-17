@@ -17,6 +17,7 @@ export const Colors = {
   peach: '#fc7a83',
   yellow: '#f5c54c',
   hot_pink: '#f603a3',
+  sky_blue: '#3498db'
 }
 
 const Light = {

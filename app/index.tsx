@@ -15,8 +15,10 @@ import { Provider as ReduxProvider } from 'react-redux'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-import { store } from '../store'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
+import { store } from '@/store'
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
+import { User } from 'firebase/auth'
 
 // Get the full width and height of the screen
 
@@ -32,11 +34,17 @@ const { width: screenWidth } = getScreenSize()
 export default function App() {
   const router = useRouter()
   const [appIsReady, setAppIsReady] = useState(false)
+  const [authUser, setAuthUser] = useState<User>()
+
 
   useEffect(() => {
     const prepare = async () => {
       try {
         // Pre-load fonts + APIs
+        firebaseApp
+        auth
+        let user = auth.currentUser || undefined;
+        setAuthUser(user)
       } catch (e) {
         console.warn(e)
       } finally {
@@ -74,6 +82,10 @@ export default function App() {
         {/*
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>Home Page</Text>
+          <Text>
+            Hi
+            {authUser && <Text>{", " + authUser.displayName}</Text>}
+          </Text>
           <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
             <ReactNativeButton title="Open Signin" />

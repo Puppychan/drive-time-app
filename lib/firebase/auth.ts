@@ -1,18 +1,22 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   GoogleAuthProvider,
   onAuthStateChanged as _onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  User
+  User,
+  setPersistence,
+  inMemoryPersistence,
+  AuthErrorCodes
 } from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
-
 import { ResponseDto } from '@/common/response.dto'
+import { Constant } from '@/components/Constant'
 import { AccountType } from '@/lib/common/model-type'
-import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
 import { auth } from '@/lib/firebase/firebase'
+import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
 
 export function onAuthStateChanged() {
   return () => {}
@@ -20,49 +24,73 @@ export function onAuthStateChanged() {
 
 export async function signInWithGoogle() {}
 
-export async function signOut() {}
+export async function signOut() {
+  auth.signOut()
+  await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.FALSE)
+  await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, Constant.FALSE)
+  await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, '')
+}
 
-
-export async function signIn(email: string, password: string): Promise<ResponseDto> {
-  return (
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+export async function signIn(
+  email: string,
+  password: string,
+  remember: boolean
+): Promise<ResponseDto> {
+  if (!remember) setPersistence(auth, inMemoryPersistence)
+  return signInWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
       const user = userCredential.user
-      return new ResponseDto(ResponseCode.OK, 'Login successfully', {...user})
+      await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
+      await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, remember ? Constant.TRUE : Constant.FALSE)
+      await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, email)
+      return new ResponseDto(ResponseCode.OK, 'Login successfully', { ...user })
     })
-    .catch((error) => {
+    .catch(async (error) => {
+      await signOut()
+
+      let message = 'Cannot login. Please try again'
+      if (error.code) {
+        switch (error.code) {
+          case AuthErrorCodes.INVALID_EMAIL:
+            message = 'Invalid email'
+            break
+          case AuthErrorCodes.INVALID_LOGIN_CREDENTIALS:
+            message = 'Invalid login credentials'
+            break
+          case AuthErrorCodes.INVALID_PASSWORD:
+            message = 'Wrong password'
+            break
+          default:
+            message = error.message
+        }
+      }
       // TODO: display to UI
       return new ResponseDto(
         error.code ?? ResponseCode.BAD_GATEWAY,
-        `Login failed: ${error}`,
+        `${message}`,
         `Login failed: ${error}`
       )
     })
-  );
-
 }
 
-export async function createAuthAccount(email: string, password: string): Promise<ResponseDto>{
-  return (
-    createUserWithEmailAndPassword(auth, email, password)
+export async function createAuthAccount(email: string, password: string): Promise<ResponseDto> {
+  return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user
-      return new ResponseDto(ResponseCode.OK, 'Register user successfully', {...user})
+      return new ResponseDto(ResponseCode.OK, 'Register user successfully', { ...user })
     })
     .catch((error) => {
       // TODO: display to UI
       return new ResponseDto(
         error.code ?? ResponseCode.BAD_GATEWAY,
-        `Failed to register user: ${error}`,
-        `Failed to register user: ${error}`
+        `${error.message}`,
+        `Failed to register user:  ${error}`
       )
     })
-  );
 }
 
 export async function addUser(user: User, additionalUserInfo: AccountType): Promise<ResponseDto> {
-  return (
-    addUserToDatabase(user, additionalUserInfo)
+  return addUserToDatabase(user, additionalUserInfo)
     .then((value) => {
       // if add user information to database successfully
       return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
@@ -71,10 +99,9 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
       })
     })
     .catch(async (error) => {
-      console.log(`~ ~ ~ ~ auth.ts, line 73: `,error)
+      console.log(`~ ~ ~ ~ auth.ts, line 73: `, error)
       return await handleUserCreationError(user, error)
     })
-  );
 }
 
 export async function createUser(email: string, password: string, otherUserInfo: AccountType) {
@@ -104,4 +131,3 @@ export async function createUser(email: string, password: string, otherUserInfo:
       )
     })
 }
-
