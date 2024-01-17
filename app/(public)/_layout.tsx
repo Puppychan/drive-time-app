@@ -14,7 +14,6 @@ export default function _layout() {
         name="signup"
         options={{
           headerShown: true,
-          
         }}
       />
     </Stack>
