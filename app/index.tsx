@@ -18,7 +18,7 @@ import { UserProfileScreen } from '@/src/screens/ProfileScreen'
 import { store } from '@/store'
 
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-
+import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
 
@@ -54,7 +54,7 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <CallControllerScreen />
+        <PaymentScreen />
 
         {/* <View style={styles.container}>
           <Text>Open up ./app/index.tsx to start working on your app!</Text>
