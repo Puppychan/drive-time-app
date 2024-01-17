@@ -2,7 +2,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { GooglePlacesInput } from '@/src/screens/GooglePlacesInputScreen'
-import { SignInScreen } from '@/app/(user)/signin'
+import { SignInScreen } from '@/app/(public)/signin'
 
 import HomeScreen from './screens/HomeScreen'
 import { MapScreen } from './screens/MapScreen'

@@ -81,9 +81,9 @@ export default async function Page() {
       const driverAccount: AccountType = {
         ...account,
         workStartDate: Timestamp.fromDate(new Date()),
-        QRCode: '',
+        // QRCode: '',
         isBan: false,
-        banTime: undefined
+        banTime: null,
       }
 
       addUser(authUser, driverAccount)
@@ -91,7 +91,7 @@ export default async function Page() {
         if (res.code === ResponseCode.OK) {
           ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
           auth.signOut();
-          router.push(`/login`);
+          // router.push(`/login`);
         }
         else {
           auth.signOut();

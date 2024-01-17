@@ -2,7 +2,7 @@ import { Slot } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
 
-import { Colors } from '../../../../components/Colors'
+import { Colors } from '../../../components/Colors'
 
 export default function Layout() {
   return (

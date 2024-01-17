@@ -25,7 +25,7 @@ export default function Page() {
     .then((res) => {
       if (res.code === ResponseCode.OK) {
         const {user} = res.body
-        router.push(`/driver/register/driver-profile?id=${user.uid}`);
+        // router.push(`/driver/register/driver-profile?id=${user.uid}`);
       }
       else {
         ToastAndroid.show(`Register account failed: ${res.message}`, ToastAndroid.SHORT);
