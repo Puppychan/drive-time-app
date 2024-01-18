@@ -1,35 +1,42 @@
 import { ResponseCode } from '@/common/response-code.enum'
 import { Colors } from '@/components/Colors'
 import { signIn } from '@/lib/firebase/auth'
-import { CustomButton } from '@/src/components/button/Buttons'
+import { AppButton, ButtonType } from '@/src/components/button/Buttons'
+import CheckBox from '@/src/components/input/Checkbox'
 import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, ToastAndroid } from 'react-native'
-export default function Page() {
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ToastAndroid } from 'react-native'
+// import {
+//   GoogleSigninButton
+// } from "@react-native-google-signin/google-signin";
+
+export default function SignInScreen() {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
-  const [btnDisable, setBtnDisable] = useState<boolean>(false)
+  const [loginDisable, setLoginDisable] = useState<boolean>(false)
+  const [rememberMe, setRememberMe] = useState<boolean>(true)
+
+  const handleRegister = () => {router.push("/driver/register")}
 
   const handleLogin = async () => {
-    setBtnDisable(true)
+    setLoginDisable(true)
     if (email.trim() === '') {
       ToastAndroid.show("Email is required", ToastAndroid.SHORT);
-      setBtnDisable(false)
+      setLoginDisable(false)
       return
     } else if (password.trim() === '') {
       ToastAndroid.show("Password is required", ToastAndroid.SHORT);
-      setBtnDisable(false)
+      setLoginDisable(false)
       return
     }
-
-    signIn(email, password)
+    
+    signIn(email, password, rememberMe)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
         const user = res.body
-        console.log(user)
         ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT);
         router.push(`/`);
       }
@@ -38,7 +45,7 @@ export default function Page() {
       }
     })
 
-    setBtnDisable(false)
+    setLoginDisable(false)
   }
 
   return (
@@ -62,12 +69,25 @@ export default function Page() {
             onChangeText={setPassword}
             style={styles.input}
           />
-          <CustomButton style={styles.loginButton} title="Login" onPress={handleLogin} disabled={btnDisable} />
-          <TouchableOpacity style={styles.forgotPasswordButton}>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          <CheckBox 
+            title='Remember me'
+            isChecked={rememberMe}
+            onPress={() => setRememberMe(!rememberMe)}
+            style={{color: Colors.sky_blue}}
+            textStyle={{color: Colors.white}}
+          />
+          <AppButton style={styles.loginButton} title="Login" onPress={handleLogin} disabled={loginDisable} />
+          {/* <GoogleSigninButton onPress={()=> {}}/> */}
+          {/* <OutlineButton style={styles.loginButton} title="Continue without login" onPress={handleLogin}/> */}
+          <AppButton
+            title='Forgot Password?'
+            onPress={() => {}}
+            type={ButtonType.text}
+            style={styles.forgotPasswordButton}
+            textStyle={styles.forgotPasswordText}
+          />
         </View>
-        <CustomButton style={styles.registerButton} title="Don't have an account? Register now!" onPress={handleLogin} disabled={btnDisable} />
+        <AppButton style={styles.registerButton} title="Join our team? REGISTER DRIVER NOW!" onPress={handleRegister}/>
         <StatusBar style="auto" />
       </View>
     </ImageBackground>
@@ -87,7 +107,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
-    // paddingBottom: 250,
     paddingHorizontal: 30,
     flexDirection: 'column'
   },
@@ -102,23 +121,27 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   loginButton: {
-    backgroundColor: '#3498db',
-    padding: 10,
+    backgroundColor: Colors.sky_blue,
     borderRadius: 8,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center'
+  withoutLoginButton: {
+    backgroundColor: Colors.sky_blue,
+    borderColor: '#3498db',
+    borderRadius: 8,
   },
+  // buttonText: {
+  //   color: '#fff',
+  //   fontSize: 20,
+  //   fontWeight: 'bold',
+  //   textAlign: 'center'
+  // },
   forgotPasswordButton: {
     alignSelf: 'center'
   },
   forgotPasswordText: {
     color: '#fff',
     fontSize: 16,
-    textDecorationLine: 'underline'
+    fontWeight: 'normal'
   },
   form: {
     flexDirection: 'column',
@@ -126,7 +149,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   registerButton: {
-    backgroundColor: Colors.yellow,
+    backgroundColor: Colors.secondaryColor,
     padding: 10,
     borderRadius: 8,
     marginTop: 50

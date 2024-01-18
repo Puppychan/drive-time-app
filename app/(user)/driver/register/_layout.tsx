@@ -15,7 +15,7 @@ export default function Layout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.navy_black,
+    backgroundColor: Colors.black,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 30

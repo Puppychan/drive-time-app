@@ -1,6 +1,6 @@
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { useEffect, useState } from 'react'
+import { SetStateAction, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Button as ReactNativeButton } from 'react-native'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -10,6 +10,9 @@ import { generateData } from '@/lib/data/generate-all.data'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 import { auth, firebaseApp } from '@/lib/firebase/firebase'
+import { AppButton } from '@/src/components/button/Buttons'
+import { signOut } from '@/lib/firebase/auth'
+import { onAuthStateChanged, User } from 'firebase/auth'
 
 // Get the full width and height of the screen
 const { width: screenWidth } = getScreenSize()
@@ -24,45 +27,77 @@ SplashScreen.preventAutoHideAsync()
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
   const router = useRouter()
+  const [authUser, setUser] = useState<User>()
+  const handleSignOut = async () => {
+    try {
+      await signOut()
+      router.push("/")
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     const prepare = async () => {
       try {
-        // Pre-load fonts + APIs
         firebaseApp
         auth
       } catch (e) {
-        console.warn(e)
-      } finally {
-        setAppIsReady(true)
+        console.log(e)
       }
     }
 
     prepare()
+    auth.onAuthStateChanged((user) => {
+      user ? setUser(user) : setUser(undefined);
+    })
+    setAppIsReady(true)
+
+    
   }, [])
 
-  // hide splash screen when the app is ready
-  useEffect(() => {
+  const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      SplashScreen.hideAsync()
+      await SplashScreen.hideAsync();
     }
-  }, [appIsReady])
+  }, [appIsReady]);
 
   if (!appIsReady) {
     return null
   }
 
+
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        {/* <AppNavigator /> */}
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          {/* <StatusBar style="light" /> */}
+        <View 
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        onLayout={onLayoutRootView}
+        >
           <Text>Home Page</Text>
           <Button onPress={onClickData}>Generate Data</Button>
-          <Link href="/signin" asChild>
-            <ReactNativeButton title="Open Signin" />
-          </Link>
+          <>
+          {
+            authUser ? 
+              <>
+                <Text>{"Hi,  " +  authUser.displayName}</Text>
+                <AppButton
+                  title='Sign out'
+                  onPress={handleSignOut}
+                />
+              </>
+            : 
+          
+              <>
+                <AppButton
+                  title='Sign in'
+                  onPress={() => {router.push("/signin")}}
+                />
+              </>
+          }
+          </>
+          
         </View>
       </PageProvider>
     </ReduxProvider>
