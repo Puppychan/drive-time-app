@@ -25,7 +25,7 @@ const CheckBox = (props : CheckBoxProps) => {
 				<MaterialCommunityIcons 
 					name={iconName} size={24} color={color} /> 
 			</Pressable> 
-      {title && <Label label={title} required={props.required} labelStyle={[props.textStyle, styles.title]}></Label>}
+			{title && <Label label={title} required={props.required} labelStyle={[styles.title, props.textStyle]}></Label>}
 		</View> 
 	); 
 }; 
@@ -34,15 +34,15 @@ export default CheckBox;
 
 const styles = StyleSheet.create({ 
 	container: { 
-		justifyContent: "flex-start", 
-		alignItems: "center", 
 		flexDirection: "row", 
-		width: 150, 
+		justifyContent: "flex-start", 
+		alignItems: "flex-start", 
 		marginTop: 5, 
 		marginHorizontal: 5, 
 	}, 
 	title: { 
-		marginLeft: 5
+		marginLeft: 5,
+		// marginTop: 2
 	}, 
 
 }); 

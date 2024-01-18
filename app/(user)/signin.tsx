@@ -1,13 +1,17 @@
 import { ResponseCode } from '@/common/response-code.enum'
 import { Colors } from '@/components/Colors'
 import { signIn } from '@/lib/firebase/auth'
-import { CustomButton, OutlineButton } from '@/src/components/button/Buttons'
+import { AppButton, ButtonType } from '@/src/components/button/Buttons'
 import CheckBox from '@/src/components/input/Checkbox'
 import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ToastAndroid } from 'react-native'
+// import {
+//   GoogleSigninButton
+// } from "@react-native-google-signin/google-signin";
+
 export default function SignInScreen() {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
@@ -28,12 +32,11 @@ export default function SignInScreen() {
       setLoginDisable(false)
       return
     }
-
+    
     signIn(email, password, rememberMe)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
         const user = res.body
-        console.log(user)
         ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT);
         router.push(`/`);
       }
@@ -73,13 +76,18 @@ export default function SignInScreen() {
             style={{color: Colors.sky_blue}}
             textStyle={{color: Colors.white}}
           />
-          <CustomButton style={styles.loginButton} title="Login" onPress={handleLogin} disabled={loginDisable} />
+          <AppButton style={styles.loginButton} title="Login" onPress={handleLogin} disabled={loginDisable} />
+          {/* <GoogleSigninButton onPress={()=> {}}/> */}
           {/* <OutlineButton style={styles.loginButton} title="Continue without login" onPress={handleLogin}/> */}
-          <TouchableOpacity style={styles.forgotPasswordButton}>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          <AppButton
+            title='Forgot Password?'
+            onPress={() => {}}
+            type={ButtonType.text}
+            style={styles.forgotPasswordButton}
+            textStyle={styles.forgotPasswordText}
+          />
         </View>
-        <CustomButton style={styles.registerButton} title="Don't have an account? REGISTER NOW!" onPress={handleRegister}/>
+        <AppButton style={styles.registerButton} title="Join our team? REGISTER DRIVER NOW!" onPress={handleRegister}/>
         <StatusBar style="auto" />
       </View>
     </ImageBackground>
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: '#fff',
     fontSize: 16,
-    textDecorationLine: 'underline'
+    fontWeight: 'normal'
   },
   form: {
     flexDirection: 'column',
@@ -141,7 +149,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   registerButton: {
-    backgroundColor: Colors.yellow,
+    backgroundColor: Colors.secondaryColor,
     padding: 10,
     borderRadius: 8,
     marginTop: 50

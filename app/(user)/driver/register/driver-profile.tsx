@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 
 import { Colors } from '@/components/Colors'
-import { CustomButton, OutlineButton } from '@/src/components/button/Buttons'
+import { AppButton, ButtonType } from '@/src/components/button/Buttons'
 import { Input } from '@/src/components/input/TextInput'
 import { AppDropDown } from '@/src/components/menu/DropDownMenu'
 import { auth } from '@/lib/firebase/firebase'
@@ -83,22 +83,9 @@ export default function Page() {
     addUser(authUser, driverAccount)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
-        updateProfile(authUser, {
-          displayName: firstName,
-          photoURL: avatarUrl
-        })
-        .then(() => {
-          ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
-          auth.signOut();
-          router.push(`/login`);
-        })
-        .catch(error => {
-          console.log(`~ ~ ~ ~ driver-profile.ts, line 97: `,error)
-          ToastAndroid.show(`Please login`, ToastAndroid.SHORT);
-          auth.signOut();
-          router.push(`/login`);
-        }) 
-
+        ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
+        auth.signOut();
+        router.push(`/login`);
       }
       else {
         auth.signOut();
@@ -106,8 +93,6 @@ export default function Page() {
         router.push(`/driver/register`);
       }
     })
-
-    return
   }
 
   const handleCancel = async () => {
@@ -158,9 +143,9 @@ export default function Page() {
           selectedValue={gender}
           setSelectedValue={setGender}
         />
-        <OutlineButton title='Select Avatar' onPress={chooseImage}/>
-        <CustomButton title="Submit" onPress={handleSubmit} />
-        <CustomButton title="Cancel" onPress={handleCancel} />
+        <AppButton title='Select Avatar' onPress={chooseImage} type={ButtonType.outlined}/>
+        <AppButton title="Submit" onPress={handleSubmit} />
+        <AppButton title="Cancel" onPress={handleCancel} />
       </View>
     </View>
   )
@@ -183,8 +168,7 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: Colors.navy_black
+    fontWeight: 'bold'
   },
   form: {
     flexDirection: 'column',

@@ -7,7 +7,7 @@ import DriverInfoCard from '../components/review/ReviewCard/DriverInfoCard'
 import RouteInfo from '../components/review/ReviewCard/RouteInfo'
 import TripInsurance from '../components/review/ReviewCard/TripInsurance'
 import PaymentInfo from '../components/review/ReviewCard/PaymentInfo'
-import { CustomButton } from '../components/button/Buttons'
+import { AppButton } from '../components/button/Buttons'
 import { Review, ReviewFrom } from '../../lib/models/review.model'
 import { auth, db } from '../../lib/firebase/firebase'
 import { Timestamp, collection, doc, setDoc, addDoc } from 'firebase/firestore'
@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <CustomButton title="Arrive" style={styles.customButtonStyle } onPress={addReview} />
+      <AppButton title="Arrive" style={styles.customButtonStyle } onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>
