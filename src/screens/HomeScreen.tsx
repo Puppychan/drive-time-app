@@ -43,7 +43,7 @@ const HomeScreen = () => {
   }
 
   const onClickSuggestions = () => {
-    router.push('/driver/register/book_driver')
+    router.push('/(user)/customer/book_driver')
   }
   
   const onClickInstruction = () => {
@@ -185,10 +185,11 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingHorizontal: 10
   },
   insideContainer: {
-    padding: 15,
+    // padding: 15,
     gap: 15,
     marginTop: 20,
     marginBottom: 50
