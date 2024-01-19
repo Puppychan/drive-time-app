@@ -22,6 +22,9 @@ import SearchInput from '@/src/components/input/SearchInput'
 import ReviewScreen from './ReviewScreen'
 import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
+import { Driver } from '../../lib/models/driver.model'
+import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
+
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
@@ -45,13 +48,14 @@ const HomeScreen = () => {
   const onClickSuggestions = () => {
     router.push('/(user)/customer/book_driver')
   }
-  
+
   const onClickInstruction = () => {
     // navigation.navigate(link)
     router.push('./(user)/driver/register/review')
   }
 
   return (
+
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
@@ -80,8 +84,10 @@ const HomeScreen = () => {
 
           {/* Recent card */}
           <CustomButton
-            title='Register Driver'
-            onPress={() => {router.push('/driver/register')}}
+            title="Register Driver"
+            onPress={() => {
+              router.push('/driver/register')
+            }}
           />
 
           {/* Explore Nearby Card */}
@@ -163,12 +169,15 @@ const HomeScreen = () => {
 
           {/* Discover Map */}
           <Title>Around You</Title>
-          <Image
+          <View>
+              {/* <MapScreen/> */}
+          </View>
+          {/* <Image
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/007/017/843/non_2x/abstract-polygon-world-map-illustration-geometric-structure-in-blue-color-for-presentation-booklet-website-and-other-design-projects-polygonal-background-free-vector.jpg'
             }}
             style={styles.planningImage}
-          />
+          /> */}
         </View>
       </ScrollView>
 
@@ -180,6 +189,7 @@ const HomeScreen = () => {
         <Appbar.Action icon="account" onPress={() => {}} />
       </Appbar>
     </View>
+
   )
 }
 
