@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "228927602830-n9qmqtlda0k51un9f3a28flo0fmmjmq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.drivetimeapp",
+            "certificate_hash": "bc55d8d57da5188fccb994e667bdff7a2757c975"
+          }
+        },
+        {
           "client_id": "228927602830-8jdp1nts8t75igmojssev3cjo43csngi.apps.googleusercontent.com",
           "client_type": 3
         }
