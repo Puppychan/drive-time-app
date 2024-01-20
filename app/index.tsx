@@ -2,7 +2,7 @@ import * as Notifications from 'expo-notifications'
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { User } from 'firebase/auth'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import {
   StyleSheet,
   Text,
@@ -61,7 +61,7 @@ export default function App() {
 
     prepare()
     auth.onAuthStateChanged((user) => {
-      user ? setUser(user) : setUser(undefined)
+      user ? setAuthUser(user) : setAuthUser(undefined)
     })
     setAppIsReady(true)
   }, [])

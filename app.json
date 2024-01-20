@@ -12,12 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -26,7 +21,6 @@
       "package": "com.anonymous.drivetimeapp",
       "googleServicesFile": "./android/google-services.json",
       "jsEngine": "hermes"
-
     },
     "web": {
       "favicon": "./assets/favicon.png",

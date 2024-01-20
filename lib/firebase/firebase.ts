@@ -1,5 +1,3 @@
-// import 'dotenv/config'
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getApps, initializeApp } from 'firebase/app'
 import { getReactNativePersistence, initializeAuth } from 'firebase/auth'
