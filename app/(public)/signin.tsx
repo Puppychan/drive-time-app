@@ -102,7 +102,7 @@ export default function Page() {
           />
           <AppButton
             style={styles.buttonStyle}
-            title="Login"
+            title="Loginn"
             onPress={handleLogin}
             disabled={loginDisable}
           />

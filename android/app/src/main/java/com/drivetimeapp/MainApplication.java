@@ -31,11 +31,11 @@ public class MainApplication extends Application implements ReactApplication {
       @Override
       protected List<ReactPackage> getPackages() {
         @SuppressWarnings("UnnecessaryLocalVariable")
-        List<ReactPackage> packages = new PackageList(this).getPackages();
+        List<ReactPackage> packages = new PackageList(this).getPackages(new ReactNativeFirebaseAppPackage());
         // Packages that cannot be autolinked yet can be added manually here, for example:
         // packages.add(new MyReactNativePackage());
         // packages.add(new MainReactPackage());
-        packages.add(new ReactNativeFirebaseAppPackage());
+        // packages.add(new ReactNativeFirebaseAppPackage());
          // Check if the package is already included by auto-linking
         // boolean hasFirebaseAppPackage = false;
         // for (ReactPackage pkg : packages) {
