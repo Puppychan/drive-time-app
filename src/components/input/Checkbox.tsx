@@ -34,8 +34,6 @@ const CheckBox = (props: CheckBoxProps) => {
   )
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
@@ -49,4 +47,5 @@ const styles = StyleSheet.create({
     marginLeft: 5
   }
 })
+
 export default CheckBox
