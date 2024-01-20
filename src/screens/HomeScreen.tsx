@@ -86,15 +86,12 @@ const HomeScreen = () => {
 
           {/* Recent card */}
 
-          <CustomButton
+          <AppButton
             title="Register Driver"
             onPress={() => {
               router.push('/driver/register')
             }}
 
-          <Button
-            title='Register Driver'
-            onPress={() => {router.push('/driver/register')}}
 
           />
 
@@ -114,7 +111,7 @@ const HomeScreen = () => {
             <Title>Suggestions</Title>
             {/* Add see more if more than 4 suggestions */}
             {SUGGESTION_LIST.length > 4 && (
-              <Button
+              <AppButton
                 title="See More"
                 onPress={() => {
                   onClickSeeMore('suggestion')
@@ -148,7 +145,7 @@ const HomeScreen = () => {
             <Title>Instruction</Title>
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
-              <Button
+              <AppButton
                 title="See More"
                 onPress={() => {
                   onClickSeeMore('instruction')
