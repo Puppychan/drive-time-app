@@ -88,7 +88,6 @@ export default function Page() {
             required={true}
             value={email}
             onChangeText={setEmail}
-            style={styles.input}
           />
           <Input
             placeHolder="Password"
@@ -96,7 +95,6 @@ export default function Page() {
             required={true}
             value={password}
             onChangeText={setPassword}
-            style={styles.input}
           />
           <CheckBox
             title="Remember me"
@@ -117,12 +115,12 @@ export default function Page() {
             disabled={loginDisable} 
           />
           <CustomButton 
-            style={[styles.buttonStyle, styles.driverRegisterButton]} 
+            style={[styles.buttonStyle, styles.registerButton]} 
             title="Create new account" 
             onPress={handleRegister}
           />
           <CustomButton 
-            style={styles.buttonStyle} 
+            style={[styles.buttonStyle, styles.driverRegisterButton]} 
             type={ButtonType.outlined}
             title="Join our team? REGISTER DRIVER ACCOUNT!" 
             onPress={handleRegisterDriver}
@@ -158,15 +156,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: Spacing * 3
   },
-  input: {
-    borderRadius: 8
-  },
   buttonStyle: {
-    borderRadius: 8,
     paddingVertical: Spacing * 1.3
   },
-  driverRegisterButton: {
+  registerButton: {
     backgroundColor: Colors.secondaryColor,
+  },
+  driverRegisterButton: {
+    paddingVertical: Spacing * 1.1
   },
   specialTextStyle: {
     color: specialColors.primary,

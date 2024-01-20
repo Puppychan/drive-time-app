@@ -11,12 +11,6 @@ export default function _layout() {
         }}
       />
       <Stack.Screen
-        name="(user)"
-        options={{
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
         name="(public)"
         options={{
           headerShown: false

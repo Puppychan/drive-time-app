@@ -18,7 +18,7 @@ export default function Page() {
   const [btnDisable, setBtnDisable] = useState<boolean>(false)
   const {role} = useLocalSearchParams<{ role?: string }>();
   const handleCancel = async () => {
-    router.push(`/`);
+    router.push(`/signin`);
     return
   }
 
@@ -41,7 +41,8 @@ export default function Page() {
         console.log('User: ', user)
         router.push({pathname: `/signup/profile`, params: {uid: user.uid, role: role ?? AccountRole.Driver}});
       } else {
-        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT)
+        console.log("~~~~~~ handleNext() line 44:", res.message)
+        ToastAndroid.show(`Register failed. Please try again`, ToastAndroid.SHORT)
       }
     })
 
@@ -50,7 +51,7 @@ export default function Page() {
 
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.formTitle}>Register Account</Text>
+      <Text style={styles.formTitle}>Register {role !== AccountRole.Customer ?  role : ""}</Text>
       <View style={styles.form}>
         <Input
           label="Email"
@@ -68,7 +69,7 @@ export default function Page() {
           onChangeText={setPassword}
         />
         <CustomButton title="Continue" onPress={handleNext} disabled={btnDisable} />
-        <CustomButton type={ButtonType.outlined} title="Cancel" onPress={handleCancel} />
+        <CustomButton type={ButtonType.outlined} title="Already have an account? LOGIN" onPress={handleCancel} />
 
       </View>
     </View>
