@@ -92,6 +92,10 @@ export default function Page() {
             title="Remember me"
             isChecked={rememberMe}
             onPress={() => setRememberMe(!rememberMe)}
+
+            style={{ color: Colors.sky_blue }}
+            textStyle={{ color: Colors.black }}
+
           />
           <AppButton
             title="Forgot Password ?"
@@ -116,6 +120,7 @@ export default function Page() {
             type={ButtonType.outlined}
             title="Join our team? REGISTER DRIVER ACCOUNT!"
             onPress={handleRegisterDriver}
+
           />
         </View>
 

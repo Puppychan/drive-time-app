@@ -42,11 +42,11 @@ const HomeScreen = () => {
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
 
   const onClickExploreNearby = () => {
-    router.push('/driver/register')
+    router.push('/(user)/customer/nearby_place')
   }
 
   const onClickSuggestions = () => {
-    router.push('/(user)/customer/book_driver')
+    router.push('/(user)/customer/nearby_place')
   }
 
   const onClickInstruction = () => {
