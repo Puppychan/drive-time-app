@@ -1,4 +1,4 @@
-import { Timestamp, doc, setDoc } from 'firebase/firestore'
+import { DocumentData, DocumentSnapshot, Timestamp, collection, doc, getDocs, setDoc } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -38,5 +38,23 @@ export async function addVoucher(voucherData: Voucher) {
   } catch (error) {
     console.error('Error adding voucher:', error)
     return handleVoucherException(error, 'Saving')
+  }
+}
+
+export const fetchVouchers = async () => {
+  try {
+    const vouchersCollection = collection(db, CollectionName.VOUCHERS); // Replace 'vouchers' with your actual collection name
+    const querySnapshot = await getDocs(vouchersCollection);
+
+    const vouchersList: Voucher[] = [];
+    querySnapshot.forEach((doc: DocumentSnapshot<DocumentData>) => {
+      const voucherData = { id: doc.id, ...(doc.data() as Voucher) };
+      vouchersList.push(voucherData);
+    });
+
+    return vouchersList;
+  } catch (error) {
+    console.error('Error fetching vouchers:', error);
+    throw error; // You might want to handle this error in your application
   }
 }
