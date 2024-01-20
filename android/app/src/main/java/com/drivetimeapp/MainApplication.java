@@ -16,7 +16,7 @@ import com.facebook.soloader.SoLoader;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
-import com.rnimmersivemode.RNImmersiveModePackage;	// add this
+import java.util.Arrays;
 
 import java.util.List;
 
@@ -31,26 +31,9 @@ public class MainApplication extends Application implements ReactApplication {
 
       @Override
       protected List<ReactPackage> getPackages() {
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        List<ReactPackage> packages = new PackageList(this).getPackages(new ReactNativeFirebaseAppPackage());
-        packages.getPackages(new RNImmersiveModePackage());
-        // Packages that cannot be autolinked yet can be added manually here, for example:
-        // packages.add(new MyReactNativePackage());
-        // packages.add(new MainReactPackage());
-        // packages.add(new ReactNativeFirebaseAppPackage());
-         // Check if the package is already included by auto-linking
-        // boolean hasFirebaseAppPackage = false;
-        // for (ReactPackage pkg : packages) {
-        //   if (pkg instanceof ReactNativeFirebaseAppPackage) {
-        //     hasFirebaseAppPackage = true;
-        //     break;
-        //   }
-        // }
-        // // Manually add the package if it's missing
-        // if (!hasFirebaseAppPackage) {
-        //   packages.add(new ReactNativeFirebaseAppPackage());
-        // }
-        return packages;
+        return Arrays.<ReactPackage>asList(
+          new ReactNativeFirebaseAppPackage()
+        );
       }
 
       @Override
