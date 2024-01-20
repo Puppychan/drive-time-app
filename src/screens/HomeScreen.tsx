@@ -46,7 +46,9 @@ const HomeScreen = () => {
   }
 
   const onClickSuggestions = () => {
-    router.push('/(user)/customer/nearby_place')
+
+    router.push('/(user)/customer/book_driver')
+
   }
 
   const onClickInstruction = () => {
