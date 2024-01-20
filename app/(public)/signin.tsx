@@ -15,7 +15,7 @@ import {
 import { ResponseCode } from '@/common/response-code.enum'
 import { signIn } from '@/lib/firebase/auth'
 import { AccountRole } from '@/lib/models/account.model'
-import { ButtonType, CustomButton } from '@/src/components/button/Buttons'
+import { AppButton, ButtonType } from '@/src/components/button/Buttons'
 import CheckBox from '@/src/components/input/Checkbox'
 import { Input } from '@/src/components/input/TextInput'
 
@@ -93,25 +93,25 @@ export default function Page() {
             isChecked={rememberMe}
             onPress={() => setRememberMe(!rememberMe)}
           />
-          <CustomButton
+          <AppButton
             title="Forgot Password ?"
             onPress={() => {}}
             type={ButtonType.text}
             style={{ alignSelf: 'flex-end' }}
             textStyle={styles.specialTextStyle}
           />
-          <CustomButton
+          <AppButton
             style={styles.buttonStyle}
             title="Login"
             onPress={handleLogin}
             disabled={loginDisable}
           />
-          <CustomButton
+          <AppButton
             style={[styles.buttonStyle, styles.registerButton]}
             title="Create new account"
             onPress={handleRegister}
           />
-          <CustomButton
+          <AppButton
             style={[styles.buttonStyle, styles.driverRegisterButton]}
             type={ButtonType.outlined}
             title="Join our team? REGISTER DRIVER ACCOUNT!"

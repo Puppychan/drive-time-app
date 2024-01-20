@@ -5,7 +5,11 @@ import { Colors } from '@/components/Colors'
 import { Constant } from '@/components/Constant'
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors'
 
-export enum ButtonType {filled, outlined, text}
+export enum ButtonType {
+  filled,
+  outlined,
+  text
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -22,8 +26,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: Constant.buttonTextSize,
     color: Colors.white,
-    fontWeight: 'bold',
-
+    fontWeight: 'bold'
   },
   outlinedButton: {
     backgroundColor: 'transparent',
@@ -41,8 +44,7 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: Colors.disabled
-  },
-
+  }
 })
 
 interface ButtonProps {
@@ -58,7 +60,6 @@ interface ButtonProps {
   loading?: any
   childrenLeft?: any
   childrenRight?: any
-
 }
 
 export const AppButton = (props: ButtonProps) => {
@@ -74,7 +75,7 @@ export const AppButton = (props: ButtonProps) => {
         disabled && styles.disabledButton,
         type === ButtonType.outlined && styles.outlinedButton,
         type === ButtonType.text && styles.textButton,
-        props.style,
+        props.style
       ]}
     >
       {props.iconLeft}
@@ -82,12 +83,14 @@ export const AppButton = (props: ButtonProps) => {
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <Text style={[
-          styles.buttonText, 
-          type === ButtonType.outlined && styles.outlinedButtonText,
-          type === ButtonType.text && styles.textButton,
-          props.textStyle,
-        ]}>
+        <Text
+          style={[
+            styles.buttonText,
+            type === ButtonType.outlined && styles.outlinedButtonText,
+            type === ButtonType.text && styles.textButton,
+            props.textStyle
+          ]}
+        >
           {props.title}
         </Text>
       )}
@@ -96,7 +99,6 @@ export const AppButton = (props: ButtonProps) => {
     </TouchableOpacity>
   )
 }
-
 
 interface ToggleButtonProps {
   value?: boolean
@@ -145,4 +147,3 @@ export const ToggleButton = (props: ToggleButtonProps) => {
 //     </TouchableOpacity>
 //   )
 // }
-

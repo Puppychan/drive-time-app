@@ -15,7 +15,7 @@ import Onboarding from 'react-native-onboarding-swiper'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { auth, firebaseApp, firebaseVapidKey, messaging } from '@/lib/firebase/firebase'
+import { auth, firebaseApp, firebaseVapidKey } from '@/lib/firebase/firebase'
 // import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
@@ -23,8 +23,9 @@ import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-import { getToken } from 'firebase/messaging'
-import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import { getDeviceToken, registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import messaging from '@react-native-firebase/messaging';
+
 // Get the full width and height of the screen
 
 function onClickData() {
@@ -46,44 +47,34 @@ const { width: screenWidth } = getScreenSize()
 export default function App() {
   const router = useRouter()
   const [appIsReady, setAppIsReady] = useState(false)
-  const [authUser, setAuthUser] = useState<User>()
+  const [authUser, setAuthUser] = useState<User | null>(null)
 
   useEffect(() => {
     const prepare = async () => {
       try {
-        firebaseApp
-        auth
-        // messaging
-        let availableToken
-        const user = auth.currentUser || undefined
+        const user = auth.currentUser
         setAuthUser(user)
-        // await registerForPushNotificationsAsync()
-        getToken(messaging, { vapidKey: firebaseVapidKey })
-          .then((currentToken) => {
-            if (currentToken) {
-              // Send the token to your server and update the UI if necessary
-              // ...
-              console.log('Current tokennn', currentToken)
+        await registerForPushNotificationsAsync()
+        console.log('Done register push notification')
+        const token = await getDeviceToken()
+        console.log('doneee get token', token)
 
-            } else {
-              // Show permission request UI
-              console.log('No registration token available. Request permission to generate one.')
-              // ...
-            }
-          })
-          .catch((err) => {
-            console.log('An error occurred while retrieving token. ', err)
-            // ...
-          })
+        // Foreground message handler
+        messaging().onMessage(async (remoteMessage) => {
+          console.log('A new FCM message arrived!', JSON.stringify(remoteMessage))
+        })
+
+        // Background message handler
+        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+          console.log('Message handled in the background!', remoteMessage)
+        })
       } catch (e) {
         console.log(e)
       }
     }
 
     prepare()
-    auth.onAuthStateChanged((user) => {
-      user ? setAuthUser(user) : setAuthUser(undefined)
-    })
+    auth.onAuthStateChanged((user) => setAuthUser(user))
     setAppIsReady(true)
   }, [])
 

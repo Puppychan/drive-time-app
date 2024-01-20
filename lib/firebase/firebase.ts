@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getApps, initializeApp } from 'firebase/app'
 import { getReactNativePersistence, initializeAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { getMessaging } from 'firebase/messaging'
 import { getStorage } from 'firebase/storage'
 
 export const firebaseConfig = {
@@ -21,6 +20,6 @@ export const auth = initializeAuth(firebaseApp, {
 })
 export const db = getFirestore(firebaseApp)
 export const storage = getStorage(firebaseApp)
-export const messaging = getMessaging(firebaseApp)
+// export const messaging = getMessaging(firebaseApp)
 
 export const firebaseVapidKey = process.env.EXPO_PUBLIC_FIREBASE_VAPID_KEY
