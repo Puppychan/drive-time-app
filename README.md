@@ -74,7 +74,6 @@
       - Run `jenv add /result-of-above-command/libexec/openjdk.jdk/Contents/Home` to add java 11 to jenv
       - Move terminal to root directory of this project and run `jenv local 11` to set java version to 11 (if 11 is not valid, run specified version of java 11)
     - Run `npm install -g expo-cli`
-    - Run `expo-cli upgrade`
     - Also run `npm update`
     - Now rerun `npx expo start`
   - If there is error which is relevant to `CommandError: No development build (com.drivetimeapp) for this project is installed. Please make and install a development build on the device first.`:
