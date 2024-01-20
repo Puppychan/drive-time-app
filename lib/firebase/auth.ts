@@ -1,13 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
-  GoogleAuthProvider,
   onAuthStateChanged as _onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   User,
-  setPersistence,
+  AuthErrorCodes,
+  updateProfile,
+  getReactNativePersistence,
   inMemoryPersistence,
-  AuthErrorCodes
+  setPersistence
 } from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -18,17 +19,56 @@ import { AccountType } from '@/lib/common/model-type'
 import { auth } from '@/lib/firebase/firebase'
 import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
 
+// export async function autoLogin(): Promise<ResponseDto> {
+//   try {
+//     const autoLogin = await AsyncStorage.getItem(Constant.AUTO_LOGIN_KEY)
+//     console.log("auto login: ", autoLogin)
+//     if (autoLogin === Constant.TRUE) {
+//       const userEmail = await AsyncStorage.getItem(Constant.USER_EMAIL_KEY);
+//       console.log("userEmail: ", userEmail)
+//       const authEmail = auth.currentUser?.email
+//       console.log(auth.currentUser)
+//       console.log("authEmail: ", authEmail)
+//       if (userEmail === authEmail) {
+//         console.log("hehee")
+//         await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
+//         return new ResponseDto(ResponseCode.OK, 'Auto Login successfully', {...auth.currentUser})
+//       }
+//     }
+//     console.log("huhu")
+//     await signOut()
+//     return new ResponseDto(ResponseCode.UNAUTHORIZED, `Auto Login Failed: Unauthorized`)
+//   }
+//   catch (error) {
+//     await signOut()
+//     console.log(error);
+//   }
+// }
+
 export function onAuthStateChanged() {
-  return () => {}
+  _onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('user signed in: ', user.email)
+    } else {
+      console.log('user signed out ')
+    }
+  })
 }
 
-export async function signInWithGoogle() {}
+// export async function signInWithGoogle() {
+//   const credential = GoogleAuthProvider.credential(id_token);
 
 export async function signOut() {
-  auth.signOut()
-  await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.FALSE)
-  await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, Constant.FALSE)
-  await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, '')
+  try {
+    await auth.signOut()
+    await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.FALSE)
+    await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, Constant.FALSE)
+    await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, '')
+    return new ResponseDto(ResponseCode.OK, 'Logout successfully', null)
+  } catch (error: any) {
+    const errorCode = error?.code ?? ResponseCode.BAD_GATEWAY
+    return new ResponseDto(errorCode, 'Cannot logout. Please try again', `Logout failed: ${error}`)
+  }
 }
 
 export async function signIn(
@@ -40,7 +80,8 @@ export async function signIn(
   return signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user
-      await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
+      const token = await user.getIdToken()
+      // await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
       await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, remember ? Constant.TRUE : Constant.FALSE)
       await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, email)
       return new ResponseDto(ResponseCode.OK, 'Login successfully', { ...user })
@@ -93,10 +134,22 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
   return addUserToDatabase(user, additionalUserInfo)
     .then((value) => {
       // if add user information to database successfully
-      return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
-        ...user,
-        ...additionalUserInfo
+      return updateProfile(user, {
+        displayName: additionalUserInfo.username,
+        photoURL: additionalUserInfo.avatar
       })
+        .then(() => {
+          return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
+            ...user,
+            ...additionalUserInfo
+          })
+        })
+        .catch((e) => {
+          return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
+            ...user,
+            ...additionalUserInfo
+          })
+        })
     })
     .catch(async (error) => {
       console.log(`~ ~ ~ ~ auth.ts, line 73: `, error)
@@ -105,11 +158,11 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
 }
 
 export async function createUser(email: string, password: string, otherUserInfo: AccountType) {
-  await createUserWithEmailAndPassword(auth, email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       // Signed up
       const user = userCredential.user
-      await addUserToDatabase(user, otherUserInfo)
+      addUserToDatabase(user, otherUserInfo)
         .then((value) => {
           // if add user information to database successfully
           return new ResponseDto(

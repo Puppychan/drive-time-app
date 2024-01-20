@@ -6,7 +6,6 @@ const LabelStyle = StyleSheet.create({
   container: {
     flexDirection: 'row',
     gap: 5,
-    marginBottom: 10
   },
   label: {
     fontSize: Constant.normalTextSize

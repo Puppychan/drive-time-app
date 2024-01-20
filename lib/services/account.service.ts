@@ -71,6 +71,26 @@ export const updateCustomerMembership = async (userId: string) => {
   }
 }
 
+export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId: string) => {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, userId)
+    const customerSnapshot = await getDoc(accountRef)
+    if (customerSnapshot.exists()) {
+      await updateDoc(accountRef, {
+        deviceTokenIdList: arrayUnion(deviceTokenId),
+        updatedAt: Timestamp.fromDate(new Date())
+      })
+    } else {
+      throw new Error(`User with id ${userId} does not exist`)
+    }
+
+    return new ResponseDto(ResponseCode.OK, 'User device added successfully', null)
+  } catch (error) {
+    console.error('Error adding user device:', error)
+    return handleUserException(error, 'Adding user device')
+  }
+}
+
 export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
   return deleteUser(user)

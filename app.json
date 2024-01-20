@@ -12,12 +12,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bitcode": false
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -25,7 +28,23 @@
       },
       "package": "com.anonymous.drivetimeapp",
       "googleServicesFile": "./android/google-services.json",
-      "jsEngine": "hermes"
+
+      "jsEngine": "hermes",
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MICROPHONE",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.WAKE_LOCK"
+      ]
 
     },
     "web": {
@@ -46,6 +65,14 @@
     ],
     "experiments": {
       "tsconfigPaths": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c3e83c5c-ff3d-46e4-9ef8-c5f50d2e505a"
+      }
     }
   }
 }

@@ -2,13 +2,16 @@ import { useState } from 'react'
 import { TextInput, View, StyleSheet } from 'react-native'
 
 import { Label } from './Label'
-import { Colors } from '@/components/Colors'
+import { Colors, specialColors } from '@/components/Colors'
 import { Constant } from '@/components/Constant'
+import FontSize from '@/components/FontSize'
+import Spacing from '@/components/Spacing'
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    minWidth: 100
+    minWidth: 100,
+    gap: 10
   },
   input: {
     borderColor: Colors.silver,
@@ -56,7 +59,24 @@ export const Input = (props: TextInputProps) => {
     <View style={styles.container}>
       {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
       <TextInput
-        style={[styles.input, isFocused && styles.onFocus, style]}
+        style={[
+          {
+            // fontFamily: Font["poppins-regular"],
+            fontSize: FontSize.small,
+            padding: Spacing * 2,
+            backgroundColor: specialColors.lightPrimary,
+            borderRadius: Spacing,
+            marginVertical: Spacing,
+          },
+          isFocused && {
+            borderWidth: 3,
+            borderColor: Colors.primary,
+            shadowOffset: { width: 4, height: Spacing },
+            shadowColor: Colors.primary,
+            shadowOpacity: 0.2,
+            shadowRadius: Spacing,
+          },
+        ]}
         placeholder={placeHolder}
         value={value}
         editable={editable}

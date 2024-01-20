@@ -14,19 +14,14 @@ import {
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { signIn } from '@/lib/firebase/auth'
+import { AccountRole } from '@/lib/models/account.model'
+import { AppButton, ButtonType } from '@/src/components/button/Buttons'
+import CheckBox from '@/src/components/input/Checkbox'
 import { Input } from '@/src/components/input/TextInput'
 
 import { Colors, specialColors } from '../../components/Colors'
 import FontSize from '../../components/FontSize'
 import Spacing from '../../components/Spacing'
-import CheckBox from '@/src/components/input/Checkbox'
-
-// import Font from "../../components/Font";
-
-// import { RootStackParamList } from "../types";
-// import AppTextInput from '../../src/components/app-text-input/AppTextInput'
-
-// type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 export default function Page() {
   const router = useRouter()
@@ -36,6 +31,8 @@ export default function Page() {
   const [rememberMe, setRememberMe] = useState<boolean>(true)
 
   const handleRegister = () => router.push('/signup')
+  const handleRegisterDriver = () =>
+    router.push({ pathname: '/signup', params: { role: AccountRole.Driver } })
 
   const handleLogin = async () => {
     setLoginDisable(true)
@@ -65,179 +62,78 @@ export default function Page() {
 
   return (
     <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2
-        }}
-      >
-        <View
+      <View style={styles.container}>
+        <Text
           style={{
-            alignItems: 'center'
+            fontSize: FontSize.xLarge,
+            fontWeight: 'bold',
+            textAlign: 'center'
           }}
         >
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.black,
-              // fontFamily: Font["poppins-bold"],
-              marginVertical: Spacing * 3
-            }}
-          >
-            Login here
-          </Text>
-          <Text
-            style={{
-              // fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.large,
-              maxWidth: '60%',
-              textAlign: 'center'
-            }}
-          >
-            Welcome back you've been missed!
-          </Text>
-        </View>
+          Login
+        </Text>
         <View
           style={{
-            marginVertical: Spacing * 3
+            flexDirection: 'column',
+            width: '100%',
+            alignItems: 'stretch',
+            gap: Spacing
           }}
         >
-          {/* <AppTextInput placeholder="Email" required={true} value={email} onChangeText={setEmail} />
-          <AppTextInput placeholder="Password" /> */}
-          <Input
-            placeHolder="Email"
-            required={true}
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-          />
+          <Input placeHolder="Email" required={true} value={email} onChangeText={setEmail} />
           <Input
             placeHolder="Password"
             secureTextEntry={true}
             required={true}
             value={password}
             onChangeText={setPassword}
-            style={styles.input}
           />
           <CheckBox
             title="Remember me"
             isChecked={rememberMe}
             onPress={() => setRememberMe(!rememberMe)}
+
             style={{ color: Colors.sky_blue }}
-            textStyle={{ color: Colors.white }}
+            textStyle={{ color: Colors.black }}
+
+          />
+          <AppButton
+            title="Forgot Password ?"
+            onPress={() => {}}
+            type={ButtonType.text}
+            style={{ alignSelf: 'flex-end' }}
+            textStyle={styles.specialTextStyle}
+          />
+          <AppButton
+            style={styles.buttonStyle}
+            title="Loginn"
+            onPress={handleLogin}
+            disabled={loginDisable}
+          />
+          <AppButton
+            style={[styles.buttonStyle, styles.registerButton]}
+            title="Create new account"
+            onPress={handleRegister}
+          />
+          <AppButton
+            style={[styles.buttonStyle, styles.driverRegisterButton]}
+            type={ButtonType.outlined}
+            title="Join our team? REGISTER DRIVER ACCOUNT!"
+            onPress={handleRegisterDriver}
+
           />
         </View>
 
-        <View>
-          <Text
-            style={{
-              // fontFamily: Font["poppins-semiBold"],
-              fontSize: FontSize.small,
-              color: specialColors.primary,
-              alignSelf: 'flex-end'
-            }}
-          >
-            Forgot your password ?
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          onPress={handleLogin} 
-          disabled={loginDisable}
-          style={{
-            padding: Spacing * 2,
-            backgroundColor: Colors.black,
-            marginVertical: Spacing * 3,
-            borderRadius: Spacing,
-            shadowColor: specialColors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing
-          }}
-        >
-          <Text
-            style={{
-              // fontFamily: Font["poppins-bold"],
-              color: specialColors.onPrimary,
-              textAlign: 'center',
-              fontSize: FontSize.large
-            }}
-          >
-            Sign in
-          </Text>
-        </TouchableOpacity>
-        {/* <Link href={"/signup"} asChild> */}
-        <TouchableOpacity
-          onPress={handleRegister}
-          // style={{
-          //   padding: Spacing,
-          // }}
-        >
-          <Text
-            style={{
-              // fontFamily: Font["poppins-semiBold"],
-              color: specialColors.text,
-              textAlign: 'center',
-              fontSize: FontSize.small
-            }}
-          >
-            Create new account
-          </Text>
-        </TouchableOpacity>
-        {/* </Link> */}
-        <View
-          style={{
-            marginVertical: Spacing * 3
-          }}
-        >
-          <Text
-            style={{
-              // fontFamily: Font["poppins-semiBold"],
-              color: specialColors.primary,
-              textAlign: 'center',
-              fontSize: FontSize.small
-            }}
-          >
-            Or continue with
-          </Text>
-
-          <View
-            style={{
-              marginTop: Spacing,
-              flexDirection: 'row',
-              justifyContent: 'center'
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                padding: Spacing,
-                backgroundColor: specialColors.gray,
-                borderRadius: Spacing / 2,
-                marginHorizontal: Spacing
-              }}
-            >
+        <View style={styles.alternativeLoginContainer}>
+          <Text style={styles.specialTextStyle}>Or continue with</Text>
+          <View style={styles.alternativeLogin}>
+            <TouchableOpacity style={styles.alternativeLoginButton}>
               <Ionicons name="logo-google" color={specialColors.text} size={Spacing * 2} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: Spacing,
-                backgroundColor: specialColors.gray,
-                borderRadius: Spacing / 2,
-                marginHorizontal: Spacing
-              }}
-            >
+            <TouchableOpacity style={styles.alternativeLoginButton}>
               <Ionicons name="logo-apple" color={specialColors.text} size={Spacing * 2} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: Spacing,
-                backgroundColor: specialColors.gray,
-                borderRadius: Spacing / 2,
-                marginHorizontal: Spacing
-              }}
-            >
+            <TouchableOpacity style={styles.alternativeLoginButton}>
               <Ionicons name="logo-facebook" color={specialColors.text} size={Spacing * 2} />
             </TouchableOpacity>
           </View>
@@ -248,8 +144,36 @@ export default function Page() {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 8
+  container: {
+    paddingHorizontal: Spacing * 2,
+    paddingVertical: Spacing * 4,
+    flexDirection: 'column',
+    gap: Spacing * 3
+  },
+  buttonStyle: {
+    paddingVertical: Spacing * 1.3
+  },
+  registerButton: {
+    backgroundColor: Colors.secondaryColor
+  },
+  driverRegisterButton: {
+    paddingVertical: Spacing * 1.1
+  },
+  specialTextStyle: {
+    color: specialColors.primary,
+    fontSize: FontSize.small
+  },
+  alternativeLoginButton: {
+    padding: Spacing,
+    backgroundColor: specialColors.gray,
+    borderRadius: 3
+  },
+  alternativeLogin: {
+    flexDirection: 'row',
+    gap: Spacing * 2
+  },
+  alternativeLoginContainer: {
+    alignItems: 'center',
+    gap: Spacing
   }
 })
