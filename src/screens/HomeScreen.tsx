@@ -45,9 +45,17 @@
 //     router.push('/(user)/customer/nearby_place')
 //   }
 
+<<<<<<< HEAD
 //   const onClickSuggestions = () => {
 //     router.push('/(user)/customer/nearby_place')
 //   }
+=======
+  const onClickSuggestions = () => {
+
+    router.push('/(user)/customer/book_driver')
+
+  }
+>>>>>>> c9f2bed9c80000f72ad9c70da958c880cfa6e35e
 
 //   const onClickInstruction = () => {
 //     // navigation.navigate(link)

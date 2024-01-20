@@ -4,15 +4,17 @@ import { Provider } from 'react-redux'
 
 import { GooglePlacesInput } from '@/src/screens/GooglePlacesInputScreen'
 import { store } from '@/store'
+import { VoucherScreen } from '@/src/screens/VoucherScreen'
 
 export default function Page() {
   const router = useRouter()
 
   return (
     <View>
-      <Provider store={store}>
+      {/* <Provider store={store}>
         <GooglePlacesInput />
-      </Provider>
+      </Provider> */}
+      <VoucherScreen/>
     </View>
   )
 }
