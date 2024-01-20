@@ -29,6 +29,7 @@
     "@stream-io/video-react-native-sdk": "^0.3.7",
     "@stripe/stripe-react-native": "0.28.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "axios": "^1.6.5",
     "babel-plugin-module-resolver": "^5.0.0",
     "d3-shape": "^3.2.0",
     "escape-string-regexp": "^5.0.0",

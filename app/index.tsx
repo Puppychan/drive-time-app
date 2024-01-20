@@ -22,7 +22,7 @@ import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-
+import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 // Get the full width and height of the screen
 
 function onClickData() {
