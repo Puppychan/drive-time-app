@@ -15,14 +15,16 @@ import Onboarding from 'react-native-onboarding-swiper'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { auth, firebaseApp } from '@/lib/firebase/firebase'
-import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import { auth, firebaseApp, firebaseVapidKey, messaging } from '@/lib/firebase/firebase'
+// import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
+import { getToken } from 'firebase/messaging'
+import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 // Get the full width and height of the screen
 
 function onClickData() {
@@ -51,33 +53,28 @@ export default function App() {
       try {
         firebaseApp
         auth
-        let availableToken;
+        // messaging
+        let availableToken
         const user = auth.currentUser || undefined
         setAuthUser(user)
-        registerForPushNotificationsAsync()
+        // await registerForPushNotificationsAsync()
+        getToken(messaging, { vapidKey: firebaseVapidKey })
+          .then((currentToken) => {
+            if (currentToken) {
+              // Send the token to your server and update the UI if necessary
+              // ...
+              console.log('Current tokennn', currentToken)
 
-        registerForPushNotificationsAsync().then((token) => {
-          console.log(token)
-          availableToken = token
-        })
-
-        const notificationReceivedListener = Notifications.addNotificationReceivedListener(
-          (notification) => {
-            console.log("Received listener", notification)
-            // Handle received notification
-          }
-        )
-
-        const notificationResponseReceivedListener =
-          Notifications.addNotificationResponseReceivedListener((response) => {
-            console.log("Notification response", response)
-            // Handle notification response
+            } else {
+              // Show permission request UI
+              console.log('No registration token available. Request permission to generate one.')
+              // ...
+            }
           })
-
-        return () => {
-          notificationReceivedListener.remove()
-          notificationResponseReceivedListener.remove()
-        }
+          .catch((err) => {
+            console.log('An error occurred while retrieving token. ', err)
+            // ...
+          })
       } catch (e) {
         console.log(e)
       }

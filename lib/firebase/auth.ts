@@ -7,7 +7,8 @@ import {
   AuthErrorCodes,
   updateProfile,
   getReactNativePersistence,
-  inMemoryPersistence
+  inMemoryPersistence,
+  setPersistence
 } from "firebase/auth"
 
 import { ResponseCode } from '@/common/response-code.enum'
