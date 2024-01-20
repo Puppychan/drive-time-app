@@ -9,7 +9,7 @@ export default function Layout() {
     <>
       <View style={styles.container}>
         <Slot />
-        <Footer />
+        {/* <Footer /> */}
       </View>
     </>
   )
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
     // paddingHorizontal: 30
   }
 })
