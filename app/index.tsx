@@ -18,11 +18,11 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { auth, firebaseApp } from '@/lib/firebase/firebase'
 import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
+import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 // Get the full width and height of the screen
 
 function onClickData() {
@@ -44,14 +44,12 @@ const { width: screenWidth } = getScreenSize()
 export default function App() {
   const router = useRouter()
   const [appIsReady, setAppIsReady] = useState(false)
-  const [authUser, setAuthUser] = useState<User>()
+  const [authUser, setAuthUser] = useState<User | null>(null)
 
   useEffect(() => {
     const prepare = async () => {
       try {
-        firebaseApp
-        auth
-        const user = auth.currentUser || undefined
+        const user = auth.currentUser
         setAuthUser(user)
         registerForPushNotificationsAsync()
       } catch (e) {
@@ -60,9 +58,7 @@ export default function App() {
     }
 
     prepare()
-    auth.onAuthStateChanged((user) => {
-      user ? setAuthUser(user) : setAuthUser(undefined)
-    })
+    auth.onAuthStateChanged((user) => setAuthUser(user))
     setAppIsReady(true)
   }, [])
 

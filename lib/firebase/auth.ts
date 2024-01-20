@@ -7,8 +7,9 @@ import {
   AuthErrorCodes,
   updateProfile,
   getReactNativePersistence,
-  inMemoryPersistence
-} from "firebase/auth"
+  inMemoryPersistence,
+  setPersistence
+} from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -47,9 +48,9 @@ import { addUserToDatabase, handleUserCreationError } from '@/lib/services/accou
 export function onAuthStateChanged() {
   _onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log("user signed in: ", user.email)
+      console.log('user signed in: ', user.email)
     } else {
-      console.log("user signed out ")
+      console.log('user signed out ')
     }
   })
 }
@@ -79,7 +80,7 @@ export async function signIn(
   return signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user
-      const token = await user.getIdToken();
+      const token = await user.getIdToken()
       // await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
       await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, remember ? Constant.TRUE : Constant.FALSE)
       await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, email)
@@ -137,19 +138,18 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
         displayName: additionalUserInfo.username,
         photoURL: additionalUserInfo.avatar
       })
-      .then(() => {
-        return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
-          ...user,
-          ...additionalUserInfo
+        .then(() => {
+          return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
+            ...user,
+            ...additionalUserInfo
+          })
         })
-      })
-      .catch(e => {
-        return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
-          ...user,
-          ...additionalUserInfo
+        .catch((e) => {
+          return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
+            ...user,
+            ...additionalUserInfo
+          })
         })
-      })
-
     })
     .catch(async (error) => {
       console.log(`~ ~ ~ ~ auth.ts, line 73: `, error)
@@ -159,28 +159,28 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
 
 export async function createUser(email: string, password: string, otherUserInfo: AccountType) {
   createUserWithEmailAndPassword(auth, email, password)
-  .then(async (userCredential) => {
-    // Signed up
-    const user = userCredential.user
-    addUserToDatabase(user, otherUserInfo)
-    .then((value) => {
-      // if add user information to database successfully
+    .then(async (userCredential) => {
+      // Signed up
+      const user = userCredential.user
+      addUserToDatabase(user, otherUserInfo)
+        .then((value) => {
+          // if add user information to database successfully
+          return new ResponseDto(
+            ResponseCode.OK,
+            'Signing up user successfully',
+            new SuccessResponseDto(otherUserInfo, value.id)
+          )
+        })
+        .catch(async (error) => {
+          return await handleUserCreationError(user, error)
+        })
+    })
+    .catch((error) => {
+      // TODO: display to UI
       return new ResponseDto(
-        ResponseCode.OK,
-        'Signing up user successfully',
-        new SuccessResponseDto(otherUserInfo, value.id)
+        error.code ?? ResponseCode.BAD_GATEWAY,
+        'Signing up user unsuccessfully',
+        `Failed to signing up the user: ${error}`
       )
     })
-    .catch(async (error) => {
-      return await handleUserCreationError(user, error)
-    })
-  })
-  .catch((error) => {
-    // TODO: display to UI
-    return new ResponseDto(
-      error.code ?? ResponseCode.BAD_GATEWAY,
-      'Signing up user unsuccessfully',
-      `Failed to signing up the user: ${error}`
-    )
-  })
 }
