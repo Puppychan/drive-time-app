@@ -51,9 +51,33 @@ export default function App() {
       try {
         firebaseApp
         auth
+        let availableToken;
         const user = auth.currentUser || undefined
         setAuthUser(user)
         registerForPushNotificationsAsync()
+
+        registerForPushNotificationsAsync().then((token) => {
+          console.log(token)
+          availableToken = token
+        })
+
+        const notificationReceivedListener = Notifications.addNotificationReceivedListener(
+          (notification) => {
+            console.log("Received listener", notification)
+            // Handle received notification
+          }
+        )
+
+        const notificationResponseReceivedListener =
+          Notifications.addNotificationResponseReceivedListener((response) => {
+            console.log("Notification response", response)
+            // Handle notification response
+          })
+
+        return () => {
+          notificationReceivedListener.remove()
+          notificationResponseReceivedListener.remove()
+        }
       } catch (e) {
         console.log(e)
       }
