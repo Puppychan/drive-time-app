@@ -9,7 +9,9 @@ import {
   TextInput,
   ToastAndroid,
   TouchableOpacity,
-  View
+  View,
+  Image,
+  Alert
 } from 'react-native'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -29,6 +31,7 @@ export default function Page() {
   const [password, setPassword] = useState('')
   const [loginDisable, setLoginDisable] = useState<boolean>(false)
   const [rememberMe, setRememberMe] = useState<boolean>(true)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleRegister = () => router.push('/signup')
   const handleRegisterDriver = () =>
@@ -60,84 +63,116 @@ export default function Page() {
     setLoginDisable(false)
   }
 
+  const handleHelpPress = () => {
+    Alert.alert(
+      'Technical Support',
+      'For further information, please contact huuquoc7603@gmail.com'
+    )
+  }
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Text
-          style={{
-            fontSize: FontSize.xLarge,
-            fontWeight: 'bold',
-            textAlign: 'center'
-          }}
-        >
-          Login
-        </Text>
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            alignItems: 'stretch',
-            gap: Spacing
-          }}
-        >
-          <Input placeHolder="Email" required={true} value={email} onChangeText={setEmail} />
-          <Input
-            placeHolder="Password"
-            secureTextEntry={true}
-            required={true}
-            value={password}
-            onChangeText={setPassword}
+        <View>
+          <Image
+            style={{ width: 100, height: 100, resizeMode: 'cover' }}
+            source={require('../../assets/ic_uber.png')}
           />
-          <CheckBox
-            title="Remember me"
-            isChecked={rememberMe}
-            onPress={() => setRememberMe(!rememberMe)}
-
-            style={{ color: Colors.sky_blue }}
-            textStyle={{ color: Colors.black }}
-
-          />
-          <AppButton
-            title="Forgot Password ?"
-            onPress={() => {}}
-            type={ButtonType.text}
-            style={{ alignSelf: 'flex-end' }}
-            textStyle={styles.specialTextStyle}
-          />
-          <AppButton
-            style={styles.buttonStyle}
-            title="Loginn"
-            onPress={handleLogin}
-            disabled={loginDisable}
-          />
-          <AppButton
-            style={[styles.buttonStyle, styles.registerButton]}
-            title="Create new account"
-            onPress={handleRegister}
-          />
-          <AppButton
-            style={[styles.buttonStyle, styles.driverRegisterButton]}
-            type={ButtonType.outlined}
-            title="Join our team? REGISTER DRIVER ACCOUNT!"
-            onPress={handleRegisterDriver}
-
-          />
-        </View>
-
-        <View style={styles.alternativeLoginContainer}>
-          <Text style={styles.specialTextStyle}>Or continue with</Text>
-          <View style={styles.alternativeLogin}>
-            <TouchableOpacity style={styles.alternativeLoginButton}>
-              <Ionicons name="logo-google" color={specialColors.text} size={Spacing * 2} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.alternativeLoginButton}>
-              <Ionicons name="logo-apple" color={specialColors.text} size={Spacing * 2} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.alternativeLoginButton}>
-              <Ionicons name="logo-facebook" color={specialColors.text} size={Spacing * 2} />
+          <Text
+            style={{
+              fontSize: 32,
+              fontWeight: 'bold',
+              textAlign: 'left'
+            }}
+          >
+            Sign In
+          </Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 18, marginTop: 8 }}>Don't have an account?</Text>
+            <TouchableOpacity onPress={handleRegister}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  marginTop: 8,
+                  marginLeft: 10,
+                  color: 'green',
+                  textDecorationLine: 'underline'
+                }}
+              >
+                Register
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
+        <View>
+          <Text style={styles.inputTitle}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="E.g. huuquoc7603@gmail.com"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+        </View>
+        <View>
+          <Text style={styles.inputTitle}>Password</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="******"
+              value={password}
+              secureTextEntry={showPassword}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                setShowPassword(!showPassword)
+              }}
+              style={styles.showHideButton}
+            >
+              <Text>{!showPassword ? 'Hide' : 'Show'}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View
+          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}
+        >
+          <CheckBox
+            title="Remember me"
+            onPress={() => setRememberMe(!rememberMe)}
+            textStyle={{
+              fontSize: 16,
+              color: 'gray',
+              fontWeight: '500'
+            }}
+            isChecked={rememberMe}
+          />
+
+          <TouchableOpacity>
+            <Text style={{ color: 'green', fontSize: 16 }}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.line} />
+          <Text style={styles.text}>Or</Text>
+          <View style={styles.line} />
+        </View>
+
+        <TouchableOpacity style={styles.googleSignInButton}>
+          <Image source={require('../../assets/ic_google.png')} style={{ width: 32, height: 32 }} />
+          <Text style={{ color: 'black', fontSize: 18 }}>Sign In with Google</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{ alignItems: 'center' }} onPress={handleHelpPress}>
+          <Text style={{ fontSize: 16, marginTop: 8, textDecorationLine: 'underline' }}>
+            Need Help?
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
@@ -156,6 +191,42 @@ const styles = StyleSheet.create({
   registerButton: {
     backgroundColor: Colors.secondaryColor
   },
+  input: {
+    height: 55,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingLeft: 10,
+    fontSize: 16
+  },
+  inputTitle: {
+    fontSize: 18,
+    marginBottom: 10
+  },
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)'
+  },
+  text: {
+    marginHorizontal: 10,
+    color: 'rgba(0, 0, 0, 0.4)',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  passwordContainer: {
+    position: 'relative',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc'
+  },
+  showHideButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    padding: 18
+  },
   driverRegisterButton: {
     paddingVertical: Spacing * 1.1
   },
@@ -167,6 +238,29 @@ const styles = StyleSheet.create({
     padding: Spacing,
     backgroundColor: specialColors.gray,
     borderRadius: 3
+  },
+  signInButton: {
+    backgroundColor: 'black',
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginTop: 10
+  },
+  googleSignInButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center'
   },
   alternativeLogin: {
     flexDirection: 'row',
