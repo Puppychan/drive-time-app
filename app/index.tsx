@@ -1,45 +1,38 @@
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { SetStateAction, useCallback, useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Button as ReactNativeButton } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button as ReactNativeButton,
+  Image,
+  TouchableOpacity
+} from 'react-native'
 import { Button, Provider as PageProvider } from 'react-native-paper'
+import Onboarding from 'react-native-onboarding-swiper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { Colors } from '@/components/Colors'
-import { generateData } from '@/lib/data/generate-all.data'
+import { generateData } from '../lib/data/generate-all.data'
+import { CallControllerScreen } from '../src/screens/CallControllerScreen'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 import { auth, firebaseApp } from '@/lib/firebase/firebase'
-import { AppButton } from '@/src/components/button/Buttons'
+import { CustomButton } from '@/src/components/button/Buttons'
 import { signOut } from '@/lib/firebase/auth'
 import { onAuthStateChanged, User } from 'firebase/auth'
 
-// Get the full width and height of the screen
-const { width: screenWidth } = getScreenSize()
-
-function onClickData() {
-  console.log("Calldls;fnk");
-  generateData()
-}
-
 SplashScreen.preventAutoHideAsync()
 
+const { width: screenWidth } = getScreenSize()
+
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false)
   const router = useRouter()
-  const [authUser, setUser] = useState<User>()
-  const handleSignOut = async () => {
-    try {
-      await signOut()
-      router.push("/")
-    }
-    catch (error) {
-      console.log(error)
-    }
-  }
+  const [appIsReady, setAppIsReady] = useState(false)
+  const [authUser, setAuthUser] = useState<User>()
 
   useEffect(() => {
-    const prepare = async () => {
+    const prepare = () => {
       try {
         firebaseApp
         auth
@@ -50,11 +43,11 @@ export default function App() {
 
     prepare()
     auth.onAuthStateChanged((user) => {
-      user ? setUser(user) : setUser(undefined);
+      user ? setAuthUser(user) : setAuthUser(undefined);
     })
     setAppIsReady(true)
 
-    
+
   }, [])
 
   const onLayoutRootView = useCallback(async () => {
@@ -67,37 +60,87 @@ export default function App() {
     return null
   }
 
+  const handleDone = () => {
+    router.replace('/signin')
+  }
+  const doneButton = ({ ...props }) => {
+    return (
+      <TouchableOpacity style={styles.doneButton} {...props}>
+        <Text>Done</Text>
+      </TouchableOpacity>
+    )
 
+  }
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <View 
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        onLayout={onLayoutRootView}
-        >
+        {/*
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>Home Page</Text>
           <Button onPress={onClickData}>Generate Data</Button>
-          <>
-          {
-            authUser ? 
-              <>
-                <Text>{"Hi,  " +  authUser.displayName}</Text>
-                <AppButton
-                  title='Sign out'
-                  onPress={handleSignOut}
-                />
-              </>
-            : 
-          
-              <>
-                <AppButton
-                  title='Sign in'
-                  onPress={() => {router.push("/signin")}}
-                />
-              </>
-          }
-          </>
-          
+          <Link href="/signin" asChild>
+            <ReactNativeButton title="Open Signin" />
+          </Link>
+          <Link href="../driver/register/chat" asChild>
+            <Button>Open SignIn</Button>
+          </Link>
+        </View>
+        */}
+        <View 
+          style={styles.container}
+          onLayout={onLayoutRootView}
+        >
+          <Onboarding
+            onDone={handleDone}
+            onSkip={handleDone}
+            bottomBarHighlight={false}
+            DoneButtonComponent={doneButton}
+            containerStyles={{ paddingHorizontal: 15 }}
+            pages={[
+              {
+                backgroundColor: '#fff',
+                image: (
+                  <View style={styles.lottie}>
+                    <Image
+                      source={require('../assets/car7.png')}
+                      style={{ width: screenWidth * 0.9, height: screenWidth }}
+                    />
+                  </View>
+                ),
+
+                title: 'Navigation',
+                subtitle: "Don't worry about getting lost"
+              },
+              {
+                backgroundColor: '#fff',
+                //   image: <Image source={require('./images/circle.png')} />,
+                image: (
+                  <View style={styles.lottie}>
+                    <Image
+                      source={require('../assets/car7.png')}
+                      style={{ width: screenWidth * 0.9, height: screenWidth }}
+                    />
+                  </View>
+                ),
+                title: 'Enviroment',
+                subtitle: "Don't throw trash away"
+              },
+              {
+                backgroundColor: '#fff',
+                //   image: <Image source={require('./images/circle.png')} />,
+                image: (
+                  <View style={styles.lottie}>
+                    <Image
+                      source={require('../assets/car7.png')}
+                      style={{ width: screenWidth * 0.9, height: screenWidth }}
+                    />
+                  </View>
+                ),
+                title: 'Friend Ship',
+                subtitle: 'New event, new friend'
+              }
+            ]}
+          />
         </View>
       </PageProvider>
     </ReduxProvider>
@@ -107,9 +150,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: screenWidth,
-    backgroundColor: Colors.cream,
-    alignItems: 'center',
-    overflow: 'scroll'
+    backgroundColor: 'white'
+  },
+  lottie: {
+    width: screenWidth * 0.9,
+    height: screenWidth * 0.9,
+  },
+  doneButton: {
+    padding: 20,
+    backgroundColor: 'white'
+    // borderTopLeftRadius: '100%',
+    // borderBottomLeftRadius: '100%',
   }
 })

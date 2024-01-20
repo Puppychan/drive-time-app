@@ -19,7 +19,7 @@ export interface Account {
   updatedDate?: Timestamp // add after create account
   createdDate?: Timestamp // add after create account
   birthday?: Timestamp | null
-  role: AccountRole
+  role: string
   // address - can be optional because sometimes user doesn't have address
   locationId?: string // This field is optional as denoted by '?'
 }

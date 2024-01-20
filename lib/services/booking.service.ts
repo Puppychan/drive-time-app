@@ -1,4 +1,4 @@
-import { Timestamp, doc, getDoc, increment, setDoc, updateDoc } from 'firebase/firestore'
+import { Timestamp, doc, getDoc, increment, runTransaction, setDoc, updateDoc } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -8,6 +8,8 @@ import { CollectionName } from '../common/collection-name.enum'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { db } from '../firebase/firebase'
 import { Booking, BookingStatus } from '../models/booking.model'
+import { updateCustomerMembership } from './account.service'
+import { updateMembership, upgradeMembershipIfEligible } from './membership.service'
 
 function handleBookingException(error: any, type: string) {
   const errorCode = error?.code
@@ -44,6 +46,9 @@ export async function addBooking(bookingData: Booking) {
 export async function finishBooking(bookingId: string) {
   try {
     // Begin a transaction or batch if necessary for atomic operations
+    await runTransaction(db, async (transaction) => {
+      
+    })
 
     // Retrieve the booking
     const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
@@ -63,15 +68,11 @@ export async function finishBooking(bookingId: string) {
 
       // Loop through all customers associated with the booking and add points
       for (const customerId of booking.customerIdList) {
-        const accountRef = doc(db, CollectionName.ACCOUNTS, customerId)
-        const accountSnapshot = await getDoc(accountRef)
-        if (accountSnapshot.exists()) {
-          // Update the customer's points
-          await updateDoc(accountRef, {
-            membershipPoints: increment(ADD_MEMBERSHIP_POINT), // This will add the specified points to the existing points
-            updatedAt: Timestamp.fromDate(new Date())
-          })
+        const updateCustomerResponse = await updateCustomerMembership(customerId)
+        if (updateCustomerResponse.code != ResponseCode.OK) {
+          return Promise.reject("Sorry! Population is too big");
         }
+        const membershipUpdateResponse = await upgradeMembershipIfEligible(customerId)
       }
 
       console.log(`Booking ${bookingId} finished and points added to customers`)

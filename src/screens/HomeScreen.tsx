@@ -20,7 +20,7 @@ import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
 
 import ReviewScreen from './ReviewScreen'
-import { AppButton } from '../components/button/Buttons'
+import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 
 // TODO: change to dynamic later

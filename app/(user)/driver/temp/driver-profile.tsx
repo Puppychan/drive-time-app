@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 
 import { Colors } from '@/components/Colors'
-import { AppButton, ButtonType } from '@/src/components/button/Buttons'
+import { CustomButton, ButtonType } from '@/src/components/button/Buttons'
 import { Input } from '@/src/components/input/TextInput'
 import { AppDropDown } from '@/src/components/menu/DropDownMenu'
 import { auth } from '@/lib/firebase/firebase'
@@ -143,9 +143,9 @@ export default function Page() {
           selectedValue={gender}
           setSelectedValue={setGender}
         />
-        <AppButton title='Select Avatar' onPress={chooseImage} type={ButtonType.outlined}/>
-        <AppButton title="Submit" onPress={handleSubmit} />
-        <AppButton title="Cancel" onPress={handleCancel} />
+        <CustomButton title='Select Avatar' onPress={chooseImage} type={ButtonType.outlined}/>
+        <CustomButton title="Submit" onPress={handleSubmit} />
+        <CustomButton title="Cancel" onPress={handleCancel} />
       </View>
     </View>
   )

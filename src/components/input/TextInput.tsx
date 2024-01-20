@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     minWidth: 100,
-    gap: 10
+    gap: 10,
   },
   input: {
     borderColor: Colors.silver,

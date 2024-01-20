@@ -1,23 +1,23 @@
-import { Pressable, StyleSheet, Text, View } from "react-native"; 
-import React from "react"; 
-import { MaterialCommunityIcons } from "@expo/vector-icons"; 
-import { Label } from "./Label";
+import { Colors } from '@/components/Colors';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+
+import { Label } from './Label'
 
 interface CheckBoxProps {
   title: string
-	isChecked?: boolean
+  isChecked?: boolean
   onPress?: any
   required?: boolean
   textStyle?: any
   style?: any
 }
 
-
-const CheckBox = (props : CheckBoxProps) => { 
-	const title = props.title;
-	const iconName = props.isChecked ? 
-		"checkbox-marked" : "checkbox-blank-outline"; 
-	const color = props.style.color || '#000'
+const CheckBox = (props: CheckBoxProps) => {
+  const title = props.title
+  const iconName = props.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'
+  const color = props.style?.color ?? '#000'
 
 	return ( 
 		<View style={styles.container}> 
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 	}, 
 	title: { 
 		marginLeft: 5,
-		// marginTop: 2
+		marginTop: 2
 	}, 
 
 }); 

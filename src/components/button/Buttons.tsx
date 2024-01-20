@@ -28,16 +28,21 @@ const styles = StyleSheet.create({
   outlinedButton: {
     backgroundColor: 'transparent',
     borderColor: Colors.primary,
-    borderWidth: 1
+    borderWidth: 1,
+    elevation: 0,
   },
   outlinedButtonText: {
-    color: Colors.primary
+    color: Colors.primary,
   },
   textButton: {
     backgroundColor: 'transparent',
     paddingVertical: 0,
     paddingHorizontal: 0,
-    textDecorationLine: 'underline'
+    elevation: 0,
+  },
+  textButtonText: {
+    fontWeight: 'normal',
+
   },
   disabledButton: {
     backgroundColor: Colors.disabled
@@ -61,7 +66,7 @@ interface ButtonProps {
 
 }
 
-export const AppButton = (props: ButtonProps) => {
+export const CustomButton = (props: ButtonProps) => {
   const type = props.type ?? ButtonType.filled
   const disabled = props.disabled ?? false
   return (
@@ -85,7 +90,7 @@ export const AppButton = (props: ButtonProps) => {
         <Text style={[
           styles.buttonText, 
           type === ButtonType.outlined && styles.outlinedButtonText,
-          type === ButtonType.text && styles.textButton,
+          type === ButtonType.text && styles.textButtonText,
           props.textStyle,
         ]}>
           {props.title}

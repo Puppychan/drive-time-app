@@ -8,7 +8,7 @@ import { Input } from '@/src/components/input/TextInput'
 import { AppDropDown } from '@/src/components/menu/DropDownMenu'
 import { auth } from '@/lib/firebase/firebase'
 import { deleteUser, updateProfile, User } from 'firebase/auth'
-import { addUser } from '@/lib/firebase/auth'
+import { addUser, signOut } from '@/lib/firebase/auth'
 import { Account, AccountRole } from '@/lib/models/account.model'
 import { uploadImage } from '@/lib/firebase/storage'
 import { Timestamp } from 'firebase/firestore'
@@ -24,6 +24,8 @@ const genderList = [
 ]
 
 export default function Page() {
+  const { uid, role } = useLocalSearchParams<{ uid: string; role?: string }>();
+  const accountRole = role ?? AccountRole.Customer
   const router = useRouter()
   const [authUser, setAuthUser] = useState<User>()
   const [gender, setGender] = useState(genderList[0].value)
@@ -61,43 +63,66 @@ export default function Page() {
     // create account
     const account: Account = {
       userId: authUser.uid,
-      email: authUser.email || "",
+      email: authUser.email ?? "",
       username: username,
       firstName: firstName,
       lastName: lastName,
-      role: AccountRole.Driver,
+      role: accountRole,
       phone: phone,
-      avatar: avatarUrl || null,
+      avatar: avatarUrl,
       birthday: (dob && Timestamp.fromDate(dob)) || null,
       createdDate: Timestamp.fromDate(new Date())
     }
 
-    const driverAccount: AccountType = {
-      ...account,
-      workStartDate: Timestamp.fromDate(new Date()),
-      isBan: false,
-      banTime: null
+    let roleAccount : AccountType
+
+    switch (accountRole) {
+      case AccountRole.Driver: //driver
+        roleAccount = {
+          ...account,
+          workStartDate: Timestamp.fromDate(new Date()),
+          isBan: false,
+          banTime: null,
+          transport: null
+        }
+        break;
+
+      case AccountRole.Admin: //admin
+        roleAccount = {
+          ...account,
+          workStartDate: Timestamp.fromDate(new Date())
+        }
+        break;
+
+      default: //customer
+        roleAccount = {
+          ...account,
+          membershipId: '1',
+          membershipPoints: 0,
+          description: ''
+        }
     }
 
+
     console.log(authUser.uid)
-    addUser(authUser, driverAccount)
-    .then((res) => {
+    addUser(authUser, roleAccount)
+    .then(async (res) => {
       if (res.code === ResponseCode.OK) {
         ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
-        auth.signOut();
-        router.push(`/login`);
+        await signOut()
+        router.push(`/signin`);
       }
       else {
-        auth.signOut();
+        await signOut()
         ToastAndroid.show(`Register account failed: ${res.message}. Please try again`, ToastAndroid.LONG);
-        router.push(`/driver/register`);
+        router.push(`/signup`);
       }
     })
   }
 
   const handleCancel = async () => {
     if (!authUser) {
-      router.push(`/driver/register`);
+      router.push(`/signup`);
       return
     }
 
@@ -113,8 +138,7 @@ export default function Page() {
       field = "First Name";
     } else if (lastName.trim() === '') {
       field = "Last Name";
-    }
-    else if (username.trim() === '') {
+    } else if (username.trim() === '') {
       field = "Username";
     }  else if (phone.trim() === '') {
       field = "Phone";
@@ -128,11 +152,15 @@ export default function Page() {
   
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.formTitle}>Driver Profile</Text>
+      <Text style={styles.formTitle}>Profile Information</Text>
       <View style={styles.form}>
         <View style={styles.inline}>
-          <Input style={styles.elementSameRow} label="First Name" placeHolder="First Name" required={true} onChangeText={setFirstName}/>
-          <Input style={styles.elementSameRow} label="Last Name" placeHolder="Last Name" required={true} onChangeText={setLastName} />
+          <View style={styles.elementSameRow}>
+            <Input label="First Name" placeHolder="First Name" required={true} onChangeText={setFirstName}/>  
+          </View>
+          <View style={styles.elementSameRow}>
+            <Input label="Last Name" placeHolder="Last Name" required={true} onChangeText={setLastName} />
+          </View>
         </View>
         <Input label="Username" placeHolder="Username" required={true} onChangeText={setUsername}/>
         <Input label="Phone" placeHolder="Phone Number" required={true} onChangeText={setPhone}/>
@@ -177,9 +205,9 @@ const styles = StyleSheet.create({
   },
   inline: {
     flexDirection: 'row',
-    gap: 10
+    gap: 10,
   },
   elementSameRow: {
-    flex: 1
+    flex: 1,
   }
 })

@@ -1,4 +1,4 @@
-import { AppButton } from '@/src/components/button/Buttons'
+import { CustomButton } from '@/src/components/button/Buttons'
 import { Colors } from '@/components/Colors'
 import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
@@ -29,10 +29,8 @@ export default function Page() {
     createAuthAccount(email, password)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
-        // ToastAndroid.show(`Register successfully`, ToastAndroid.SHORT);
-        const user = res.body
-        console.log(user)
-        router.push(`driver/register/driver-profile`);
+        const {user} = res.body
+        // router.push(`/driver/register/driver-profile?id=${user.uid}`);
       }
       else {
         ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT);
@@ -61,7 +59,7 @@ export default function Page() {
           value={password}
           onChangeText={setPassword}
         />
-        <AppButton title="Next" onPress={handleNext} disabled={btnDisable} />
+        <CustomButton title="Next" onPress={handleNext} disabled={btnDisable} />
       </View>
     </View>
   )

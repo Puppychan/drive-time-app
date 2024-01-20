@@ -24,17 +24,20 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.drivetimeapp",
-      "googleServicesFile": "./android/google-services.json",
+      "googleServicesFile": "./android/app/google-services.json",
       "jsEngine": "hermes"
 
     },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro",
-      "output": "static"
-    },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@stream-io/video-react-native-sdk",
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true
