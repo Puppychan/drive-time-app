@@ -42,7 +42,7 @@ export default function Page() {
 
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.formTitle}>Driver Sign Up</Text>
+      <Text style={styles.formTitle}>Sign Up</Text>
       <View style={styles.form}>
         <Input
           label="Email"
