@@ -1,6 +1,4 @@
-import { Ionicons } from '@expo/vector-icons'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Link, router, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
   SafeAreaView,
@@ -16,10 +14,7 @@ import {
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { signIn } from '@/lib/firebase/auth'
-import { AccountRole } from '@/lib/models/account.model'
-import { AppButton, ButtonType } from '@/src/components/button/Buttons'
 import CheckBox from '@/src/components/input/Checkbox'
-import { Input } from '@/src/components/input/TextInput'
 
 import { Colors, specialColors } from '../../components/Colors'
 import FontSize from '../../components/FontSize'
@@ -29,23 +24,17 @@ export default function Page() {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
-  const [loginDisable, setLoginDisable] = useState<boolean>(false)
   const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState(false)
 
   const handleRegister = () => router.push('/signup')
-  const handleRegisterDriver = () =>
-    router.push({ pathname: '/signup', params: { role: AccountRole.Driver } })
 
   const handleLogin = async () => {
-    setLoginDisable(true)
     if (email.trim() === '') {
       ToastAndroid.show('Email is required', ToastAndroid.SHORT)
-      setLoginDisable(false)
       return
     } else if (password.trim() === '') {
       ToastAndroid.show('Password is required', ToastAndroid.SHORT)
-      setLoginDisable(false)
       return
     }
 
@@ -59,8 +48,6 @@ export default function Page() {
         ToastAndroid.show(`Login failed: ${res.message}`, ToastAndroid.SHORT)
       }
     })
-
-    setLoginDisable(false)
   }
 
   const handleHelpPress = () => {

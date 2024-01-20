@@ -13,13 +13,33 @@ import expo.modules.ReactActivityDelegateWrapper;
 public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    // Set the theme to AppTheme BEFORE onCreate to support 
+    // Set the theme to AppTheme BEFORE onCreate to support
     // coloring the background, status bar, and navigation bar.
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null);
+    makeImmersiveSticky();
   }
 
+private void makeImmersiveSticky() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      // For Android 11 and above, use the WindowInsetsController
+      View decorView = getWindow().getDecorView();
+      WindowInsetsController insetsController = decorView.getWindowInsetsController();
+      if (insetsController != null) {
+        insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        insetsController.hide(WindowInsetsController.BARS_NAVIGATION);
+        insetsController.hide(WindowInsetsController.BARS_STATUS);
+      }
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      // For Android 4.4 (KitKat) to Android 10
+      View decorView = getWindow().getDecorView();
+      int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+          | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+          | View.SYSTEM_UI_FLAG_FULLSCREEN;
+      decorView.setSystemUiVisibility(uiOptions);
+    }
+  }
   /**
    * Returns the name of the main component registered from JavaScript.
    * This is used to schedule rendering of the component.
