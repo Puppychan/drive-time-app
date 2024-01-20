@@ -1,18 +1,30 @@
+import { ResponseDto } from '@/common/response.dto'
 import * as Notifications from 'expo-notifications'
+import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
+import { NotificationDto } from '../../common/notification.dto'
 
-import { auth } from './firebase'
+admin.initializeApp()
 
-// exports.sendNotification = functions.https.onCall((data, context) => {
-//   const payload = {
-//     notification: {
-//       title: 'New Notification',
-//       body: data.message
-//     }
-//   }
+exports.sendNotification = functions.https.onCall((data, context) => {
+  const payload = {
+    notification: {
+      title: data.title,
+      body: data.body
+    },
+    token: data.token
+  } as NotificationDto
 
-//   return admin.messaging().sendToDevice(data.token, payload)
-// })
+  return admin
+    .messaging()
+    .send(payload)
+    .then((response) => {
+      return new ResponseDto()
+    })
+    .catch((error) => {
+      return { success: false, error }
+    })
+})
 
 export async function registerForPushNotificationsAsync() {
   const { status: existingStatus } = await Notifications.getPermissionsAsync()
@@ -53,5 +65,15 @@ async function sendPushNotification(expoPushToken: string, message: string) {
     })
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const sendNotification = async (token, title, body) => {
+  const sendNotificationFunction = functions().httpsCallable('sendNotification')
+  try {
+    const response = await sendNotificationFunction({ token, title, body })
+    console.log('Notification sent:', response)
+  } catch (error) {
+    console.error('Error sending notification:', error)
   }
 }

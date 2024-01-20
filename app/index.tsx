@@ -18,11 +18,11 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { auth, firebaseApp } from '@/lib/firebase/firebase'
 import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
+import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 // Get the full width and height of the screen
 
 function onClickData() {
@@ -61,18 +61,16 @@ export default function App() {
 
     prepare()
     auth.onAuthStateChanged((user) => {
-      user ? setUser(user) : setUser(undefined);
+      user ? setUser(user) : setUser(undefined)
     })
     setAppIsReady(true)
-
-    
   }, [])
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      await SplashScreen.hideAsync();
+      await SplashScreen.hideAsync()
     }
-  }, [appIsReady]);
+  }, [appIsReady])
 
   if (!appIsReady) {
     return null

@@ -30,7 +30,6 @@
     "@stripe/stripe-react-native": "0.28.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "axios": "^1.6.5",
-    "babel-plugin-module-resolver": "^5.0.0",
     "d3-shape": "^3.2.0",
     "escape-string-regexp": "^5.0.0",
     "expo": "~49.0.15",
@@ -39,10 +38,12 @@
     "expo-constants": "~14.4.2",
     "expo-dev-client": "~2.4.12",
     "expo-linking": "~5.0.2",
+    "expo-notifications": "~0.20.1",
     "expo-router": "^2.0.4",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
     "firebase-functions": "^4.6.0",
     "jsonwebtoken": "^9.0.2",
     "metro-react-native-babel-preset": "^0.77.0",
@@ -78,8 +79,7 @@
     "stream-chat": "^8.14.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.3",
-    "uuid": "^9.0.1",
-    "expo-notifications": "~0.20.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -93,6 +93,7 @@
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "babel-plugin-inline-dotenv": "^1.7.0",
+    "babel-plugin-module-resolver": "^5.0.0",
     "cypress": "^13.6.3",
     "eslint": "^8.56.0",
     "eslint-config-universe": "^12.0.0",
