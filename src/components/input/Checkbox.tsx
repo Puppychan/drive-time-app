@@ -16,7 +16,7 @@ interface CheckBoxProps {
 const CheckBox = (props: CheckBoxProps) => {
   const title = props.title
   const iconName = props.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'
-  const color = props.style.color || '#000'
+  const color = '#000'
 
   return (
     <View style={styles.container}>
@@ -34,8 +34,6 @@ const CheckBox = (props: CheckBoxProps) => {
   )
 }
 
-export default CheckBox
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
@@ -49,3 +47,5 @@ const styles = StyleSheet.create({
     marginLeft: 5
   }
 })
+
+export default CheckBox

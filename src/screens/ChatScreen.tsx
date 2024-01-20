@@ -13,7 +13,6 @@ import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
 import { View } from 'react-native'
 import { GiftedChat, IMessage } from 'react-native-gifted-chat'
 
-
 import { ChatHeader } from '../components/chat/header/ChatHeader'
 import { ChatInputField } from '../components/chat/input/ChatInputField'
 import { ChatMessageView } from '../components/chat/message/MessageView'
