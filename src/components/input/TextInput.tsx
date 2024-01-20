@@ -10,7 +10,8 @@ import Spacing from '@/components/Spacing'
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    minWidth: 100
+    minWidth: 100,
+    gap: 10
   },
   input: {
     borderColor: Colors.silver,

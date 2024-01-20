@@ -28,50 +28,43 @@ const AnimatedIcon = Animated.createAnimatedComponent(Feather)
 const FooterElement = ({ label, icon, index, onTabPress, activeIndex }: FooterElementProps) => {
   const { curvePaths } = usePath()
   const animatedActiveIndex = useSharedValue(activeIndex)
+  const iconColor = useSharedValue('rgba(128,128,128,0.8)')
+
   const iconPosition = getPathXCenterByIndex(curvePaths, index)
   const labelPosition = getPathXCenterByIndex(curvePaths, index)
 
   const tabStyle = useAnimatedStyle(() => {
-    const translateY = animatedActiveIndex.value - 1 === index ? -35 : 20
-    const iconPositionX = iconPosition - index * ICON_SIZE
-
+    const translateY = animatedActiveIndex.value === index ? -35 : 20
     return {
       width: ICON_SIZE,
       height: ICON_SIZE,
       transform: [
-        { translateX: withTiming(translateY) },
-        { translateY: iconPositionX - ICON_SIZE / 2 }
+        { translateX: iconPosition - ICON_SIZE / 2 },
+        { translateY: withTiming(translateY) }
       ]
     }
   })
 
   const labelContainerStyle = useAnimatedStyle(() => {
-    const translateY = animatedActiveIndex.value - 1 === index ? 36 : 100
-
+    const translateY = animatedActiveIndex.value === index ? 36 : 100
     return {
       transform: [
-        { translateX: withTiming(translateY) },
-        { translateY: labelPosition - LABEL_WIDTH / 2 }
+        { translateX: labelPosition - LABEL_WIDTH / 2 },
+        { translateY: withTiming(translateY) }
       ]
     }
   })
 
-  const iconColor = useSharedValue(
-    animatedActiveIndex.value - 1 === index ? '#fff' : 'rgba(128,128,128,0.8)'
-  )
-
   useEffect(() => {
     animatedActiveIndex.value = activeIndex
-    if (animatedActiveIndex.value === index + 1) {
-      iconColor.value = withTiming('#fff')
-    } else {
-      iconColor.value = withTiming('rgba(128,128,128,0.8)')
-    }
-  }, [activeIndex])
+    iconColor.value =
+      animatedActiveIndex.value === index ? withTiming('#fff') : withTiming('rgba(128,128,128,0.8)')
+  }, [activeIndex, index, iconColor])
 
   const animatedIconProps = useAnimatedProps(() => ({
     color: iconColor.value
   }))
+
   return (
     <>
       <Animated.View style={[tabStyle]}>
@@ -101,4 +94,5 @@ const styles = StyleSheet.create({
     color: 'rgba(128,128,128,0.8)'
   }
 })
+
 export default FooterElement

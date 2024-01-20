@@ -20,7 +20,7 @@ import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
 
 import ReviewScreen from './ReviewScreen'
-import { CustomButton } from '../components/button/Buttons'
+import { AppButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
@@ -71,23 +71,29 @@ const HomeScreen = () => {
                 name="home"
                 size={24}
                 color={colorsTheme.background}
-                backgroundColor={colorsTheme.opposite}
+                backgroundColor={colorsTheme.opposite_bg}
               />
 
               <View style={{ ...verticalLeftView, flexGrow: 1 }}>
                 <Title>Home</Title>
                 <Paragraph>123 Main St</Paragraph>
               </View>
-              <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite} />
+              <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
             </View>
           </TouchableOpacity>
 
           {/* Recent card */}
+
           <CustomButton
             title="Register Driver"
             onPress={() => {
               router.push('/driver/register')
             }}
+
+          <Button
+            title='Register Driver'
+            onPress={() => {router.push('/driver/register')}}
+
           />
 
           {/* Explore Nearby Card */}
@@ -106,7 +112,7 @@ const HomeScreen = () => {
             <Title>Suggestions</Title>
             {/* Add see more if more than 4 suggestions */}
             {SUGGESTION_LIST.length > 4 && (
-              <CustomButton
+              <Button
                 title="See More"
                 onPress={() => {
                   onClickSeeMore('suggestion')
@@ -140,7 +146,7 @@ const HomeScreen = () => {
             <Title>Instruction</Title>
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
-              <CustomButton
+              <Button
                 title="See More"
                 onPress={() => {
                   onClickSeeMore('instruction')
