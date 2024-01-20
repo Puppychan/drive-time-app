@@ -1,4 +1,4 @@
-import { CustomButton } from '@/src/components/button/Buttons'
+import { AppButton } from '@/src/components/button/Buttons'
 import { Colors } from '@/components/Colors'
 import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
@@ -59,7 +59,7 @@ export default function Page() {
           value={password}
           onChangeText={setPassword}
         />
-        <CustomButton title="Next" onPress={handleNext} disabled={btnDisable} />
+        <AppButton title="Next" onPress={handleNext} disabled={btnDisable} />
       </View>
     </View>
   )

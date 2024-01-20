@@ -22,7 +22,7 @@ import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-
+import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 // Get the full width and height of the screen
 
 function onClickData() {
@@ -49,28 +49,30 @@ export default function App() {
   useEffect(() => {
     const prepare = async () => {
       try {
-        // Pre-load fonts + APIs
         firebaseApp
         auth
         const user = auth.currentUser || undefined
         setAuthUser(user)
         registerForPushNotificationsAsync()
       } catch (e) {
-        console.warn(e)
-      } finally {
-        setAppIsReady(true)
+        console.log(e)
       }
     }
 
     prepare()
+    auth.onAuthStateChanged((user) => {
+      user ? setUser(user) : setUser(undefined);
+    })
+    setAppIsReady(true)
+
+    
   }, [])
 
-  // hide splash screen when the app is ready
-  useEffect(() => {
+  const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      SplashScreen.hideAsync()
+      await SplashScreen.hideAsync();
     }
-  }, [appIsReady])
+  }, [appIsReady]);
 
   if (!appIsReady) {
     return null
@@ -92,10 +94,6 @@ export default function App() {
         {/*
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>Home Page</Text>
-          <Text>
-            Hi
-            {authUser && <Text>{", " + authUser.displayName}</Text>}
-          </Text>
           <Button onPress={onClickData}>Generate Data</Button>
           <Link href="/signin" asChild>
             <ReactNativeButton title="Open Signin" />
