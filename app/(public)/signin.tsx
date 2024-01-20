@@ -123,7 +123,7 @@ export default function Page() {
             isChecked={rememberMe}
             onPress={() => setRememberMe(!rememberMe)}
             style={{ color: Colors.sky_blue }}
-            textStyle={{ color: Colors.white }}
+            textStyle={{ color: Colors.black }}
           />
         </View>
 
