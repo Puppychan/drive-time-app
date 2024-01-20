@@ -2,7 +2,7 @@
 import { createStackNavigator } from '@react-navigation/stack'
 
 import { GooglePlacesInput } from '@/src/screens/GooglePlacesInputScreen'
-import { SignInScreen } from '@/src/screens/SignInScreen'
+import SignInScreen from "@/app/(user)/signin"
 
 import HomeScreen from './screens/HomeScreen'
 import { MapScreen } from './screens/MapScreen'
@@ -13,7 +13,7 @@ const Stack = createStackNavigator()
 const AppNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="SignIn"
       screenOptions={{
         headerShown: false // Hide the header for all screens in the navigator
       }}
