@@ -1,15 +1,15 @@
-import { FC } from 'react'
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Switch } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome6';
 
-import { Colors } from '../../../components/Colors'
-import { Constant } from '../../../components/Constant'
+import { Colors } from '@/components/Colors'
+import { Constant } from '@/components/Constant'
 
-const ButtonStyle = StyleSheet.create({
+const styles = StyleSheet.create({
   button: {
     elevation: 8,
     backgroundColor: Colors.primary,
     borderRadius: 5,
+    borderWidth: 0,
     paddingVertical: 10,
     paddingHorizontal: 20,
     flexDirection: 'row',
@@ -23,7 +23,8 @@ const ButtonStyle = StyleSheet.create({
   },
   outlinedButton: {
     backgroundColor: Colors.cream,
-    borderColor: Colors.primary
+    borderColor: Colors.primary,
+    borderWidth: 1
   },
   outlinedButtonText: {
     color: Colors.primary
@@ -43,53 +44,60 @@ interface ButtonProps {
   textStyle?: any
   activeOpacity?: any
   loading?: any
+  childrenLeft?: any
+  childrenRight?: any
+
 }
 
-export const CustomButton: FC<ButtonProps> = (props) => {
+export const CustomButton = (props: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
       disabled={props.disabled === true}
       activeOpacity={props.activeOpacity}
       style={[
-        ButtonStyle.button,
-        props.disabled === true && ButtonStyle.disabledButton,
+        styles.button,
+        props.disabled === true && styles.disabledButton,
         props.style
       ]}
     >
       {props.iconLeft}
+      {props.childrenLeft}
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <Text style={[ButtonStyle.buttonText, props.textStyle]}>{props.title}</Text>
+        <Text style={[styles.buttonText, props.textStyle]}>{props.title}</Text>
       )}
       {props.iconRight}
+      {props.childrenRight}
     </TouchableOpacity>
   )
 }
 
-export const OutlineButton: FC<ButtonProps> = (props) => {
+export const OutlineButton = (props: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      disabled={props.disabled !== true}
+      disabled={props.disabled === true}
       activeOpacity={props.activeOpacity}
       style={[
-        ButtonStyle.button,
-        ButtonStyle.outlinedButton,
-        props.disabled !== true && ButtonStyle.disabledButton,
+        styles.button,
+        styles.outlinedButton,
+        props.disabled === true && styles.disabledButton,
         props.style
       ]}
     >
       {props.iconLeft}
+      {props.childrenLeft}
       {props.loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <Text style={[ButtonStyle.buttonText, ButtonStyle.outlinedButtonText, props.textStyle]}>
+        <Text style={[styles.buttonText, styles.outlinedButtonText, props.textStyle]}>
           {props.title}
         </Text>
       )}
       {props.iconRight}
+      {props.childrenRight}
     </TouchableOpacity>
   )
 }
@@ -100,7 +108,7 @@ interface ToggleButtonProps {
   disabled?: boolean
 }
 
-export const ToggleButton: FC<ToggleButtonProps> = (props) => {
+export const ToggleButton = (props: ToggleButtonProps) => {
   const { value, onValueChange, disabled } = props
   return (
     <Switch

@@ -76,7 +76,10 @@
     - Run `npm install -g expo-cli`
     - Run `expo-cli upgrade`
     - Also run `npm update`
-    - Now rerun `npm run android`
+    - Now rerun `npx expo start`
+  - If there is error which is relevant to `CommandError: No development build (com.drivetimeapp) for this project is installed. Please make and install a development build on the device first.`:
+    - Rerun `expo run:android`
+  - If still cannot rerun: run `npm run --reset-cache` and rerun `npx expo start`
 
 ### Other Commands Usage
 
@@ -86,6 +89,11 @@
 - Combine both commands above: `npm run lint`
 
 ## Features
+- If driver has not register car -> they cannot receive passenger
+- Filter inside account: filter list of drivers, list of customers, list of admins, filter based on membership
+- Sort account list (by name, by created, by updated, by review rate)
+- Update account, update nested entity - transport inside account
+- Delete account
 
 ## Future Improvement
 

@@ -2,19 +2,17 @@ import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 40,
-    paddingLeft: 15,
-    paddingRight: 60,
-    backgroundColor: '#ecf0f1'
+    width:'100%',
+    height: '100%',
   },
   autocompleteContainer: {
-    flex: 0, // Consider using flex: 1 if you want the autocomplete boxes to take up all available space
+    flex: 0,
+    width:'100%',
     paddingTop: 5,
-    flexDirection: 'row' // or 'column' based on your design preference
+    paddingHorizontal: 10,
+    flexDirection: 'row'
   },
   textInputContainer: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
     marginBottom: 10
   },
   textInput: {

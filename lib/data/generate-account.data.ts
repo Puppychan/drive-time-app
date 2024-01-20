@@ -1,19 +1,20 @@
-/* eslint-disable no-console */
 import { faker } from '@faker-js/faker'
 import { Timestamp } from 'firebase/firestore'
 
-import { createUser } from '../firebase/auth'
 import { AccountType } from '../common/model-type'
+import { createUser } from '../firebase/auth'
 import { Account, AccountRole, accountRoleList } from '../models/account.model'
-import { uploadQRCodeToStorage } from '../services/account.service'
 
-const generateRandomAccountData = async () => {
+const generateRandomAccountData = async (type: AccountRole | null) => {
+  console.log('Starting create account data')
   const accountId = faker.string.uuid()
-  const createdDate = Timestamp.fromDate(new Date())
   const birthday = Timestamp.fromDate(faker.date.birthdate({ min: 18, max: 65, mode: 'age' }))
 
-  const randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
-  let workStartDate: Timestamp, qrCode: string
+  let workStartDate: Timestamp
+  let randomRole
+  if (type == null)
+    randomRole = accountRoleList[faker.number.int({ min: 0, max: accountRoleList.length - 1 })]
+  else randomRole = type
   // generate work start date for admin and driver
   if (randomRole !== AccountRole.Customer) {
     workStartDate = Timestamp.fromDate(
@@ -22,12 +23,8 @@ const generateRandomAccountData = async () => {
   } else {
     workStartDate = Timestamp.fromDate(new Date())
   }
-  // generate QR code for driver
-  if (randomRole === AccountRole.Driver) {
-    qrCode = await uploadQRCodeToStorage(faker.string.uuid())
-  } else {
-    qrCode = ''
-  }
+  // randomRole = AccountRole.Driver
+  // workStartDate = Timestamp.fromDate(new Date())
   const randomNumber = faker.number.int({ max: 500 })
 
   const tempAccount: Account = {
@@ -38,10 +35,10 @@ const generateRandomAccountData = async () => {
     avatar: faker.image.avatar(),
     email: `user${randomNumber}@mail.com`,
     phone: faker.phone.number(),
-    updatedDate: createdDate,
-    createdDate,
     birthday,
-    role: randomRole
+    role: randomRole,
+    updatedDate: undefined,
+    createdDate: undefined
   }
 
   let subAccount: AccountType
@@ -50,6 +47,8 @@ const generateRandomAccountData = async () => {
     case AccountRole.Customer:
       subAccount = {
         ...tempAccount,
+        membershipId: '1',
+        membershipPoints: 0,
         description: faker.lorem.paragraphs()
       }
       break
@@ -57,9 +56,9 @@ const generateRandomAccountData = async () => {
       subAccount = {
         ...tempAccount,
         workStartDate,
-        QRCode: '',
         isBan: false,
-        banTime: undefined
+        banTime: null,
+        transport: null
       }
       break
     case AccountRole.Admin:
@@ -72,20 +71,25 @@ const generateRandomAccountData = async () => {
   return subAccount
 }
 
-export const generateRandomAccounts = async (numberOfUsers: number) => {
+export const generateRandomAccounts = async (
+  numberOfUsers: number,
+  type: AccountRole | null = null
+) => {
   const userCreationPromises = []
 
   for (let i = 0; i < numberOfUsers; i++) {
-    const subAccount = await generateRandomAccountData()
+    const subAccount = await generateRandomAccountData(type)
     const userPromise = createUser(subAccount.email, '1234567', subAccount)
     userCreationPromises.push(userPromise)
   }
 
   try {
     await Promise.all(userCreationPromises)
+
+    return 'Successfully added user'
+    // process.exit(0)
   } catch (error) {
-    console.error('Error creating users:', error)
+    return `Error adding user ` + error
+    // process.exit(1)
   }
 }
-
-const dummyUsers = generateRandomAccounts(2) // Generate 10 users

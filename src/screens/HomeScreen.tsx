@@ -1,9 +1,11 @@
 import { useNavigation, router } from 'expo-router'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
-import { Appbar, Paragraph, Title } from 'react-native-paper'
+import { Appbar, Button, Paragraph, Title } from 'react-native-paper'
 
 import { useThemeColors } from '@/components/Colors'
+import { generateRandomAccounts } from '@/lib/data/generate-account.data'
+import { AccountRole } from '@/lib/models/account.model'
 import { DEFAULT_THEME } from '@/src/common/constants/default-value.constant'
 import {
   INSTRUCTION_LIST,
@@ -17,6 +19,7 @@ import ServiceCard from '@/src/components/cards/ServiceCard'
 import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
 
+import ReviewScreen from './ReviewScreen'
 import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 
@@ -30,19 +33,22 @@ const HomeScreen = () => {
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.push('./(user)/driver/register/driver-profile')
+    router.push('/driver/register/driver-profile')
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
 
   const onClickExploreNearby = () => {
-    router.push('./user/driver/register')
+    router.push('/driver/register')
   }
-  const onClickSuggestions = () => (link: string) => {
-    // navigation.navigate(link)
+
+  const onClickSuggestions = () => {
+    router.push('/driver/register/book_driver')
   }
-  const onClickInstruction = () => (link: string) => {
+  
+  const onClickInstruction = () => {
     // navigation.navigate(link)
+    router.push('./(user)/driver/register/review')
   }
 
   return (
@@ -73,6 +79,10 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {/* Recent card */}
+          <CustomButton
+            title='Register Driver'
+            onPress={() => {router.push('/driver/register')}}
+          />
 
           {/* Explore Nearby Card */}
           <FullScreenCard

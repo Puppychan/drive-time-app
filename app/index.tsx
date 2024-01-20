@@ -1,36 +1,60 @@
-import { NavigationContainer } from '@react-navigation/native'
-import { useRouter } from 'expo-router'
+import * as Notifications from 'expo-notifications'
+import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { StatusBar } from 'expo-status-bar'
+import { User } from 'firebase/auth'
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Provider as PageProvider } from 'react-native-paper'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button as ReactNativeButton,
+  Image,
+  TouchableOpacity
+} from 'react-native'
+import Onboarding from 'react-native-onboarding-swiper'
+import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { Colors } from '@/components/Colors'
-import AppNavigator from '@/src/AppNavigator'
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
+import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
-import FullScreenCard from '@/src/components/cards/FullScreenCard'
-import ServiceCardLarge from '@/src/components/cards/ServiceCardLarge'
-import ServiceCardTextInside from '@/src/components/cards/ServiceCardTextInside'
-import { UserProfileScreen } from '@/src/screens/ProfileScreen'
 import { store } from '@/store'
 
+import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
 import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 // Get the full width and height of the screen
-const { width: screenWidth } = getScreenSize()
+
+function onClickData() {
+  console.log('Calldls;fnk')
+  generateData()
+}
 
 SplashScreen.preventAutoHideAsync()
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true
+  })
+})
+
+const { width: screenWidth } = getScreenSize()
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false)
   const router = useRouter()
+  const [appIsReady, setAppIsReady] = useState(false)
+  const [authUser, setAuthUser] = useState<User>()
 
   useEffect(() => {
     const prepare = async () => {
       try {
+        // Pre-load fonts + APIs
+        firebaseApp
+        auth
+        const user = auth.currentUser || undefined
+        setAuthUser(user)
+        registerForPushNotificationsAsync()
       } catch (e) {
         console.warn(e)
       } finally {
@@ -41,6 +65,7 @@ export default function App() {
     prepare()
   }, [])
 
+  // hide splash screen when the app is ready
   useEffect(() => {
     if (appIsReady) {
       SplashScreen.hideAsync()
@@ -51,24 +76,88 @@ export default function App() {
     return null
   }
 
+  const handleDone = () => {
+    router.replace('/signin')
+  }
+  const doneButton = ({ ...props }) => {
+    return (
+      <TouchableOpacity style={styles.doneButton} {...props}>
+        <Text>Done</Text>
+      </TouchableOpacity>
+    )
+  }
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <PaymentScreen />
+        {/*
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Home Page</Text>
+          <Text>
+            Hi
+            {authUser && <Text>{", " + authUser.displayName}</Text>}
+          </Text>
+          <Button onPress={onClickData}>Generate Data</Button>
+          <Link href="/signin" asChild>
+            <ReactNativeButton title="Open Signin" />
+          </Link>
+          <Link href="../driver/register/chat" asChild>
+            <Button>Open SignIn</Button>
+          </Link>
+        </View>
+        */}
+        <View style={styles.container}>
+          <Onboarding
+            onDone={handleDone}
+            onSkip={handleDone}
+            bottomBarHighlight={false}
+            DoneButtonComponent={doneButton}
+            containerStyles={{ paddingHorizontal: 15 }}
+            pages={[
+              {
+                backgroundColor: '#fff',
+                image: (
+                  <View style={styles.lottie}>
+                    <Image
+                      source={require('../assets/car7.png')}
+                      style={{ width: screenWidth * 0.9, height: screenWidth }}
+                    />
+                  </View>
+                ),
 
-        {/* <View style={styles.container}>
-          <Text>Open up ./app/index.tsx to start working on your app!</Text>
-          <View style={{ flexDirection: 'row', margin: 10 }}>
-            <ServiceCardTextInside
-              iconImage="https://source.unsplash.com/random?transport"
-              title="Book a ride"
-              onClick={() => {
-                ToastAndroid.show('Booking confirmed!', ToastAndroid.SHORT)
-              }}
-            />
-          </View>
-          <StatusBar style="auto" />
-        </View> */}
+                title: 'Navigation',
+                subtitle: "Don't worry about getting lost"
+              },
+              {
+                backgroundColor: '#fff',
+                //   image: <Image source={require('./images/circle.png')} />,
+                image: (
+                  <View style={styles.lottie}>
+                    <Image
+                      source={require('../assets/car7.png')}
+                      style={{ width: screenWidth * 0.9, height: screenWidth }}
+                    />
+                  </View>
+                ),
+                title: 'Enviroment',
+                subtitle: "Don't throw trash away"
+              },
+              {
+                backgroundColor: '#fff',
+                //   image: <Image source={require('./images/circle.png')} />,
+                image: (
+                  <View style={styles.lottie}>
+                    <Image
+                      source={require('../assets/car7.png')}
+                      style={{ width: screenWidth * 0.9, height: screenWidth }}
+                    />
+                  </View>
+                ),
+                title: 'Friend Ship',
+                subtitle: 'New event, new friend'
+              }
+            ]}
+          />
+        </View>
       </PageProvider>
     </ReduxProvider>
   )
@@ -77,9 +166,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: screenWidth,
-    backgroundColor: Colors.cream,
-    alignItems: 'center',
-    overflow: 'scroll'
+    backgroundColor: 'white'
+  },
+  lottie: {
+    width: screenWidth * 0.9,
+    height: screenWidth * 0.9
+  },
+  doneButton: {
+    padding: 20,
+    backgroundColor: 'white'
+    // borderTopLeftRadius: '100%',
+    // borderBottomLeftRadius: '100%',
   }
 })
