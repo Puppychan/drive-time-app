@@ -6,6 +6,6 @@ import { Transport } from './transport.model'
 export interface Driver extends Account {
   workStartDate: Timestamp
   isBan: boolean
-  banTime?: Timestamp | null
   transport: Transport | null
+  banTime?: Timestamp | null
 }

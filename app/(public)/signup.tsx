@@ -1,12 +1,13 @@
-import { AppButton } from '@/src/components/button/Buttons'
-import { Colors } from '@/components/Colors'
-import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import  {createAuthAccount} from "@/lib/firebase/auth";
+
 import { ResponseCode } from '@/common/response-code.enum'
-import { StatusBar } from 'expo-status-bar'
+import { Colors } from '@/components/Colors'
+import { createAuthAccount } from '@/lib/firebase/auth'
+import { CustomButton } from '@/src/components/button/Buttons'
+import { Input } from '@/src/components/input/TextInput'
 
 export default function Page() {
   const router = useRouter()
@@ -17,25 +18,22 @@ export default function Page() {
   const handleNext = async () => {
     setBtnDisable(true)
     if (email.trim() === '') {
-      ToastAndroid.show("Email is required", ToastAndroid.SHORT);
+      ToastAndroid.show('Email is required', ToastAndroid.SHORT)
       setBtnDisable(false)
       return
     } else if (password.trim() === '') {
-      ToastAndroid.show("Password is required", ToastAndroid.SHORT);
+      ToastAndroid.show('Password is required', ToastAndroid.SHORT)
       setBtnDisable(false)
       return
     }
 
-    createAuthAccount(email, password)
-    .then((res) => {
+    createAuthAccount(email, password).then((res) => {
       if (res.code === ResponseCode.OK) {
-        // ToastAndroid.show(`Register successfully`, ToastAndroid.SHORT);
-        const user = res.body
-        console.log(user)
-        router.push(`driver/register/driver-profile`);
-      }
-      else {
-        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT);
+        const { user } = res.body
+        console.log('Userrr', user)
+        // router.push(`/driver/register/driver-profile?id=${user.uid}`);
+      } else {
+        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT)
       }
     })
 
@@ -61,7 +59,7 @@ export default function Page() {
           value={password}
           onChangeText={setPassword}
         />
-        <AppButton title="Next" onPress={handleNext} disabled={btnDisable} />
+        <CustomButton title="Next" onPress={handleNext} disabled={btnDisable} />
       </View>
     </View>
   )

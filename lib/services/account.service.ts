@@ -4,7 +4,9 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
+  increment,
   query,
   setDoc,
   updateDoc,
@@ -18,15 +20,11 @@ import { CollectionName } from '../common/collection-name.enum'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 import { FavoriteLocation } from '../models/favorite-location.model'
+import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
-    // generate and validate based on role
-    let qrCode: string | null = null
-    // if (additionalUserInfo.role === AccountRole.Driver && 'QRCode' in additionalUserInfo) {
-    //   qrCode = await generateDriverQRCode(user.uid)
-    //   additionalUserInfo.QRCode = qrCode
-    // }
+    console.log('Create user dbnfkjsdbsdf')
     // validate
     const isUnique = await isUniqueUser(
       user.uid,
@@ -52,6 +50,44 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
   } catch (error) {
     console.log('Errorrr', error)
     throw error
+  }
+}
+
+export const updateCustomerMembership = async (userId: string) => {
+  try {
+    const customerRef = doc(db, CollectionName.ACCOUNTS, userId)
+    const customerSnapshot = await getDoc(customerRef)
+    if (customerSnapshot.exists()) {
+      await updateDoc(customerRef, {
+        membership: increment(ADD_MEMBERSHIP_POINT),
+        updatedAt: Timestamp.fromDate(new Date())
+      })
+    }
+
+    return new ResponseDto(ResponseCode.OK, 'Membership updated successfully', null)
+  } catch (error) {
+    console.error('Error updating membership:', error)
+    return handleUserException(error, 'Updating membership point')
+  }
+}
+
+export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId: string) => {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, userId)
+    const customerSnapshot = await getDoc(accountRef)
+    if (customerSnapshot.exists()) {
+      await updateDoc(accountRef, {
+        deviceTokenIdList: arrayUnion(deviceTokenId),
+        updatedAt: Timestamp.fromDate(new Date())
+      })
+    } else {
+      throw new Error(`User with id ${userId} does not exist`)
+    }
+
+    return new ResponseDto(ResponseCode.OK, 'User device added successfully', null)
+  } catch (error) {
+    console.error('Error adding user device:', error)
+    return handleUserException(error, 'Adding user device')
   }
 }
 

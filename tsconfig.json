@@ -17,6 +17,6 @@
   "include": [
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "cypress/e2e/login.cy.js"  ],
   "extends": "expo/tsconfig.base"
 }
