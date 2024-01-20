@@ -25,10 +25,16 @@ export function onAuthStateChanged() {
 export async function signInWithGoogle() {}
 
 export async function signOut() {
-  auth.signOut()
-  await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.FALSE)
-  await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, Constant.FALSE)
-  await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, '')
+  try {
+    await auth.signOut()
+    await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.FALSE)
+    await AsyncStorage.setItem(Constant.AUTO_LOGIN_KEY, Constant.FALSE)
+    await AsyncStorage.setItem(Constant.USER_EMAIL_KEY, '')
+    return new ResponseDto(ResponseCode.OK, 'Logout successfully', null)
+  } catch (error: any) {
+    const errorCode = error?.code ?? ResponseCode.BAD_GATEWAY
+    return new ResponseDto(errorCode, 'Cannot logout. Please try again', `Logout failed: ${error}`)
+  }
 }
 
 export async function signIn(

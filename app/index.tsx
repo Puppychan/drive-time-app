@@ -1,5 +1,7 @@
+import * as Notifications from 'expo-notifications'
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
+import { User } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 import {
   StyleSheet,
@@ -9,16 +11,17 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native'
-import { Button, Provider as PageProvider } from 'react-native-paper'
 import Onboarding from 'react-native-onboarding-swiper'
+import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
+
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
+import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
+import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
-import { store } from '@/store'
-import { auth, firebaseApp } from '@/lib/firebase/firebase'
-import { User } from 'firebase/auth'
 
 // Get the full width and height of the screen
 
@@ -28,6 +31,13 @@ function onClickData() {
 }
 
 SplashScreen.preventAutoHideAsync()
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true
+  })
+})
 
 const { width: screenWidth } = getScreenSize()
 
@@ -36,15 +46,15 @@ export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
   const [authUser, setAuthUser] = useState<User>()
 
-
   useEffect(() => {
     const prepare = async () => {
       try {
         // Pre-load fonts + APIs
         firebaseApp
         auth
-        let user = auth.currentUser || undefined;
+        const user = auth.currentUser || undefined
         setAuthUser(user)
+        registerForPushNotificationsAsync()
       } catch (e) {
         console.warn(e)
       } finally {
@@ -160,7 +170,7 @@ const styles = StyleSheet.create({
   },
   lottie: {
     width: screenWidth * 0.9,
-    height: screenWidth * 0.9,
+    height: screenWidth * 0.9
   },
   doneButton: {
     padding: 20,

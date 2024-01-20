@@ -8,5 +8,6 @@ export enum CollectionName {
   REVIEWS = 'reviews',
   CHATS = 'chat',
   MESSAGES = 'messages',
-  BOOKINGS = 'bookings'
+  BOOKINGS = 'bookings',
+  INVITATIONS = 'invitations',
 }

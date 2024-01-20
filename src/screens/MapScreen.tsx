@@ -125,7 +125,7 @@ const MapScreen = () => {
         />
       </MapView>
 
-      <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
+      {/* <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
         <Stack.Navigator
           screenOptions={{
             headerShown: false
@@ -133,7 +133,7 @@ const MapScreen = () => {
         >
           <Stack.Screen name="RideSelection" component={RideSelectionCard} />
         </Stack.Navigator>
-      </View>
+      </View> */}
     </View>
   )
 }
