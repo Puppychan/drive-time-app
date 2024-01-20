@@ -25,11 +25,11 @@ export const styles = StyleSheet.create({
     color: '#1faadb'
   },
   filterButton: {
-    backgroundColor: '#DDDDDD',
-    padding: 10,
+    backgroundColor: '#e9e9e9',
+    padding: 9,
     paddingHorizontal: 20,
     margin: 5,
-    borderRadius: 20,
+    borderRadius: 15,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -40,5 +40,48 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'black',
+  },
+
+  filterImageButton: {
+    borderColor: 'gray',
+    padding: 10,
+    borderRadius: 15,
+    alignItems: 'center',
+    // backgroundColor: '#e9e9e9',
+    height: 100,
+  },
+  selectedImageButton: {
+    borderColor: 'blue',
+  },
+  ImageButtonContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  borderImage: {
+    width: 80,
+    height: 80,
+    marginBottom: 5,
+  
+    alignItems: 'center', // Center the content horizontally
+    justifyContent: 'center', 
+  },
+  image: {
+    width: 60, // Adjust the size as needed
+    height: 60, // Adjust the size as needed
+   
+  },
+  selectedImage: {
+    borderColor: 'blue',
+    borderWidth: 2,
+    borderRadius: 40,
+    width: 80, // Adjust the size as needed
+    height: 80, // Adjust the size as needed
+    marginBottom: 5,
+    alignItems: 'center', // Center the content horizontally
+    justifyContent: 'center', 
+    
+  },
+  imageButtonText: {
+    textAlign: 'center',
   },
 })
