@@ -1,57 +1,49 @@
+import { PermissionsAndroid } from 'react-native'
+import { ResponseDto } from '@/common/response.dto'
 import * as Notifications from 'expo-notifications'
-import * as functions from 'firebase-functions'
-
-import { auth } from './firebase'
-
-// exports.sendNotification = functions.https.onCall((data, context) => {
-//   const payload = {
-//     notification: {
-//       title: 'New Notification',
-//       body: data.message
-//     }
-//   }
-
-//   return admin.messaging().sendToDevice(data.token, payload)
-// })
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { NotificationDto } from '../../common/notification.dto'
+import { firebaseApp } from './firebase'
+import Constants from 'expo-constants'
+import messaging from '@react-native-firebase/messaging'
 
 export async function registerForPushNotificationsAsync() {
-  const { status: existingStatus } = await Notifications.getPermissionsAsync()
-  let finalStatus = existingStatus
+  //   const { status: existingStatus } = await Notifications.getPermissionsAsync()
+  //   let finalStatus = existingStatus
 
-  if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync()
-    finalStatus = status
-  }
-  if (finalStatus !== 'granted') {
-    alert('Failed to get push token for push notification!')
-    return
-  }
-  const token = (await Notifications.getExpoPushTokenAsync()).data
-  console.log(token)
+  //   if (existingStatus !== 'granted') {
+  //     const { status } = await Notifications.requestPermissionsAsync()
+  //     finalStatus = status
+  //     return true
+  //   }
+  //   if (finalStatus !== 'granted') {
+  //     alert('Failed to get push token for push notification!')
+  //     return false
+  //   }
+  //   return false
+  const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
 
-  return token
+  console.log('Permisssiondds status'), status
 }
 
-async function sendPushNotification(expoPushToken: string, message: string) {
-  const messageToSend = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: message,
-    data: { data: 'goes here' }
+export async function getDeviceToken() {
+  await messaging().registerDeviceForRemoteMessages()
+  const token = await messaging().getToken()
+  if (token) {
+    console.log('Device FCM Token:', token)
+    return token
+    // Your logic to send the token to the server
   }
+  return ''
+}
 
+export const sendNotification = async (token: string, title: string, body: string) => {
+  const functions = getFunctions(firebaseApp)
+  const sendNotificationFunction = httpsCallable(functions, 'sendNotification')
   try {
-    await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(messageToSend)
-    })
+    const response = await sendNotificationFunction({ token, title, body })
+    console.log('Notification sent:', response)
   } catch (error) {
-    console.log(error)
+    console.error('Error sending notification:', error)
   }
 }

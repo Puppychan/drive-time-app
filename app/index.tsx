@@ -15,14 +15,17 @@ import Onboarding from 'react-native-onboarding-swiper'
 import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { auth, firebaseApp } from '@/lib/firebase/firebase'
-import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import { auth, firebaseApp, firebaseVapidKey } from '@/lib/firebase/firebase'
+// import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
+import { getDeviceToken, registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import messaging from '@react-native-firebase/messaging';
+
 // Get the full width and height of the screen
 
 function onClickData() {
@@ -51,7 +54,20 @@ export default function App() {
       try {
         const user = auth.currentUser
         setAuthUser(user)
-        registerForPushNotificationsAsync()
+        await registerForPushNotificationsAsync()
+        console.log('Done register push notification')
+        const token = await getDeviceToken()
+        console.log('doneee get token', token)
+
+        // Foreground message handler
+        messaging().onMessage(async (remoteMessage) => {
+          console.log('A new FCM message arrived!', JSON.stringify(remoteMessage))
+        })
+
+        // Background message handler
+        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+          console.log('Message handled in the background!', remoteMessage)
+        })
       } catch (e) {
         console.log(e)
       }

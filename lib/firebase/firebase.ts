@@ -20,3 +20,6 @@ export const auth = initializeAuth(firebaseApp, {
 })
 export const db = getFirestore(firebaseApp)
 export const storage = getStorage(firebaseApp)
+// export const messaging = getMessaging(firebaseApp)
+
+export const firebaseVapidKey = process.env.EXPO_PUBLIC_FIREBASE_VAPID_KEY
