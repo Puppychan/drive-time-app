@@ -2,7 +2,9 @@ import { ResponseDto } from '@/common/response.dto'
 import * as Notifications from 'expo-notifications'
 import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { NotificationDto } from '../../common/notification.dto'
+import { firebaseApp } from './firebase'
 
 admin.initializeApp()
 
@@ -44,32 +46,9 @@ export async function registerForPushNotificationsAsync() {
   return token
 }
 
-async function sendPushNotification(expoPushToken: string, message: string) {
-  const messageToSend = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: message,
-    data: { data: 'goes here' }
-  }
-
-  try {
-    await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(messageToSend)
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-export const sendNotification = async (token, title, body) => {
-  const sendNotificationFunction = functions().httpsCallable('sendNotification')
+export const sendNotification = async (token: string, title: string, body: string) => {
+  const functions = getFunctions(firebaseApp)
+  const sendNotificationFunction = httpsCallable(functions, 'sendNotification')
   try {
     const response = await sendNotificationFunction({ token, title, body })
     console.log('Notification sent:', response)
