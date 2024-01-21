@@ -145,25 +145,25 @@ const GooglePlacesInput = () => {
         </View>
 
         <FlatList
-        data={historyLocation}
-        keyExtractor={(item, index) => `${item.type}-${index}`}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={handleQueue}>
-            <View>
-              <Text>Data: {JSON.stringify(item.data)}</Text>
-              <Text>Details: {JSON.stringify(item.details)}</Text>
-              <Divider style={{ marginVertical: 10 }} />
+          data={historyLocation}
+          keyExtractor={(item, index) => `${item.type}-${index}`}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={handleQueue}>
+              <View>
+                <Text>Data: {JSON.stringify(item.data)}</Text>
+                <Text>Details: {JSON.stringify(item.details)}</Text>
+                <Divider style={{ marginVertical: 10 }} />
+              </View>
+            </TouchableOpacity>
+          )}
+          ListHeaderComponent={
+            <View style={{ flexDirection: 'row', marginHorizontal: 20, marginBottom: 10 }}>
+              {buttons.map(renderButton)}
             </View>
-          </TouchableOpacity>
-        )}
-        ListHeaderComponent={
-          <View style={{ flexDirection: 'row', marginHorizontal: 20, marginBottom: 10 }}>
-            {buttons.map(renderButton)}
-          </View>
-        }
-        ListEmptyComponent={<Text>No history items</Text>}
-        nestedScrollEnabled={true}
-      />
+          }
+          ListEmptyComponent={<Text>No history items</Text>}
+          nestedScrollEnabled={true}
+        />
       </View>
     </SafeAreaView>
   )

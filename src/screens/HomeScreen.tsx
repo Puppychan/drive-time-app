@@ -38,14 +38,14 @@ const HomeScreen = () => {
     router.push('/driver/register/driver-profile')
   }
 
-  const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
+  const onClickSeeMore = (type: 'suggestion' | 'instruction') => { }
 
   const onClickExploreNearby = () => {
     router.push('/(user)/customer/nearby_place')
   }
 
-  const onClickSuggestions = () => {
-    router.push('/(user)/customer/nearby_place')
+  const onClickSuggestions = (index: number) => {
+    router.push('/(user)/customer/book_driver')
   }
 
   const onClickInstruction = () => {
@@ -127,10 +127,9 @@ const HomeScreen = () => {
             data={SUGGESTION_LIST}
             renderItem={({ item, index }) => (
               <ServiceCard
-                // iconImage={suggestionImages[index]}
                 iconImage={item.iconImage}
                 title={item.name}
-                onClick={onClickSuggestions}
+                onClick={() => onClickSuggestions(index)}
               />
             )}
             ItemSeparatorComponent={() => <View style={{ width: 20 }} />} // Gap width
@@ -191,10 +190,10 @@ const HomeScreen = () => {
 
       {/* Bottom Navigation */}
       <Appbar style={styles.bottom}>
-        <Appbar.Action icon="home" onPress={() => {}} />
-        <Appbar.Action icon="magnify" onPress={() => {}} />
-        <Appbar.Action icon="bell" onPress={() => {}} />
-        <Appbar.Action icon="account" onPress={() => {}} />
+        <Appbar.Action icon="home" onPress={() => { }} />
+        <Appbar.Action icon="magnify" onPress={() => { }} />
+        <Appbar.Action icon="bell" onPress={() => { }} />
+        <Appbar.Action icon="account" onPress={() => { }} />
       </Appbar>
     </View>
   )
