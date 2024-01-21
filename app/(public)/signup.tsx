@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import CheckBox from '@/src/components/input/Checkbox'
 
-import Button from '../../src/components/button/Button'
 import COLORS from '../../src/constants/Color'
 
 const Signup = () => {
