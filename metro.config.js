@@ -1,13 +1,7 @@
-module.exports = {
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false
-      }
-    })
-  },
-  resolver: {
-    assetExts: ['png', 'jpg', 'jpeg', 'svg', 'gif', 'ttf', 'mp4']
-  }
-}
+const {getDefaultConfig} = require("@expo/metro-config");
+
+const defaultConfig = getDefaultConfig(__dirname);
+defaultConfig.resolver.sourceExts.push('cjs'); 
+
+module.exports = defaultConfig;
+

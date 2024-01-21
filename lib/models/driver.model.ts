@@ -8,4 +8,6 @@ export interface Driver extends Account {
   isBan: boolean
   transport: Transport | null
   banTime?: Timestamp | null
+  ladtitude: number
+  longitude: number
 }
