@@ -43,11 +43,6 @@
         "android.permission.WAKE_LOCK"
       ]
     },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro",
-      "output": "static"
-    },
     "plugins": [
       "expo-router",
       "@stream-io/video-react-native-sdk",

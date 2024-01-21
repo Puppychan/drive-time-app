@@ -28,6 +28,7 @@
 
     <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="YOUR-APP-URL-HERE" />
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="YOUR-APP-SDK-VERSION-HERE" />
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="BKtPaEuslvIn6DKVeFqTI73cpXF2s9qCHe01J8Cg-GKZxaGJgJFN45d5jr1GtEF-4cUTecduOPFiAwi9DTZv8Js"/>
     <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

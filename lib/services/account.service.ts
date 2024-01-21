@@ -24,17 +24,32 @@ import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 
+export async function getUserById(userId: string){
+  try {
+    const userRef = doc(db, CollectionName.ACCOUNTS, userId)
+    const userSnap = await getDoc(userRef)
+    let user = null
+    if (userSnap.exists()) {
+      user = userSnap.data();
+    }
+    return user
+  }
+  catch (e) {
+    throw e
+  }
+  
+}
+
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
-    console.log('Create user dbnfkjsdbsdf')
     // validate
     const isUnique = await isUniqueUser(
       user.uid,
       additionalUserInfo.email,
       additionalUserInfo.username
     )
-    if (!isUnique) {
-      throw new Error(`User with email ${additionalUserInfo.email} already exists`)
+    if (isUnique.code === ResponseCode.OK && isUnique.body === false) {
+      throw new Error(isUnique.message)
     }
 
     // add created at and updated at
@@ -43,14 +58,38 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
     additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
     additionalUserInfo.userId = user.uid
 
+
     // Create a reference to the document with the custom ID
     const accountRef = doc(db, CollectionName.ACCOUNTS, additionalUserInfo.userId)
+    console.log("accountRef: ", accountRef)
     // Set the data for the document with the custom ID
     await setDoc(accountRef, additionalUserInfo)
 
     return accountRef
   } catch (error) {
-    console.log('Errorrr', error)
+    console.log('~~~~~ Errorrr addUserToDatabase', error)
+    throw error
+  }
+}
+
+
+export const updateUserProfile = async (user: User, additionalUserInfo: AccountType) => {
+  try {
+
+    // add created at and updated at
+    const currentDate = new Date()
+    additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
+    additionalUserInfo.userId = user.uid
+
+
+    // Create a reference to the document with the custom ID
+    const accountRef = doc(db, CollectionName.ACCOUNTS, additionalUserInfo.userId)
+    console.log("accountRef: ", accountRef)
+    // Set the data for the document with the custom ID
+    await setDoc(accountRef, additionalUserInfo)
+    return new ResponseDto(ResponseCode.OK, "Updated", accountRef)
+  } catch (error) {
+    console.log('~~~~~ Errorrr addUserToDatabase', error)
     throw error
   }
 }
@@ -160,20 +199,27 @@ function handleUserException(error: any, type: string) {
 const isUniqueUser = async (userId: string, email: string, username: string) => {
   try {
     const userCollection = collection(db, CollectionName.ACCOUNTS)
-    const queries = [
-      query(userCollection, where('userId', '==', userId)),
-      query(userCollection, where('email', '==', email)),
-      query(userCollection, where('username', '==', username))
-    ]
 
-    // specific check for role
-    // if (role === AccountRole.Driver) {
-    //   queries.push(query(userCollection, where('QRCode', '==', props[0])))
-    // }
+    const qMail = query(userCollection, where("email", "==", email))
+    const qUsername = query(userCollection, where('username', "==", username))
 
-    const results = await Promise.all(queries.map(getDocs))
-    return results.every((querySnapshot) => querySnapshot.empty)
+    const mailSnap = await getDocs(qMail); 
+    console.log(mailSnap)
+    if (!mailSnap.empty) {
+      return new ResponseDto(ResponseCode.OK, "Email already in use", false)
+    }
+
+    const usernameSnap = await getDocs(qUsername); 
+    if (!usernameSnap.empty) {
+      return new ResponseDto(ResponseCode.OK, "Username already in use", false)
+    }
+
+    return new ResponseDto(ResponseCode.OK, "User is unique", true)
+
+
   } catch (error) {
+    // TODO: handle error exception
+    console.log('~~~~~ Errorrr isUniqueUser', error)
     throw error
   }
 }

@@ -20,32 +20,47 @@ import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
 
 import ReviewScreen from './ReviewScreen'
-import { AppButton } from '../components/button/Buttons'
+import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
+import { useEffect, useState } from 'react'
+import { auth } from '@/lib/firebase/firebase'
+import { User } from 'firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
+import { signOut } from '@/lib/firebase/auth'
 
 // TODO: change to dynamic later
-const homeInfo = '123 Main St'
-const usernameInfo = 'John Doe'
-
 const HomeScreen = () => {
-  const navigation = useNavigation()
   const colorsTheme = useThemeColors(DEFAULT_THEME)
+  const [user, setUser] = useState<User | null>()
+  const [role, setRole] = useState<string>(AccountRole.Customer)
+  useEffect(() => {
+    const prepare = async () => {
+      if (auth.currentUser) {
+        setUser(auth.currentUser)
+        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+        setRole(role ?? AccountRole.Customer)
+      }
+    }
+    prepare()
+
+  }, [])
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.push('/driver/register/driver-profile')
+    router.replace(`/${role.toLowerCase( )}/profile`)
   }
 
-  const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
+  const onClickSeeMore = (type: 'suggestion' | 'instruction') => { }
 
   const onClickExploreNearby = () => {
     router.push('/(user)/customer/nearby_place')
   }
 
-  const onClickSuggestions = () => {
-    router.push('/(user)/customer/nearby_place')
+  const onClickSuggestions = (index: number) => {
+    router.push('/(user)/customer/book_driver')
   }
 
   const onClickInstruction = () => {
@@ -57,7 +72,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Title style={styles.welcome}>Welcome, {usernameInfo}</Title>
+          <Title style={styles.welcome}>Welcome, {user?.displayName ?? role}</Title>
 
           <SearchInput />
 
@@ -89,11 +104,12 @@ const HomeScreen = () => {
             }} */}
 
           <Button
-            onPress={() => {
-              router.push('/driver/register')
+            onPress={async () => {
+              await signOut()
+              router.push('/signin')
             }}
           >
-            Register Driver
+            Sign Out
           </Button>
 
           {/* Explore Nearby Card */}
@@ -127,10 +143,9 @@ const HomeScreen = () => {
             data={SUGGESTION_LIST}
             renderItem={({ item, index }) => (
               <ServiceCard
-                // iconImage={suggestionImages[index]}
                 iconImage={item.iconImage}
                 title={item.name}
-                onClick={onClickSuggestions}
+                onClick={() => onClickSuggestions(index)}
               />
             )}
             ItemSeparatorComponent={() => <View style={{ width: 20 }} />} // Gap width
@@ -191,10 +206,10 @@ const HomeScreen = () => {
 
       {/* Bottom Navigation */}
       <Appbar style={styles.bottom}>
-        <Appbar.Action icon="home" onPress={() => {}} />
-        <Appbar.Action icon="magnify" onPress={() => {}} />
-        <Appbar.Action icon="bell" onPress={() => {}} />
-        <Appbar.Action icon="account" onPress={() => {}} />
+        <Appbar.Action icon="home" onPress={() => { }} />
+        <Appbar.Action icon="magnify" onPress={() => { }} />
+        <Appbar.Action icon="bell" onPress={() => { }} />
+        <Appbar.Action icon="account" onPress={() => { }} />
       </Appbar>
     </View>
   )

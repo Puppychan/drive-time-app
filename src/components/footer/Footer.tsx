@@ -1,43 +1,28 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-
-import { UserProfileScreen } from '@/src/screens/ProfileScreen'
-
-import { CustomFooter } from './CustomFooter'
-import Direction from '../../screens/DirectionScreen'
-import Favourite from '../../screens/FavouriteScreen'
-import Home from '../../screens/HomeScreen'
-
-const Tab = createBottomTabNavigator()
+import { StyleSheet } from "react-native";
+import { Appbar } from "react-native-paper";
 
 const Footer = () => {
-  return (
-    <Tab.Navigator tabBar={(props) => <CustomFooter {...props} />}>
-      <Tab.Group
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Tab.Screen options={{ tabBarLabel: 'Home' }} name="Home" component={Home} />
-        <Tab.Screen
-          options={{ tabBarLabel: 'Profile' }}
-          name="Profile"
-          component={UserProfileScreen}
-        />
-        <Tab.Screen options={{ tabBarLabel: 'Favourite' }} name="Favourite" component={Favourite} />
-        <Tab.Screen options={{ tabBarLabel: 'Direction' }} name="Direction" component={Direction} />
-      </Tab.Group>
-    </Tab.Navigator>
-  )
-}
-export default Footer
+    return (
+        <Appbar style={styles.bottom}>
+            <Appbar.Action icon="home" onPress={() => { }} />
+            <Appbar.Action icon="magnify" onPress={() => { }} />
+            <Appbar.Action icon="bell" onPress={() => { }} />
+            <Appbar.Action icon="account" onPress={() => { }} />
+        </Appbar>
+    );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    backgroundColor: '#fff'
-  }
-})
+    bottom: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#111', // A dark background color similar to Uber's style
+        justifyContent: 'space-between', // This spreads out the icons evenly
+    },
+    // If you want to style individual icons, you can do so here
+    icon: {
+        color: '#fff', // White color for the icons
+    },
+});

@@ -9,6 +9,12 @@ export default function _layout() {
           headerShown: false
         }}
       />
+      <Stack.Screen
+        name="profile"
+        options={{
+          headerShown: false
+        }}
+      />
     </Stack>
   )
 }

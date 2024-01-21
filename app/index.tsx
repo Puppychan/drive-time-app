@@ -14,13 +14,8 @@ import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
-
-// Get the full width and height of the screen
-
-function onClickData() {
-  console.log('Calldls;fnk')
-  generateData()
-}
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
 
 SplashScreen.preventAutoHideAsync()
 // Notifications.setNotificationHandler({
@@ -41,6 +36,8 @@ export default function App() {
   useEffect(() => {
     const prepare = async () => {
       try {
+        // firebaseApp
+        // auth
         const user = auth.currentUser
         setAuthUser(user)
       } catch (e) {
@@ -56,6 +53,13 @@ export default function App() {
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync()
+      if (auth.currentUser) {
+        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+        if (role) {
+          router.replace(`/${role.toLowerCase( )}/home`)
+          return
+        }
+      }
     }
   }, [appIsReady])
 
@@ -63,15 +67,25 @@ export default function App() {
     return null
   }
 
-  const handleDone = () => {
-    router.replace('/signin')
+  const handleDone = async () => {
+    if (auth.currentUser) {
+      let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+      console.log("role: ", role)
+      if (role) {
+        router.replace(`/${role.toLowerCase( )}/home`)
+        return
+      }
+    }
+    router.replace('/(user)/customer/profile')
   }
+
   const doneButton = ({ ...props }) => {
     return (
       <TouchableOpacity style={styles.doneButton} {...props}>
         <Text>Done</Text>
       </TouchableOpacity>
     )
+
   }
   return (
     <ReduxProvider store={store}>
@@ -88,7 +102,10 @@ export default function App() {
           </Link>
         </View>
         */}
-        <View style={styles.container}>
+        <View
+          style={styles.container}
+          onLayout={onLayoutRootView}
+        >
           <Onboarding
             onDone={handleDone}
             onSkip={handleDone}
