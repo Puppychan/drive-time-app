@@ -43,7 +43,7 @@ const HomeScreen = () => {
   }
 
   const onClickSuggestions = () => {
-    router.push('/driver/register/book_driver')
+    router.push('/(user)/customer/book_driver')
   }
   
   const onClickInstruction = () => {
@@ -79,7 +79,7 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {/* Recent card */}
-          <Button
+          <AppButton
             title='Register Driver'
             onPress={() => {router.push('/driver/register')}}
           />
@@ -100,7 +100,7 @@ const HomeScreen = () => {
             <Title>Suggestions</Title>
             {/* Add see more if more than 4 suggestions */}
             {SUGGESTION_LIST.length > 4 && (
-              <Button
+              <AppButton
                 title="See More"
                 onPress={() => {
                   onClickSeeMore('suggestion')
@@ -134,7 +134,7 @@ const HomeScreen = () => {
             <Title>Instruction</Title>
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
-              <Button
+              <AppButton
                 title="See More"
                 onPress={() => {
                   onClickSeeMore('instruction')
