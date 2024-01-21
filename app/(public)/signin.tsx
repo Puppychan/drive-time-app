@@ -19,6 +19,7 @@ import CheckBox from '@/src/components/input/Checkbox'
 import { Colors, specialColors } from '../../components/Colors'
 import FontSize from '../../components/FontSize'
 import Spacing from '../../components/Spacing'
+import BottomSheet from '@/src/components/modal/bottom-sheet'
 
 export default function Page() {
   const router = useRouter()
@@ -55,6 +56,16 @@ export default function Page() {
       'Technical Support',
       'For further information, please contact huuquoc7603@gmail.com'
     )
+  }
+
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false)
+
+  const handleBottomSheetSubmit = (email: string) => {
+    // Do something with the email state, e.g., send it to the server
+    console.log('Submitted email:', email)
+
+    // Close the BottomSheet
+    setBottomSheetVisible(false)
   }
 
   return (
@@ -135,9 +146,10 @@ export default function Page() {
             isChecked={rememberMe}
           />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setBottomSheetVisible(true)}>
             <Text style={{ color: 'green', fontSize: 16 }}>Forgot Password?</Text>
           </TouchableOpacity>
+          <BottomSheet isVisible={bottomSheetVisible} onSubmit={handleBottomSheetSubmit} />
         </View>
 
         <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>

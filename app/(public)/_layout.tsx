@@ -1,9 +1,8 @@
-import { Slot, Stack } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
+import { Stack } from 'expo-router'
 
 export default function _layout() {
   return (
-    <Stack >
+    <Stack>
       <Stack.Screen
         name="signin"
         options={{
@@ -13,7 +12,7 @@ export default function _layout() {
       <Stack.Screen
         name="signup"
         options={{
-          headerShown: true,
+          headerShown: false
         }}
       />
     </Stack>
