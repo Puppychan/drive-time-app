@@ -5,7 +5,6 @@ import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { AccountRole } from '@/lib/models/account.model'
 import {
   selectDestination,
   selectIsLoading,
@@ -15,66 +14,8 @@ import {
 } from '@/src/slices/navSlice'
 
 import LoadingBar from './FindingDriverScreen'
-import { Driver } from '../../lib/models/driver.model'
-import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
 import RideSelectionCard from '../components/map-screen/RideSelectionCard'
 
-const nearbyDrivers: Driver[] = [
-  {
-    userId: '1',
-    username: 'John Doe',
-    firstName: 'abc',
-    lastName: 'def',
-    avatar: null,
-    email: 'tranvuquanganh87@gmail.com',
-    phone: '123456789',
-    role: AccountRole.Driver,
-    createdDate: new Date() as any,
-    updatedDate: new Date() as any,
-    birthday: new Date() as any,
-    workStartDate: new Date() as any,
-    isBan: false,
-    transport: {
-      transportId: '1',
-      name: 'Default Transport',
-      type: TransportType.Car,
-      color: TransportColor.Red,
-      createdAt: new Date() as any,
-      updatedAt: new Date() as any,
-      licensePlate: 'ABC123'
-    },
-    banTime: null,
-    ladtitude: 10.7289568,
-    longitude: 106.6931918
-  },
-  {
-    userId: '2',
-    username: 'John Doe11',
-    firstName: 'abc2',
-    lastName: 'def3',
-    avatar: null,
-    email: 'tranvuquanganh877@gmail.com',
-    phone: '1234567891',
-    role: AccountRole.Driver,
-    createdDate: new Date() as any,
-    updatedDate: new Date() as any,
-    birthday: new Date() as any,
-    workStartDate: new Date() as any,
-    isBan: false,
-    transport: {
-      transportId: '2',
-      name: 'Default Transportt',
-      type: TransportType.Car,
-      color: TransportColor.Red,
-      createdAt: new Date() as any,
-      updatedAt: new Date() as any,
-      licensePlate: 'ABC1234'
-    },
-    banTime: null,
-    ladtitude: 10.7326689,
-    longitude: 106.6997696
-  }
-]
 const MapScreen = () => {
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -154,8 +95,9 @@ const MapScreen = () => {
           style={{ width: 100, height: 100, borderRadius: 50 }}
         >
           <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
+
             {isLoading && (
-              <View style={{ width: 50, height: 50 }}>
+              <View style={{ width: 50, height: 50, }}>
                 <LoadingBar />
               </View>
             )}
@@ -169,6 +111,7 @@ const MapScreen = () => {
               />
             </View>
           </View>
+
         </Marker>
 
         <Marker
@@ -180,23 +123,6 @@ const MapScreen = () => {
           description="Destination"
           identifier="destination"
         />
-
-        {nearbyDrivers.map((driver) => (
-          <Marker
-            coordinate={{
-              latitude: driver.ladtitude,
-              longitude: driver.longitude
-            }}
-            title={driver.username}
-            key={driver.userId}
-          >
-            <Image
-              source={require('../../assets/car.png')}
-              style={{ width: 40, height: 40, justifyContent: 'center' }} // Adjust the size of the image inside the marker
-              resizeMode="contain"
-            />
-          </Marker>
-        ))}
       </MapView>
 
       {/* <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
