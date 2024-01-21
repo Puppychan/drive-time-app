@@ -117,7 +117,7 @@ export default function Page() {
         router.push(`/signin`);
       }
     }
-    catch (error) {
+    catch (error: any) {
       console.log("~~~~ profile.tsx handleSubmit() line 121:", error)
       let message = error.message ?? "Please try again"
       ToastAndroid.show(`Create user profile failed. ${message}`, ToastAndroid.LONG);

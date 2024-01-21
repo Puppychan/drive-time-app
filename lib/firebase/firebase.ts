@@ -23,3 +23,5 @@ export const storage = getStorage(firebaseApp)
 // export const messaging = getMessaging(firebaseApp)
 
 export const firebaseVapidKey = process.env.EXPO_PUBLIC_FIREBASE_VAPID_KEY
+
+// android: 165487746211-o8iukacrbi8o37v81qrnkl56mr2l6mig.apps.googleusercontent.com

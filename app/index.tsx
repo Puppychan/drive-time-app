@@ -94,6 +94,7 @@ export default function App() {
     }
     router.replace('/signin')
   }
+
   const doneButton = ({ ...props }) => {
     return (
       <TouchableOpacity style={styles.doneButton} {...props}>

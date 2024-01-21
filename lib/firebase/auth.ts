@@ -6,9 +6,9 @@ import {
   User,
   AuthErrorCodes,
   updateProfile,
-  getReactNativePersistence,
   inMemoryPersistence,
-  setPersistence
+  setPersistence,
+  sendPasswordResetEmail
 } from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -27,6 +27,16 @@ export function onAuthStateChanged() {
       console.log('user signed out ')
     }
   })
+}
+
+export function resetPasswordWithEmail(email: string) {
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      console.log('Password reset email sent successfully')
+    })
+    .catch((error) => {
+      console.error('Error sending password reset email:', error)
+    })
 }
 
 // export async function signInWithGoogle() {

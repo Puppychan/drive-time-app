@@ -26,8 +26,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.drivetimeapp",
+
+      "package": "com.drivetimeapp",
       "googleServicesFile": "./android/app/google-services.json",
+
       "jsEngine": "hermes",
       "permissions": [
         "android.permission.POST_NOTIFICATIONS",
