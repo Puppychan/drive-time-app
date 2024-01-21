@@ -79,13 +79,16 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {/* Recent card */}
-          <Button
+
+          <AppButton
+            title="Register Driver"
             onPress={() => {
               router.push('/driver/register')
             }}
           >
-            Register Driver
-          </Button>
+
+
+          />
 
           {/* Explore Nearby Card */}
           <FullScreenCard
@@ -103,13 +106,12 @@ const HomeScreen = () => {
             <Title>Suggestions</Title>
             {/* Add see more if more than 4 suggestions */}
             {SUGGESTION_LIST.length > 4 && (
-              <Button
+              <AppButton
+                title="See More"
                 onPress={() => {
                   onClickSeeMore('suggestion')
                 }}
-              >
-                See More
-              </Button>
+              />
             )}
           </View>
           <FlatList
@@ -138,13 +140,12 @@ const HomeScreen = () => {
             <Title>Instruction</Title>
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
-              <Button
+              <AppButton
+                title="See More"
                 onPress={() => {
                   onClickSeeMore('instruction')
                 }}
-              >
-                See More
-              </Button>
+              />
             )}
           </View>
           <FlatList
