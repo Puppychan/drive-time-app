@@ -1,4 +1,13 @@
-import { DocumentData, DocumentSnapshot, Timestamp, collection, doc, getDocs, setDoc, getDoc } from 'firebase/firestore'
+import {
+  DocumentData,
+  DocumentSnapshot,
+  Timestamp,
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  getDoc
+} from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -102,18 +111,36 @@ export function revertDiscountPrice(discountedPrice: number, currentVoucher: Vou
 
 export const fetchVouchers = async () => {
   try {
-    const vouchersCollection = collection(db, CollectionName.VOUCHERS); // Replace 'vouchers' with your actual collection name
-    const querySnapshot = await getDocs(vouchersCollection);
+    console.log('Create doc ref')
+    const docRef = doc(db, 'vouchers', '21ccbb4c-720c-4c0b-b8b2-1858c85d2d9b')
+    console.log('Before calling get doc')
+    const docSnap = await getDoc(docRef)
+    console.log('After get doc snap')
+    if (docSnap.exists()) {
+      console.log('Document data:', docSnap.data())
+    } else {
+      console.log('No such document!')
+    }
 
-    const vouchersList: Voucher[] = [];
+    const vouchersCollection = collection(db, CollectionName.VOUCHERS) // Replace 'vouchers' with your actual collection name
+    console.log('before getting snapshot')
+    const querySnapshot = await getDocs(vouchersCollection)
+    console.log('After getting snapshot', querySnapshot)
+
+    const vouchersList: Voucher[] = []
     querySnapshot.forEach((doc: DocumentSnapshot<DocumentData>) => {
-      const voucherData = { id: doc.id, ...(doc.data() as Voucher) };
-      vouchersList.push(voucherData);
-    });
-
-    return vouchersList;
+      const voucherData = { id: doc.id, ...(doc.data() as Voucher) }
+      console.log('voucher Data', voucherData)
+      vouchersList.push(voucherData)
+    })
+    console.log('Aftndjfs ')
+    // return vouchersList
+    return new ResponseDto(
+      ResponseCode.OK,
+      'Render voucher list successfully',
+      new SuccessResponseDto(vouchersList, '')
+    )
   } catch (error) {
-    console.error('Error fetching vouchers:', error);
-    throw error; // You might want to handle this error in your application
+    return handleVoucherException(error, 'Fetching voucher list')
   }
 }

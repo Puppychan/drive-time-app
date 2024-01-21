@@ -50,7 +50,7 @@ const HomeScreen = () => {
 
   const onClickInstruction = () => {
     // navigation.navigate(link)
-    router.push('./(user)/driver/register/review')
+    router.push('/(user)/customer/voucher')
   }
 
   return (
