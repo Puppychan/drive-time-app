@@ -1,17 +1,74 @@
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, ToastAndroid } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import CheckBox from '@/src/components/input/Checkbox'
 
 import COLORS from '../../src/constants/Color'
+import { createAuthAccount } from '@/lib/firebase/auth'
+import { ResponseCode } from '@/common/response-code.enum'
+import { db } from '@/lib/firebase/firebase'
+import { collection, getDoc, addDoc, doc, setDoc, updateDoc, getDocs } from 'firebase/firestore'
 
-const Signup = () => {
+export default function Page() {
   const router = useRouter()
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
+  const [btnDisable, setBtnDisable] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState<string>('')
+  
+  const handleNext = async () => {
+    setBtnDisable(true)
+    if (email.trim() === '') {
+      ToastAndroid.show('Email is required', ToastAndroid.SHORT)
+      setBtnDisable(false)
+      return
+    } else if (password.trim() === '') {
+      ToastAndroid.show('Password is required', ToastAndroid.SHORT)
+      setBtnDisable(false)
+      return
+    }
+
+    createAuthAccount(email, password).then((res) => {
+      if (res.code === ResponseCode.OK) {
+        const { user } = res.body
+        console.log('Userrr', user)
+        // router.push(`/driver/register/driver-profile?id=${user.uid}`);
+      } else {
+        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT)
+      }
+    })
+
+    const usersCollectionRef = collection(db, 'users');
+  const userDocRef = doc(usersCollectionRef, email);
+  const userDocSnapshot = await getDoc(userDocRef);
+
+  if (!userDocSnapshot.exists()) {
+    // Document doesn't exist, create it
+    const newUser = {
+      name: email,
+      password,
+      phone: phoneNumber,
+    };
+
+    await setDoc(userDocRef, newUser);
+    ToastAndroid.show('New user created', ToastAndroid.SHORT)
+    console.log ('New user created');
+  } else {
+    // Document exists, update it
+    await updateDoc(userDocRef, {
+      name: email,
+      password,
+    });
+    console.log ('User updated');
+  }
+    
+    setBtnDisable(false)
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={{ flex: 1, marginHorizontal: 22 }}>
@@ -65,6 +122,8 @@ const Signup = () => {
               placeholder="Enter your email address"
               placeholderTextColor={COLORS.black}
               keyboardType="email-address"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
               style={{
                 width: '100%',
                 height: 55
@@ -101,6 +160,8 @@ const Signup = () => {
               placeholder="+91"
               placeholderTextColor={COLORS.black}
               keyboardType="numeric"
+              value={phoneNumber}
+              onChangeText={(text) => setPhoneNumber(text)}
               style={{
                 width: '12%',
                 borderRightWidth: 1,
@@ -147,6 +208,8 @@ const Signup = () => {
               placeholder="Enter your password"
               placeholderTextColor={COLORS.black}
               secureTextEntry={isPasswordShown}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
               style={{
                 width: '100%'
               }}
@@ -194,7 +257,9 @@ const Signup = () => {
         </View>
 
         <TouchableOpacity
-          onPress={() => console.log('Pressed')}
+          onPress={() => {
+            isChecked? handleNext() : ToastAndroid.show('Please agree to the Terms and Conditions', ToastAndroid.SHORT)
+          }}
           style={{
             alignItems: 'center',
             justifyContent: 'center',
@@ -284,4 +349,3 @@ const Signup = () => {
   )
 }
 
-export default Signup
