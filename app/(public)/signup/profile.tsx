@@ -132,7 +132,7 @@ export default function Page() {
       deleteUser(authUser)
     }
     ToastAndroid.show(`Register has been cancelled`, ToastAndroid.SHORT);
-    router.push(`/signup`);
+    router.push(`/signin`);
   }
   
   const checkRequire = () => {
@@ -174,9 +174,9 @@ export default function Page() {
           selectedValue={gender}
           setSelectedValue={setGender}
         />
-        <CustomButton title='Select Avatar' onPress={chooseImage} type={ButtonType.outlined}/>
+        {/* <CustomButton title='Select Avatar' onPress={chooseImage} type={ButtonType.outlined}/> */}
         <CustomButton title="Submit" onPress={handleSubmit} />
-        <CustomButton title="Cancel" onPress={handleCancel} />
+        <CustomButton title="Cancel" onPress={handleCancel} type={ButtonType.outlined} />
       </View>
     </View>
   )

@@ -1,5 +1,5 @@
 export const Constant = {
-  inputHeight: 40,
+  inputHeight: 50,
   normalTextSize: 14,
   buttonTextSize: 16,
   heading1: 30,
