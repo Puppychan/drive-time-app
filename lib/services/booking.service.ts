@@ -6,6 +6,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -381,6 +382,24 @@ export async function renderBookingsByCustomer(
     return getQuerySnapshotData(q)
   } catch (err) {
     return handleBookingException(err, `Render booking list using customer ID`)
+  }
+}
+
+export async function deleteBooking(bookingId: string) {
+  try {
+    const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
+    const booking = await getSnapshotData(bookingRef)
+
+    if (booking.status === BookingStatus.Canceled) {
+      await deleteDoc(bookingRef)
+      console.log(`Booking ${bookingId} successfully deleted`)
+      return new ResponseDto(ResponseCode.OK, `Booking ${bookingId} successfully deleted`, null)
+    } else {
+      throw new BadRequestException(`The booking status must be in canceled status to delete`)
+    }
+  } catch (error) {
+    console.error(`Error deleting booking: ${error}`)
+    return handleBookingException(error, 'Delete booking')
   }
 }
 
