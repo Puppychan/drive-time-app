@@ -10,8 +10,6 @@ import { Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { auth } from '@/lib/firebase/firebase'
-// import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
-import { getDeviceToken, registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 
@@ -25,13 +23,13 @@ function onClickData() {
 }
 
 SplashScreen.preventAutoHideAsync()
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true
-  })
-})
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: true,
+//     shouldSetBadge: true
+//   })
+// })
 
 const { width: screenWidth } = getScreenSize()
 
@@ -45,20 +43,6 @@ export default function App() {
       try {
         const user = auth.currentUser
         setAuthUser(user)
-        await registerForPushNotificationsAsync()
-        console.log('Done register push notification')
-        const token = await getDeviceToken()
-        console.log('doneee get token', token)
-
-        // Foreground message handler
-        messaging().onMessage(async (remoteMessage) => {
-          console.log('A new FCM message arrived!', JSON.stringify(remoteMessage))
-        })
-
-        // Background message handler
-        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-          console.log('Message handled in the background!', remoteMessage)
-        })
       } catch (e) {
         console.log(e)
       }
@@ -80,7 +64,7 @@ export default function App() {
   }
 
   const handleDone = () => {
-    router.replace('/(user)/driver/dashboard')
+    router.replace('/signin')
   }
   const doneButton = ({ ...props }) => {
     return (

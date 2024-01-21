@@ -12,7 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -20,16 +19,13 @@
       "supportsTablet": true,
       "bitcode": false
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-
       "package": "com.drivetimeapp",
-      "googleServicesFile": "./android/google-services.json",
-
+      "googleServicesFile": "./android/app/google-services.json",
       "jsEngine": "hermes",
       "permissions": [
         "android.permission.POST_NOTIFICATIONS",
@@ -46,7 +42,6 @@
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.WAKE_LOCK"
       ]
-
     },
     "web": {
       "favicon": "./assets/favicon.png",
