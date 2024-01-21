@@ -8,7 +8,8 @@ import {
   updateProfile,
   inMemoryPersistence,
   setPersistence,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  getReactNativePersistence
 } from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'

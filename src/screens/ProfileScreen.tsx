@@ -1,4 +1,4 @@
-import { View, ScrollView, ToastAndroid } from 'react-native'
+import { View, ScrollView, ToastAndroid, Alert } from 'react-native'
 
 import { HorizontalDivider } from '@/src/components/divider/HorizontalDivider'
 
@@ -14,10 +14,18 @@ import { auth } from '@/lib/firebase/firebase'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
 import { router } from 'expo-router'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import SOSDetailModal from '../components/modal/sos-detail'
 
 export const UserProfileScreen = () => {
   const [user, setUser] = useState<User | null>()
   const [role, setRole] = useState<string>(AccountRole.Customer)
+  const [sosModalVisible, setSOSModalVisible] = useState(false)
+
+  const handleSOSSubmit = () => {
+    setSOSModalVisible(false)
+  }
+
   useEffect(() => {
     const prepare = async () => {
       if (auth.currentUser) {
@@ -34,6 +42,21 @@ export const UserProfileScreen = () => {
     prepare()
   }, [])
 
+  const handleSOS = () => {
+    Alert.alert(
+      'Safety Report',
+      'Trigger SOS or Edit/Add an SOS contact',
+      [
+        { text: 'Trigger SOS', onPress: () => {}},
+        { text: 'Edit/Add SOS', onPress: () => {setSOSModalVisible(true)}},
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {setSOSModalVisible(false)}
+      }
+    );
+  }
+
   return (
     <ScrollView>
       <View style={styles.topContainer}>
@@ -45,7 +68,12 @@ export const UserProfileScreen = () => {
           <UtilityButton imagePath="ic_trip" title="Trip" />
         </View>
 
-        <SafetyReportButton />
+        <TouchableOpacity
+          onPress={handleSOS}
+        >
+          <SafetyReportButton />
+        </TouchableOpacity>
+        <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
       </View>
       <View style={{ marginTop: 10 }}>
         <HorizontalDivider height={7} />
