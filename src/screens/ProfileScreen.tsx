@@ -45,7 +45,7 @@ export const UserProfileScreen = () => {
   const handleSOS = () => {
     Alert.alert(
       'Safety Report',
-      'Trigger SOS or Edit/Add an SOS contact',
+      'Trigger SOS or Edit/Add yoir SOS Contact',
       [
         { text: 'Trigger SOS', onPress: () => {}},
         { text: 'Edit/Add SOS', onPress: () => {setSOSModalVisible(true)}},
