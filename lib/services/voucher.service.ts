@@ -17,6 +17,7 @@ function handleVoucherException(error: any, type: string) {
   )
 }
 
+
 export async function addVoucher(voucherData: Voucher) {
   try {
     // find if admin exist
@@ -41,7 +42,7 @@ export async function addVoucher(voucherData: Voucher) {
   }
 }
 
-export const fetchVouchers = async () => {
+export const  fetchVouchers = async () => {
   try {
     const vouchersCollection = collection(db, CollectionName.VOUCHERS); // Replace 'vouchers' with your actual collection name
     const querySnapshot = await getDocs(vouchersCollection);
@@ -52,9 +53,10 @@ export const fetchVouchers = async () => {
       vouchersList.push(voucherData);
     });
 
-    return vouchersList;
+    // return vouchersList;
+    console.log('querySnapshot',vouchersCollection);
   } catch (error) {
-    console.error('Error fetching vouchers:', error);
+    console.error('Error fetching vouchers2222:', error);
     throw error; // You might want to handle this error in your application
   }
 }
