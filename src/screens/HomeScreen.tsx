@@ -24,6 +24,8 @@ import { AppButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
+import InvitationComponent from '../components/InvitationComponent'
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
@@ -60,6 +62,8 @@ const HomeScreen = () => {
           <Title style={styles.welcome}>Welcome, {usernameInfo}</Title>
 
           <SearchInput />
+
+          <InvitationComponent senderId={'0qLFIJubldTRnunTpUxKA5zPLZm1'} />
 
           {/* Home section */}
           <TouchableOpacity onPress={onClickHomeSection}>

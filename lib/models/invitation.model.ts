@@ -13,10 +13,9 @@ export enum InvitationType {
 }
 
 export interface Invitation {
-  invitationId: string
-  fromUser: string
-  toUser: string
+  sender: string
+  receiver: string
   type: InvitationType
   status: InvitationStatus
-  createdAt?: Timestamp
+  sentDate: Timestamp
 }

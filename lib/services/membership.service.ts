@@ -168,18 +168,42 @@ export const getNextHigherMembershipId = async (currentMembershipId: string) => 
   }
 }
 
-export async function updateMembership(membershipId: string, updatedData: Partial<Membership>) {
+export async function updateMembership(
+  membershipId: string,
+  membershipData: Membership
+): Promise<ResponseDto> {
   try {
-    const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipId)
-    updatedData.updatedAt = Timestamp.fromDate(new Date())
-    await updateDoc(membershipRef, updatedData)
+    await runTransaction(db, async (transaction) => {
+      const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipId)
+      // Update the updatedAt timestamp
+      membershipData.updatedAt = Timestamp.fromDate(new Date())
 
-    return new ResponseDto(ResponseCode.OK, 'Membership updated successfully', null)
+      // Update the membership document with new data
+      transaction.update(membershipRef, membershipData as { [key: string]: any })
+    })
+
+    // Retrieve list of all current memberships
+    const membershipsSnapshot = await getDocs(collection(db, CollectionName.MEMBERSHIPS))
+    const memberships = membershipsSnapshot.docs.map((doc) => doc.data() as Membership)
+
+    // Update customers based on the new list of memberships
+    const updateCustomerResponse = await updateCustomersWithMemberships(memberships)
+    if (updateCustomerResponse.code !== ResponseCode.OK) {
+      return updateCustomerResponse
+    }
+
+    // Return success response
+    return new ResponseDto(
+      ResponseCode.OK,
+      'Membership updated and customers updated successfully',
+      new SuccessResponseDto(membershipData, membershipId)
+    )
   } catch (error) {
-    console.error('Error updating membership:', error)
+    console.error('Error updating membership and updating customers:', error)
     return handleMembershipException(error, 'Updating')
   }
 }
+
 export async function deleteMembership(membershipId: string) {
   try {
     // Query to check if any customers have the membershipId
