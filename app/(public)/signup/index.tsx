@@ -33,17 +33,20 @@ export default function Page() {
       setBtnDisable(false)
       return
     }
+    
 
     createAuthAccount(email, password)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
-        const user  = res.body
-        console.log('User: ', user)
-        router.push({pathname: `/signup/profile`, params: {uid: user.uid, role: role ?? AccountRole.Driver}});
-      } else {
-        console.log("~~~~~~ handleNext() line 44:", res.message)
-        ToastAndroid.show(`Register failed. Please try again`, ToastAndroid.SHORT)
+        const {user}  = res.body
+        router.push({pathname: `/signup/profile`, params: {uid: user.uid, role: role ?? AccountRole.Customer}});
       }
+    })
+    .catch( (error) => {
+      console.log(error)
+      let message = error.message ?? ""
+      ToastAndroid.show(`Register failed. ${message}`, ToastAndroid.SHORT)
+      
     })
 
     setBtnDisable(false)

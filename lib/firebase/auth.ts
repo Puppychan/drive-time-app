@@ -16,7 +16,7 @@ import { ResponseDto } from '@/common/response.dto'
 import { Constant } from '@/components/Constant'
 import { AccountType } from '@/lib/common/model-type'
 import { auth } from '@/lib/firebase/firebase'
-import { addUserToDatabase, handleUserCreationError } from '@/lib/services/account.service'
+import { addUserToDatabase, getUserById, handleUserCreationError } from '@/lib/services/account.service'
 
 export function onAuthStateChanged() {
   _onAuthStateChanged(auth, (user) => {
@@ -66,36 +66,34 @@ export async function signIn(email: string, password: string, remember: boolean)
   return (
     signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
-      const user = userCredential.user
-      const token = await user.getIdToken();
-      await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
-      await AsyncStorage.setItem(Constant.TOKEN_KEY, token)
-      return new ResponseDto(ResponseCode.OK, 'Login successfully', {...user})
+      const authUser = userCredential.user
+      const user = await getUserById(authUser.uid)
+      if (user) {
+        const token = await authUser.getIdToken();
+        await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)
+        await AsyncStorage.setItem(Constant.TOKEN_KEY, token)
+        await AsyncStorage.setItem(Constant.USER_ROLE_KEY, user.role)
+        return new ResponseDto(ResponseCode.OK, 'Login successfully', {user})
+      }
+      throw new Error('Login failed: user not found in database')
     })
-    .catch( async (error) => {
-      const signout = await signOut();
-
-      let message = 'Cannot login. Please try again'
+    .catch( (error) => {
+      console.log(error)
+      let message = error.message ?? "Error caught"
       if (error.code) {
         switch (error.code) {
           case AuthErrorCodes.INVALID_EMAIL:
             message = 'Invalid email'
-            break
+            break;
           case AuthErrorCodes.INVALID_LOGIN_CREDENTIALS:
             message = 'Invalid login credentials'
-            break
+            break;
           case AuthErrorCodes.INVALID_PASSWORD:
             message = 'Wrong password'
-            break
-          default:
-            message = error.message
+            break;
         }
       }
-      return new ResponseDto(
-        error.code ?? ResponseCode.BAD_GATEWAY,
-        `${message}`,
-        `Login failed: ${error}`
-      )
+      throw new Error(message)
     })
   )
 }
@@ -104,45 +102,31 @@ export async function createAuthAccount(email: string, password: string): Promis
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user
-      return new ResponseDto(ResponseCode.OK, 'Register user successfully', { ...user })
+      return new ResponseDto(ResponseCode.OK, 'Register user successfully', { user })
     })
     .catch((error) => {
       console.log("~~~~~~~ createAuthAccount(): ", error)
-      // TODO: display to UI
-      return new ResponseDto(
-        error.code ?? ResponseCode.BAD_GATEWAY,
-        `${error.message}`,
-        `Failed to register user:  ${error}`
-      )
+      throw error
     })
 }
 
 export async function addUser(user: User, additionalUserInfo: AccountType): Promise<ResponseDto> {
-  return addUserToDatabase(user, additionalUserInfo)
-    .then((value) => {
-      // if add user information to database successfully
-      return updateProfile(user, {
-        displayName: additionalUserInfo.username,
-        photoURL: additionalUserInfo.avatar
-      })
-      .then(() => {
-        return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
-          ...user,
-          ...additionalUserInfo
-        })
-      })
-      .catch(e => {
-        return new ResponseDto(ResponseCode.OK, 'Signing up user successfully', {
-          ...user,
-          ...additionalUserInfo
-        })
-      })
-
+  try {
+    const doc = await addUserToDatabase(user, additionalUserInfo)
+    console.log("user doc created: ", doc)
+    await updateProfile(user, {
+      displayName: additionalUserInfo.username,
+      photoURL: additionalUserInfo.avatar
     })
-    .catch(async (error) => {
-      console.log(`~ ~ ~ ~ auth.ts, line 141: `,error)
-      return await handleUserCreationError(user, error)
+    return new ResponseDto(ResponseCode.OK, 'Added user successfully', {
+      ...user,
+      ...additionalUserInfo
     })
+  }
+  catch (error) {
+    console.log(`~ ~ ~ ~ auth.ts, line 127: `,error)
+    throw error
+  }
 }
 
 export async function createUser(email: string, password: string, otherUserInfo: AccountType) {

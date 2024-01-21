@@ -1,19 +1,17 @@
 import { Ionicons } from '@expo/vector-icons'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Link, router, useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   ToastAndroid,
   TouchableOpacity,
   View
 } from 'react-native'
 
 import { ResponseCode } from '@/common/response-code.enum'
-import { signIn } from '@/lib/firebase/auth'
+import { signIn, signOut } from '@/lib/firebase/auth'
 import { Input } from '@/src/components/input/TextInput'
 
 import { Colors, specialColors } from '../../components/Colors'
@@ -22,7 +20,6 @@ import Spacing from '../../components/Spacing'
 import CheckBox from '@/src/components/input/Checkbox'
 import { AccountRole } from '@/lib/models/account.model'
 import { ButtonType, CustomButton } from '@/src/components/button/Buttons'
-
 
 export default function Page() {
   const router = useRouter()
@@ -45,44 +42,31 @@ export default function Page() {
       setLoginDisable(false)
       return
     }
-
     
-    signIn(email, password, rememberMe)
-    .then((res) => {
-      if (res.code === ResponseCode.OK) {
-        const user = res.body
-        console.log(user)
+    try {
+      const signInRes = await signIn(email, password, rememberMe);
+      if (signInRes.code === ResponseCode.OK) {
+        const {user} = signInRes.body
         ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT)
-        router.push(`/(user)/customer/home`)
-      } else {
-        ToastAndroid.show(`Login failed: ${res.message}`, ToastAndroid.SHORT)
-      }
-    })
-
-    setLoginDisable(false)
+        router.push(`/${user.role.toLowerCase( )}/home`)
+      } 
+      else throw new Error(`Login failed: ${signInRes.message}`)
+    }
+    catch (error: any) {
+      console.log(error)
+      await signOut();
+      setLoginDisable(false)
+      let message = error.message ?? 'Please try again'
+      ToastAndroid.show(`Login failed. ${message}`, ToastAndroid.SHORT)
+    }
   }
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Text
-          style={{
-            fontSize: FontSize.xLarge,
-            fontWeight: 'bold',
-            textAlign: 'center'
-          }}
-        >
-          Login
-        </Text>
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            alignItems: 'stretch',
-            gap: Spacing,
-          }}
-        >
-          
+        <Text style={styles.loginTitle}>Login</Text>
+
+        <View  style={styles.group}>
           <Input
             placeHolder="Email"
             required={true}
@@ -108,6 +92,9 @@ export default function Page() {
             style={{alignSelf: 'flex-end'}}
             textStyle={styles.specialTextStyle}
           />
+        </View>
+
+        <View style={styles.group}>
           <CustomButton 
             style={styles.buttonStyle} 
             title="Login" 
@@ -126,8 +113,8 @@ export default function Page() {
             onPress={handleRegisterDriver}
           />
         </View>
-
-        <View style={styles.alternativeLoginContainer}>
+          
+        <View style={[styles.group, styles.alternativeLoginContainer]}>
           <Text style={styles.specialTextStyle}>
             Or continue with
           </Text>
@@ -152,9 +139,15 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing * 2,
-    paddingVertical: Spacing * 4,
+    paddingVertical: Spacing * 5,
     flexDirection: 'column',
-    gap: Spacing * 3
+    gap: Spacing * 3,
+
+  },
+  group: {
+    flexDirection: 'column',
+    gap: Spacing,
+    alignItems: 'stretch'
   },
   buttonStyle: {
     paddingVertical: Spacing * 1.3
@@ -180,6 +173,10 @@ const styles = StyleSheet.create({
   },
   alternativeLoginContainer: {
     alignItems: 'center',
-    gap: Spacing,
+  },
+  loginTitle: {
+    fontSize: FontSize.xLarge,
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 })

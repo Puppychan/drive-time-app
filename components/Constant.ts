@@ -7,6 +7,7 @@ export const Constant = {
   USER_EMAIL_KEY: 'email',
   LOGIN_STATE_KEY: 'loginState',
   TOKEN_KEY: 'token',
+  USER_ROLE_KEY: 'role',
   TRUE: 'true',
   FALSE: 'false',
 

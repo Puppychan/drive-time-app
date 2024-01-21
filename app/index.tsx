@@ -17,7 +17,7 @@ import { generateData } from '../lib/data/generate-all.data'
 import { CallControllerScreen } from '../src/screens/CallControllerScreen'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
-import { auth, firebaseApp } from '@/lib/firebase/firebase'
+import { auth, db, firebaseApp } from '@/lib/firebase/firebase'
 import { CustomButton } from '@/src/components/button/Buttons'
 import { signOut } from '@/lib/firebase/auth'
 import { onAuthStateChanged, User } from 'firebase/auth'
@@ -36,6 +36,7 @@ export default function App() {
       try {
         firebaseApp
         auth
+        db
       } catch (e) {
         console.log(e)
       }

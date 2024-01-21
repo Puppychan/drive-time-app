@@ -7,7 +7,7 @@ import { CustomButton, ButtonType } from '@/src/components/button/Buttons'
 import { Input } from '@/src/components/input/TextInput'
 import { AppDropDown } from '@/src/components/menu/DropDownMenu'
 import { auth } from '@/lib/firebase/firebase'
-import { deleteUser, updateProfile, User } from 'firebase/auth'
+import { deleteUser, User } from 'firebase/auth'
 import { addUser, signOut } from '@/lib/firebase/auth'
 import { Account, AccountRole } from '@/lib/models/account.model'
 import { uploadImage } from '@/lib/firebase/storage'
@@ -16,6 +16,7 @@ import { AVATAR_REF } from '@/components/Constant'
 import { ResponseCode } from '@/common/response-code.enum'
 import { AccountType } from '@/lib/common/model-type'
 import { ScrollView } from 'react-native-gesture-handler'
+import { handleUserCreationError } from '@/lib/services/account.service'
 
 const genderList = [
   { label: 'Female', value: 'Female' },
@@ -34,7 +35,7 @@ export default function Page() {
   const [lastName, setLastName] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
   const [dob, setDob] = useState<Date>()
-  const [avatarUri, setAvatarUri] = useState<any>()
+  const [avatarUri, setAvatarUri] = useState<any>(null)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -43,93 +44,93 @@ export default function Page() {
   })
 
   const handleSubmit = async () => {
-    if (!authUser) {
-      ToastAndroid.show(`Unauthorized`, ToastAndroid.SHORT);
-      return
-    }
-
-    // check if all required input fields are filled
-    if (!checkRequire()) return;
-
-    // upload avatar photo (if any) to storage and get the downloadurl from it
-    if (avatarUri) {
-      const res = await uploadImage(avatarUri, `${AVATAR_REF}/${authUser?.uid}.jpg`);
-      if (res.code === ResponseCode.OK) {
-        const {downloadUrl} = res.body
-        setAvatarUrl(downloadUrl)
+    try {
+      if (!authUser) {
+        ToastAndroid.show(`Unauthorized`, ToastAndroid.SHORT);
+        return
       }
-    }
-
-    // create account
-    const account: Account = {
-      userId: authUser.uid,
-      email: authUser.email ?? "",
-      username: username,
-      firstName: firstName,
-      lastName: lastName,
-      role: accountRole,
-      phone: phone,
-      avatar: avatarUrl,
-      birthday: (dob && Timestamp.fromDate(dob)) || null,
-      createdDate: Timestamp.fromDate(new Date())
-    }
-
-    let roleAccount : AccountType
-
-    switch (accountRole) {
-      case AccountRole.Driver: //driver
-        roleAccount = {
-          ...account,
-          workStartDate: Timestamp.fromDate(new Date()),
-          isBan: false,
-          banTime: null,
-          transport: null
+  
+      // check if all required input fields are filled
+      if (!checkRequire()) return;
+  
+      // upload avatar photo (if any) to storage and get the downloadurl from it
+      if (avatarUri) {
+        const res = await uploadImage(avatarUri, `${AVATAR_REF}/${authUser?.uid}.jpg`);
+        if (res.code === ResponseCode.OK) {
+          const {downloadUrl} = res.body
+          setAvatarUrl(downloadUrl)
         }
-        break;
-
-      case AccountRole.Admin: //admin
-        roleAccount = {
-          ...account,
-          workStartDate: Timestamp.fromDate(new Date())
+        else {
+          console.log("Upload image failed: " , res)
         }
-        break;
+      }
+  
+      // create account
+      const account: Account = {
+        userId: authUser.uid,
+        email: authUser.email ?? "",
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        role: accountRole,
+        phone: phone,
+        avatar: avatarUrl,
+        birthday: (dob && Timestamp.fromDate(dob)) || null,
+        createdDate: Timestamp.fromDate(new Date())
+      }
+  
+      let roleAccount : AccountType
+      console.log("accountRole: ", accountRole)
+  
+      switch (accountRole) {
+        case AccountRole.Driver: //driver
+          roleAccount = {
+            ...account,
+            workStartDate: Timestamp.fromDate(new Date()),
+            isBan: false,
+            banTime: null,
+            transport: null
+          }
+          break;
+  
+        case AccountRole.Admin: //admin
+          roleAccount = {
+            ...account,
+            workStartDate: Timestamp.fromDate(new Date())
+          }
+          break;
+  
+        default: //customer
+          roleAccount = {
+            ...account,
+            membershipId: '1',
+            membershipPoints: 0,
+            description: ''
+          }
+      }
 
-      default: //customer
-        roleAccount = {
-          ...account,
-          membershipId: '1',
-          membershipPoints: 0,
-          description: ''
-        }
-    }
-
-
-    console.log(authUser.uid)
-    addUser(authUser, roleAccount)
-    .then(async (res) => {
+      const res = await addUser(authUser, roleAccount)
       if (res.code === ResponseCode.OK) {
         ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
         await signOut()
         router.push(`/signin`);
       }
-      else {
-        await signOut()
-        ToastAndroid.show(`Register account failed: ${res.message}. Please try again`, ToastAndroid.LONG);
-        router.push(`/signup`);
-      }
-    })
+    }
+    catch (error) {
+      console.log("~~~~ profile.tsx handleSubmit() line 121:", error)
+      ToastAndroid.show(`Unable to register user profile. Please try again`, ToastAndroid.LONG);
+      // router.push(`/signup`);
+    }
+
   }
 
   const handleCancel = async () => {
-    if (!authUser) {
-      router.push(`/signup`);
-      return
+    if (authUser) {
+      auth.signOut();
+      deleteUser(authUser)
     }
-
-    auth.signOut();
-    deleteUser(authUser)
     ToastAndroid.show(`Register has been cancelled`, ToastAndroid.SHORT);
-    router.push(`/driver/register`);
+    router.push(`/signup`);
   }
   
   const checkRequire = () => {
