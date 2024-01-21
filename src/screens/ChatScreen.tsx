@@ -16,7 +16,7 @@ export type Chat = {
 
 export type Message = {
   id: string
-  chatId?: string
+  chatId: string
   content: string
   senderId: string
   senderName: string
@@ -72,7 +72,7 @@ export const ChatScreen = () => {
         <HorizontalDivider height={2} />
       </View>
       <ChatMessageView messages={messages} />
-      <ChatInputField onSent={onSent} />
+      {chat ? <ChatInputField chatId={chat.id} onSent={onSent} /> : null}
     </View>
   )
 }

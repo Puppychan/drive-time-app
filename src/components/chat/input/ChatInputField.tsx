@@ -5,10 +5,11 @@ import { Message } from '@/src/screens/ChatScreen'
 import { styles } from './chat-input-style'
 
 interface ChatInputFieldProps {
+  chatId: string
   onSent: (message: Message) => void
 }
 
-export const ChatInputField: React.FC<ChatInputFieldProps> = ({ onSent }) => {
+export const ChatInputField: React.FC<ChatInputFieldProps> = ({ chatId, onSent }) => {
   const [input, setInput] = useState('')
 
   const handleSend = () => {
@@ -16,6 +17,7 @@ export const ChatInputField: React.FC<ChatInputFieldProps> = ({ onSent }) => {
 
     const message: Message = {
       id: Math.random().toString(36),
+      chatId,
       content: input,
       senderId: auth.currentUser?.uid || '',
       senderName: auth.currentUser?.displayName || '',
