@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router'
-import React from 'react'
 
 export default function _layout() {
   return (
@@ -10,12 +9,12 @@ export default function _layout() {
           headerShown: false
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="(user)"
         options={{
           headerShown: false
         }}
-      />
+      /> */}
       <Stack.Screen
         name="(public)"
         options={{
