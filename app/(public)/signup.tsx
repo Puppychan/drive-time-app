@@ -1,10 +1,9 @@
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { Colors } from '@/components/Colors'
 import CheckBox from '@/src/components/input/Checkbox'
 
 import Button from '../../src/components/button/Button'
@@ -195,14 +194,24 @@ const Signup = () => {
           </TouchableOpacity>
         </View>
 
-        <Button
-          title="Sign Up"
-          filled
+        <TouchableOpacity
+          onPress={() => console.log('Pressed')}
           style={{
-            marginTop: 18,
-            marginBottom: 4
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            height: 55,
+            borderWidth: 1,
+            borderColor: COLORS.grey,
+            backgroundColor: 'black',
+            marginRight: 4,
+            borderRadius: 15,
+            paddingHorizontal: 16,
+            marginTop: 20
           }}
-        />
+        >
+          <Text style={{ fontSize: 18, color: 'white' }}>Sign Up</Text>
+        </TouchableOpacity>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
           <View
