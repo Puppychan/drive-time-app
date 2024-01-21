@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { View, ActivityIndicator } from 'react-native'
-import { collection, getDocs, addDoc } from 'firebase/firestore'
+import { collection, getDocs, addDoc, doc, getDoc, query, where } from 'firebase/firestore'
 
 import { ChatHeader } from '../components/chat/header/ChatHeader'
 import { ChatInputField } from '../components/chat/input/ChatInputField'
@@ -10,12 +10,13 @@ import { db } from '@/lib/firebase/firebase'
 
 export type Chat = {
   id: string
-  name: string
   members: string[]
+  createdAt: number
 }
 
 export type Message = {
   id: string
+  chatId?: string
   content: string
   senderId: string
   senderName: string
@@ -23,19 +24,30 @@ export type Message = {
 }
 
 export const ChatScreen = () => {
+  const testChatId = 'test-chat-id'
+
   const [loading, setLoading] = useState(true)
+  const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const messagesCollection = collection(db, 'messages')
-      const snapshot = await getDocs(messagesCollection)
-      const fetchedMessages = snapshot.docs.map((doc) => doc.data())
+    const fetchChatAndMessages = async () => {
+      // Fetch chat
+      const chatDoc = doc(db, 'chats', testChatId)
+      const chatSnapshot = await getDoc(chatDoc)
+      const chatData = chatSnapshot.data() as Chat
+      setChat(chatData)
+
+      // Fetch messages filtered by chat
+      const messagesQuery = query(collection(db, 'messages'), where('chatId', '==', testChatId))
+      const messagesSnapshot = await getDocs(messagesQuery)
+      const fetchedMessages = messagesSnapshot.docs.map((doc) => doc.data())
       setMessages(fetchedMessages.reverse() as Message[])
+
       setLoading(false)
     }
 
-    fetchMessages()
+    fetchChatAndMessages()
   }, [])
 
   const onSent = async (message: Message) => {
