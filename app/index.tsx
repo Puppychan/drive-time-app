@@ -1,6 +1,8 @@
+import * as Notifications from 'expo-notifications'
 import { Link, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { SetStateAction, useCallback, useEffect, useState } from 'react'
+import { User } from 'firebase/auth'
+import { useEffect, useState, useCallback } from 'react'
 import {
   StyleSheet,
   Text,
@@ -9,53 +11,69 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native'
-import { Button, Provider as PageProvider } from 'react-native-paper'
 import Onboarding from 'react-native-onboarding-swiper'
+import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { generateData } from '../lib/data/generate-all.data'
-import { CallControllerScreen } from '../src/screens/CallControllerScreen'
+import { auth, firebaseApp } from '@/lib/firebase/firebase'
+// import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
-import { auth, db, firebaseApp } from '@/lib/firebase/firebase'
-import { CustomButton } from '@/src/components/button/Buttons'
-import { signOut } from '@/lib/firebase/auth'
-import { onAuthStateChanged, User } from 'firebase/auth'
+import { getDeviceToken, registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import messaging from '@react-native-firebase/messaging';
 
 SplashScreen.preventAutoHideAsync()
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true
+  })
+})
 
 const { width: screenWidth } = getScreenSize()
 
 export default function App() {
   const router = useRouter()
   const [appIsReady, setAppIsReady] = useState(false)
-  const [authUser, setAuthUser] = useState<User>()
+  const [authUser, setAuthUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const prepare = () => {
+    const prepare = async () => {
       try {
-        firebaseApp
-        auth
-        db
+        // firebaseApp
+        // auth
+        const user = auth.currentUser
+        setAuthUser(user)
+        await registerForPushNotificationsAsync()
+        console.log('Done register push notification')
+        const token = await getDeviceToken()
+        console.log('doneee get token', token)
+
+        // Foreground message handler
+        messaging().onMessage(async (remoteMessage: any) => {
+          console.log('A new FCM message arrived!', JSON.stringify(remoteMessage))
+        })
+
+        // Background message handler
+        messaging().setBackgroundMessageHandler(async (remoteMessage: any) => {
+          console.log('Message handled in the background!', remoteMessage)
+        })
       } catch (e) {
         console.log(e)
       }
     }
 
     prepare()
-    auth.onAuthStateChanged((user) => {
-      user ? setAuthUser(user) : setAuthUser(undefined);
-    })
+    auth.onAuthStateChanged((user) => setAuthUser(user))
     setAppIsReady(true)
-
-
   }, [])
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      await SplashScreen.hideAsync();
+      await SplashScreen.hideAsync()
     }
-  }, [appIsReady]);
+  }, [appIsReady])
 
   if (!appIsReady) {
     return null
@@ -155,7 +173,7 @@ const styles = StyleSheet.create({
   },
   lottie: {
     width: screenWidth * 0.9,
-    height: screenWidth * 0.9,
+    height: screenWidth * 0.9
   },
   doneButton: {
     padding: 20,

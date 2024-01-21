@@ -87,6 +87,26 @@ export const updateCustomerMembership = async (userId: string) => {
   }
 }
 
+export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId: string) => {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, userId)
+    const customerSnapshot = await getDoc(accountRef)
+    if (customerSnapshot.exists()) {
+      await updateDoc(accountRef, {
+        deviceTokenIdList: arrayUnion(deviceTokenId),
+        updatedAt: Timestamp.fromDate(new Date())
+      })
+    } else {
+      throw new Error(`User with id ${userId} does not exist`)
+    }
+
+    return new ResponseDto(ResponseCode.OK, 'User device added successfully', null)
+  } catch (error) {
+    console.error('Error adding user device:', error)
+    return handleUserException(error, 'Adding user device')
+  }
+}
+
 export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
   return deleteUser(user)
@@ -124,25 +144,17 @@ const isUniqueUser = async (email: string, username: string) => {
 
     const qMail = query(userCollection, where("email", "==", email))
     const qUsername = query(userCollection, where('username', "==", username))
-    console.log(email, " ", username, " ", qMail)
-    const querySnapshot = await getDocs(collection(db, CollectionName.ACCOUNTS)); 
-    // console.log
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-    });
 
+    const mailSnap = await getDocs(qMail); 
+    console.log(mailSnap)
+    if (!mailSnap.empty) {
+      return new ResponseDto(ResponseCode.OK, "Email already in use", false)
+    }
 
-    // const mailSnap = await getDocs(qMail); 
-    // console.log(mailSnap)
-    // if (!mailSnap.empty) {
-    //   return new ResponseDto(ResponseCode.OK, "Email already in use", false)
-    // }
-
-    // const usernameSnap = await getDocs(qUsername); 
-    // if (!usernameSnap.empty) {
-    //   return new ResponseDto(ResponseCode.OK, "Username already in use", false)
-    // }
+    const usernameSnap = await getDocs(qUsername); 
+    if (!usernameSnap.empty) {
+      return new ResponseDto(ResponseCode.OK, "Username already in use", false)
+    }
 
     return new ResponseDto(ResponseCode.OK, "User is unique", true)
 

@@ -7,8 +7,9 @@ import {
   AuthErrorCodes,
   updateProfile,
   getReactNativePersistence,
-  inMemoryPersistence
-} from "firebase/auth"
+  inMemoryPersistence,
+  setPersistence
+} from 'firebase/auth'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -21,9 +22,9 @@ import { addUserToDatabase, getUserById, handleUserCreationError } from '@/lib/s
 export function onAuthStateChanged() {
   _onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log("user signed in: ", user.email)
+      console.log('user signed in: ', user.email)
     } else {
-      console.log("user signed out ")
+      console.log('user signed out ')
     }
   })
 }
@@ -131,28 +132,28 @@ export async function addUser(user: User, additionalUserInfo: AccountType): Prom
 
 export async function createUser(email: string, password: string, otherUserInfo: AccountType) {
   createUserWithEmailAndPassword(auth, email, password)
-  .then(async (userCredential) => {
-    // Signed up
-    const user = userCredential.user
-    addUserToDatabase(user, otherUserInfo)
-    .then((value) => {
-      // if add user information to database successfully
+    .then(async (userCredential) => {
+      // Signed up
+      const user = userCredential.user
+      addUserToDatabase(user, otherUserInfo)
+        .then((value) => {
+          // if add user information to database successfully
+          return new ResponseDto(
+            ResponseCode.OK,
+            'Signing up user successfully',
+            new SuccessResponseDto(otherUserInfo, value.id)
+          )
+        })
+        .catch(async (error) => {
+          return await handleUserCreationError(user, error)
+        })
+    })
+    .catch((error) => {
+      // TODO: display to UI
       return new ResponseDto(
-        ResponseCode.OK,
-        'Signing up user successfully',
-        new SuccessResponseDto(otherUserInfo, value.id)
+        error.code ?? ResponseCode.BAD_GATEWAY,
+        'Signing up user unsuccessfully',
+        `Failed to signing up the user: ${error}`
       )
     })
-    .catch(async (error) => {
-      return await handleUserCreationError(user, error)
-    })
-  })
-  .catch((error) => {
-    // TODO: display to UI
-    return new ResponseDto(
-      error.code ?? ResponseCode.BAD_GATEWAY,
-      'Signing up user unsuccessfully',
-      `Failed to signing up the user: ${error}`
-    )
-  })
 }

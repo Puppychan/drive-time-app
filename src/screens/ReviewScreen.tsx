@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <CustomButton title="Arrive" style={styles.CustomButtonStyle} onPress={addReview} />
+      <CustomButton title="Arrive" style={styles.customButtonStyle} onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>
@@ -66,7 +66,7 @@ const ReviewScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  CustomButtonStyle: {
+  customButtonStyle: {
     backgroundColor: 'black',
     borderRadius: 10,
     marginHorizontal: 10,

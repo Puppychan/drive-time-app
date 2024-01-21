@@ -111,14 +111,15 @@ export default function Page() {
 
       const res = await addUser(authUser, roleAccount)
       if (res.code === ResponseCode.OK) {
-        ToastAndroid.show(`Add user successfully. Please login`, ToastAndroid.SHORT);
+        ToastAndroid.show(`Register account successfully. Please login`, ToastAndroid.SHORT);
         await signOut()
         router.push(`/signin`);
       }
     }
     catch (error) {
       console.log("~~~~ profile.tsx handleSubmit() line 121:", error)
-      ToastAndroid.show(`Unable to register user profile. Please try again`, ToastAndroid.LONG);
+      let message = error.message ?? "Please try again"
+      ToastAndroid.show(`Create user profile failed. ${message}`, ToastAndroid.LONG);
       // router.push(`/signup`);
     }
 
