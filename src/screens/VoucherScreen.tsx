@@ -4,14 +4,21 @@ import { Text, View, FlatList, TouchableOpacity, StyleSheet, Image } from 'react
 import { Voucher } from '@/lib/models/voucher.model'
 import { fetchVouchers } from '@/lib/services/voucher.service'
 
+interface RenderItemType {
+  item: Voucher
+}
+
 export const VoucherScreen = () => {
-  const [vouchers, setVouchers] = useState<Voucher[]>([])
+  const [vouchers, setVouchers] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const vouchersData = await fetchVouchers()
-        // setVouchers(vouchersData);
+
+        if (vouchersData != null) {
+          setVouchers(vouchersData)
+        } else setVouchers([])
       } catch (error) {
         console.error('Error fetching vouchers:', error)
       }
@@ -24,7 +31,7 @@ export const VoucherScreen = () => {
     <View style={{ flex: 1 }}>
       <FlatList
         data={vouchers}
-        renderItem={({ item }) => (
+        renderItem={({ item }: RenderItemType) => (
           <View style={{ height: 100, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity
               // onPress={() => setSelected(item)}

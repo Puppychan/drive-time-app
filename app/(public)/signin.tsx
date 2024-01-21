@@ -1,4 +1,3 @@
-import { firebase } from '@react-native-firebase/messaging'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {

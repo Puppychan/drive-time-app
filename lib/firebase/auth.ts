@@ -6,7 +6,6 @@ import {
   User,
   AuthErrorCodes,
   updateProfile,
-  getReactNativePersistence,
   inMemoryPersistence,
   setPersistence,
   sendPasswordResetEmail

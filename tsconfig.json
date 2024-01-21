@@ -10,6 +10,6 @@
     "jsx": "react-jsx",
     "strictNullChecks": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/components/button/Button.jsx"],
   "extends": "expo/tsconfig.base"
 }
