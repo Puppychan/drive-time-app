@@ -69,6 +69,8 @@ export async function signIn(email: string, password: string, remember: boolean)
     .then(async (userCredential) => {
       const authUser = userCredential.user
       const user = await getUserById(authUser.uid)
+      console.log("role: ", user?.role)
+
       if (user) {
         const token = await authUser.getIdToken();
         await AsyncStorage.setItem(Constant.LOGIN_STATE_KEY, Constant.TRUE)

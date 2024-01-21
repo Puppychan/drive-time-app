@@ -24,14 +24,30 @@ import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
+import { useEffect, useState } from 'react'
+import { auth } from '@/lib/firebase/firebase'
+import { User } from 'firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
-const usernameInfo = 'John Doe'
-
 const HomeScreen = () => {
   const navigation = useNavigation()
   const colorsTheme = useThemeColors(DEFAULT_THEME)
+  const [user, setUser] = useState<User | null>()
+  const [role, setRole] = useState<string>(AccountRole.Customer)
+  useEffect(() => {
+    const prepare = async () => {
+      if (auth.currentUser) {
+        setUser(auth.currentUser)
+        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+        setRole(role ?? AccountRole.Customer)
+      }
+    }
+    prepare()
+
+  }, [])
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
@@ -57,7 +73,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Title style={styles.welcome}>Welcome, {usernameInfo}</Title>
+          <Title style={styles.welcome}>Welcome, {user?.displayName ?? role}</Title>
 
           <SearchInput />
 

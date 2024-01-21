@@ -287,9 +287,9 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing * 2,
-    paddingVertical: Spacing * 5,
     flexDirection: 'column',
     gap: Spacing * 3,
+    paddingTop: 80
 
   },
   group: {

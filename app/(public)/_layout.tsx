@@ -6,7 +6,7 @@ export default function _layout() {
       <Stack.Screen
         name="signin"
         options={{
-          title: "Login"
+          headerShown: false
         }}
       />
       <Stack.Screen

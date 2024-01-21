@@ -16,6 +16,8 @@ import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
 
 SplashScreen.preventAutoHideAsync()
 Notifications.setNotificationHandler({
@@ -67,6 +69,13 @@ export default function App() {
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync()
+      if (auth.currentUser) {
+        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+        if (role) {
+          router.replace(`/${role.toLowerCase( )}/home`)
+          return
+        }
+      }
     }
   }, [appIsReady])
 
@@ -74,7 +83,15 @@ export default function App() {
     return null
   }
 
-  const handleDone = () => {
+  const handleDone = async () => {
+    if (auth.currentUser) {
+      let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+      console.log("role: ", role)
+      if (role) {
+        router.replace(`/${role.toLowerCase( )}/home`)
+        return
+      }
+    }
     router.replace('/signin')
   }
   const doneButton = ({ ...props }) => {
