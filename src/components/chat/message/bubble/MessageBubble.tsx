@@ -1,24 +1,20 @@
 import { Text, View } from 'react-native'
-
 import { DateToHourMinute } from '@/src/common/utils/date-time-converter'
-
+import { Message } from '@/src/screens/ChatScreen'
 import { styles } from './msg-bubble-style'
-interface MessageBubbleProps {
-  content: string
-  sender: number
-  sentTime: number
-}
+import { auth } from '@/lib/firebase/firebase'
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ content, sender, sentTime }) => {
-  const isSender1 = sender !== 1
+export const MessageBubble: React.FC<{ message: Message }> = ({ message }) => {
+  const currentUser = auth.currentUser
+  const sentByMe = currentUser && message.senderId === currentUser.uid
 
   return (
     <View>
-      <View style={[styles.messageContainer, isSender1 ? styles.sender1 : styles.sender2]}>
-        <Text style={isSender1 ? styles.sender1Text : styles.sender2Text}>{content}</Text>
+      <View style={[styles.messageContainer, sentByMe ? styles.sender1 : styles.sender2]}>
+        <Text style={sentByMe ? styles.sender1Text : styles.sender2Text}>{message.content}</Text>
       </View>
-      <Text style={[styles.sentTime, isSender1 ? styles.sender1Time : styles.sender2Time]}>
-        Sent {DateToHourMinute(sentTime)}
+      <Text style={[styles.sentTime, sentByMe ? styles.sender1Time : styles.sender2Time]}>
+        Sent {DateToHourMinute(Number(message.createdAt))}
       </Text>
     </View>
   )
