@@ -1,12 +1,13 @@
-import { AppButton } from '@/src/components/button/Buttons'
-import { Colors } from '@/components/Colors'
-import { Input } from '@/src/components/input/TextInput'
 import { useRouter } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import  {createAuthAccount} from "@/lib/firebase/auth";
+
 import { ResponseCode } from '@/common/response-code.enum'
-import { StatusBar } from 'expo-status-bar'
+import { Colors } from '@/components/Colors'
+import { createAuthAccount } from '@/lib/firebase/auth'
+import { AppButton } from '@/src/components/button/Buttons'
+import { Input } from '@/src/components/input/TextInput'
 
 export default function Page() {
   const router = useRouter()
@@ -17,23 +18,21 @@ export default function Page() {
   const handleNext = async () => {
     setBtnDisable(true)
     if (email.trim() === '') {
-      ToastAndroid.show("Email is required", ToastAndroid.SHORT);
+      ToastAndroid.show('Email is required', ToastAndroid.SHORT)
       setBtnDisable(false)
       return
     } else if (password.trim() === '') {
-      ToastAndroid.show("Password is required", ToastAndroid.SHORT);
+      ToastAndroid.show('Password is required', ToastAndroid.SHORT)
       setBtnDisable(false)
       return
     }
 
-    createAuthAccount(email, password)
-    .then((res) => {
+    createAuthAccount(email, password).then((res) => {
       if (res.code === ResponseCode.OK) {
-        const {user} = res.body
+        const { user } = res.body
         // router.push(`/driver/register/driver-profile?id=${user.uid}`);
-      }
-      else {
-        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show(`Register failed: ${res.message}`, ToastAndroid.SHORT)
       }
     })
 

@@ -1,30 +1,21 @@
+import messaging from '@react-native-firebase/messaging'
 import * as Notifications from 'expo-notifications'
-import { Link, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { User } from 'firebase/auth'
 import { useEffect, useState, useCallback } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button as ReactNativeButton,
-  Image,
-  TouchableOpacity
-} from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Onboarding from 'react-native-onboarding-swiper'
-import { Button, Provider as PageProvider } from 'react-native-paper'
+import { Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { auth, firebaseApp, firebaseVapidKey } from '@/lib/firebase/firebase'
+import { auth } from '@/lib/firebase/firebase'
 // import { registerForPushNotificationsAsync } from '@/lib/firebase/notification'
+import { getDeviceToken, registerForPushNotificationsAsync } from '@/lib/firebase/notification'
 import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
-import { PaymentScreen } from '@/src/screens/StripePaymentScreen'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
-import { CallControllerScreen } from '../src/screens/CallControllerScreen'
-import { getDeviceToken, registerForPushNotificationsAsync } from '@/lib/firebase/notification'
-import messaging from '@react-native-firebase/messaging';
 
 // Get the full width and height of the screen
 

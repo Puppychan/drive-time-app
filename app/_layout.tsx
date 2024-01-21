@@ -7,11 +7,17 @@ export default function _layout() {
       <Stack.Screen
         name="index"
         options={{
-          title: 'Home'
+          headerShown: false
         }}
       />
       <Stack.Screen
         name="(user)"
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="(public)"
         options={{
           headerShown: false
         }}

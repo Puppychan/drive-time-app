@@ -45,7 +45,7 @@ const HomeScreen = () => {
   const onClickSuggestions = () => {
     router.push('/driver/register/book_driver')
   }
-  
+
   const onClickInstruction = () => {
     // navigation.navigate(link)
     router.push('./(user)/driver/register/review')
@@ -80,9 +80,12 @@ const HomeScreen = () => {
 
           {/* Recent card */}
           <Button
-            title='Register Driver'
-            onPress={() => {router.push('/driver/register')}}
-          />
+            onPress={() => {
+              router.push('/driver/register')
+            }}
+          >
+            Register Driver
+          </Button>
 
           {/* Explore Nearby Card */}
           <FullScreenCard
@@ -101,11 +104,12 @@ const HomeScreen = () => {
             {/* Add see more if more than 4 suggestions */}
             {SUGGESTION_LIST.length > 4 && (
               <Button
-                title="See More"
                 onPress={() => {
                   onClickSeeMore('suggestion')
                 }}
-              />
+              >
+                See More
+              </Button>
             )}
           </View>
           <FlatList
@@ -135,11 +139,12 @@ const HomeScreen = () => {
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
               <Button
-                title="See More"
                 onPress={() => {
                   onClickSeeMore('instruction')
                 }}
-              />
+              >
+                See More
+              </Button>
             )}
           </View>
           <FlatList
