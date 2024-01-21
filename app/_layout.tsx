@@ -16,6 +16,12 @@ export default function _layout() {
         }}
       />
       <Stack.Screen
+        name="(user)/driver/dashboard"
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
         name="(public)"
         options={{
           headerShown: false

@@ -4,6 +4,7 @@ import { Image, StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { AccountRole } from '@/lib/models/account.model'
 import {
   selectDestination,
@@ -14,9 +15,9 @@ import {
 } from '@/src/slices/navSlice'
 
 import LoadingBar from './FindingDriverScreen'
-import RideSelectionCard from '../components/map-screen/RideSelectionCard'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
+import RideSelectionCard from '../components/map-screen/RideSelectionCard'
 
 const nearbyDrivers: Driver[] = [
   {
@@ -102,8 +103,6 @@ const MapScreen = () => {
     getTravelTime()
   }),
     [origin, destination, apiKey]
-
-  
 
   return (
     <View style={{ flex: 1 }}>
