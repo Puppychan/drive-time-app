@@ -28,7 +28,6 @@ function handleVoucherException(error: any, type: string) {
   )
 }
 
-
 export async function addVoucher(voucherData: Voucher) {
   try {
     // find if admin exist

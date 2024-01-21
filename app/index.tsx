@@ -6,7 +6,7 @@ import { User } from 'firebase/auth'
 import { useEffect, useState, useCallback } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Onboarding from 'react-native-onboarding-swiper'
-import { Button, Provider as PageProvider } from 'react-native-paper'
+import { Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { auth } from '@/lib/firebase/firebase'
@@ -16,9 +16,6 @@ import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 import { store } from '@/store'
 
 import { generateData } from '../lib/data/generate-all.data'
-import { fetchVouchers } from '@/lib/services/voucher.service'
-import { renderBookingsByStatus } from '@/lib/services/booking.service'
-import { BookingStatus } from '@/lib/models/booking.model'
 
 // Get the full width and height of the screen
 
@@ -108,15 +105,6 @@ export default function App() {
         </View>
         */}
         <View style={styles.container}>
-          <Button
-            style={{ paddingTop: 50 }}
-            onPress={async () => {
-              // await renderBookingsByStatus(BookingStatus.Success)
-              await fetchVouchers()
-            }}
-          >
-            Fetch test
-          </Button>
           <Onboarding
             onDone={handleDone}
             onSkip={handleDone}
