@@ -23,7 +23,6 @@ import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
-import { FavoriteLocation } from '../models/favorite-location.model'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -175,7 +174,6 @@ const isUniqueUser = async (userId: string, email: string, username: string) => 
     const results = await Promise.all(queries.map(getDocs))
     return results.every((querySnapshot) => querySnapshot.empty)
   } catch (error) {
-    // TODO: handle error exception
     throw error
   }
 }

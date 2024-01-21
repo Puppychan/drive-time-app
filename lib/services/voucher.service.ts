@@ -7,8 +7,8 @@ import { ResponseDto } from '@/common/response.dto'
 import { CollectionName } from '../common/collection-name.enum'
 import { NotFoundException } from '../common/handle-error.interface'
 import { db } from '../firebase/firebase'
-import { Voucher, VoucherApplyType, AddtionalApplyType } from '../models/voucher.model'
-import { Transport } from '../models/transport.model'
+import { TransportType } from '../models/transport.model'
+import { Voucher, AddtionalApplyType } from '../models/voucher.model'
 
 function handleVoucherException(error: any, type: string) {
   const errorCode = error?.code
@@ -43,8 +43,11 @@ export async function addVoucher(voucherData: Voucher) {
   }
 }
 
-export async function getVoucherDetails(voucherId: string) {
+export async function getVoucherDetails(voucherId: string | null | undefined) {
   try {
+    // if voucher id is falsy -> does not exist
+    if (!voucherId) throw new NotFoundException('Voucher not found')
+    // start finding
     const voucherRef = doc(db, CollectionName.VOUCHERS, voucherId)
     const voucherSnapshot = await getDoc(voucherRef)
 
@@ -64,9 +67,35 @@ export async function getVoucherDetails(voucherId: string) {
   }
 }
 
-export function isVoucherCompatibleWithTransport(
-  transportType: Transport,
-  voucherType: VoucherApplyType | null | undefined
-) {
-  if (!voucherType || voucherType == AddtionalApplyType.ALL || voucherType == transportType)
+export function isAppliedVoucherValid(transportType: TransportType, voucher: Voucher) {
+  // validate voucher apply type valid
+  const voucherType = voucher.applyType
+  if (!(!voucherType || voucherType === AddtionalApplyType.ALL || voucherType === transportType))
+    return false
+
+  // validate voucher expire or started
+  const expirationDate = new Date(voucher.expireDate)
+  const startDate = new Date(voucher.startDate)
+  const currentDate = new Date()
+  if (currentDate >= expirationDate || currentDate <= startDate) return false
+
+  return true
+}
+
+export function renderNewDiscountPrice(currentPrice: number, currentVoucher: Voucher) {
+  // TODO: add validate month package later
+
+  return currentPrice * ((100 - currentVoucher.discountPercent) / 100)
+}
+
+export function revertDiscountPrice(discountedPrice: number, currentVoucher: Voucher) {
+  if (currentVoucher.discountPercent === 0) {
+    // Avoid division by zero
+    return discountedPrice
+  }
+
+  // TODO: add validate month package later
+
+  // Calculate the original price before discount
+  return discountedPrice / ((100 - currentVoucher.discountPercent) / 100)
 }

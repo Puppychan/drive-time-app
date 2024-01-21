@@ -1,10 +1,5 @@
 import { Timestamp } from 'firebase/firestore'
 
-export enum BookingSortField {
-  CREATED_AT = 'createdAt',
-  
-} 
-
 export enum BookingStatus {
   Finding = 'Finding',
   Tracking = 'Tracking',

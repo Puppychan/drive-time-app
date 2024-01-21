@@ -1,4 +1,5 @@
 import {
+  DocumentReference,
   Query,
   Timestamp,
   Transaction,
@@ -8,7 +9,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  increment,
   orderBy,
   query,
   runTransaction,
@@ -23,35 +23,52 @@ import { ResponseDto } from '@/common/response.dto'
 import { SortOrder } from '@/common/sort.enum'
 
 import { getAccountById, updateCustomerMembershipPoints } from './account.service'
-import { updateMembership, upgradeMembershipIfEligible } from './membership.service'
+import { upgradeMembershipIfEligible } from './membership.service'
+import {
+  getVoucherDetails,
+  isAppliedVoucherValid,
+  renderNewDiscountPrice,
+  revertDiscountPrice
+} from './voucher.service'
 import { CollectionName } from '../common/collection-name.enum'
-import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
+import { BadRequestException, NotFoundException } from '../common/handle-error.interface'
 import { db } from '../firebase/firebase'
 import { Booking, BookingStatus } from '../models/booking.model'
-import { NotFoundException } from '../common/handle-error.interface'
 
-export async function applyVoucherToBooking(bookingId: string) {
+export async function applyVoucherToBooking(bookingId: string, voucherId: string) {
   try {
-    const bookingRef = doc(db, 'bookings', bookingId)
-    const bookingSnapshot = await getDoc(bookingRef)
-
-    if (!bookingSnapshot.exists()) {
-      throw new NotFoundException('Booking not found')
-    }
-
-    const booking = bookingSnapshot.data()
+    const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
+    const booking = await getSnapshotData(bookingRef)
+    // render driver using id
     const driverResponse = await getAccountById(booking.driverId)
 
-    if (driverResponse.code === ResponseCode.OK) {
-      if (isVoucherCompatibleWithTransport(driver.transportType, voucherType)) {
-        // Apply voucher to booking
-        await updateDoc(bookingRef, {
-          voucherId: voucherId
-        })
-        console.log(`Voucher applied to booking ${bookingId}`)
-      } else {
-        throw new Error('Voucher is not compatible with the driver’s transport type')
-      }
+    if (driverResponse.code !== ResponseCode.OK) {
+      // error getting driver
+      return driverResponse
+    }
+    // if success
+    // get driver body
+    const driverData = driverResponse.body.data
+    // render voucher
+    const voucherResponse = await getVoucherDetails(voucherId)
+    // if render voucher details successfully
+    if (voucherResponse.code !== ResponseCode.OK) {
+      // error getting voucher
+      return voucherResponse
+    }
+    // get voucher body if success
+    const voucherData = voucherResponse.body.data
+    // validate again: if compact with required type - in case validation in front end provides bugs
+    if (isAppliedVoucherValid(driverData.transportType, voucherData)) {
+      // Apply voucher to booking
+      await updateDoc(bookingRef, {
+        voucherId,
+        discountPrice: renderNewDiscountPrice(booking.discountPrice, voucherData),
+        updatedAt: Timestamp.now()
+      })
+      console.log(`Voucher applied to booking ${bookingId}`)
+    } else {
+      throw new BadRequestException('Voucher is not compatible with the driver`s transport type')
     }
   } catch (error) {
     console.error(`Error applying voucher to booking: ${error}`)
@@ -81,9 +98,21 @@ export async function addDestinationToRide(bookingId: string, newDestination: st
 export async function deleteVoucherInBooking(bookingId: string) {
   try {
     const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
+    const booking = await getSnapshotData(bookingRef)
+
+    // render voucher
+    const currentVoucherResponse = await getVoucherDetails(booking.voucherId)
+    // voucher has error -> return
+    if (currentVoucherResponse.code !== ResponseCode.OK) return currentVoucherResponse
+    const voucherData = currentVoucherResponse.body.data
+
+    // start updating
     await updateDoc(bookingRef, {
-      voucherId: null
+      voucherId: null,
+      discountPrice: revertDiscountPrice(booking.discountPrice, voucherData),
+      updatedAt: Timestamp.now()
     })
+    // return result
     console.log(`Voucher removed from booking ${bookingId}`)
     return new ResponseDto(ResponseCode.OK, `Voucher removed from booking ${bookingId}`, null)
   } catch (error) {
@@ -95,8 +124,15 @@ export async function deleteVoucherInBooking(bookingId: string) {
 export async function deleteDestinationInRide(bookingId: string, destination: string) {
   try {
     const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
+    const booking = await getSnapshotData(bookingRef)
+    // validate current destination ID list
+    if (booking.destinationList.length === 1)
+      throw new BadRequestException('The destination ID list can`t be empty')
+    // start updating
     await updateDoc(bookingRef, {
-      destinationList: arrayRemove(destination)
+      destinationList: arrayRemove(destination),
+      // TODO: add new price calculation
+      updatedAt: Timestamp.now()
     })
     console.log(`Destination ${destination} removed from booking ${bookingId}`)
     return new ResponseDto(
@@ -114,8 +150,10 @@ export async function deleteDestinationInRide(bookingId: string, destination: st
 export async function addCustomerToRide(bookingId: string, newCustomerId: string) {
   try {
     const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
+    const booking = await getSnapshotData(bookingRef)
     await updateDoc(bookingRef, {
       customerIdList: arrayUnion(newCustomerId),
+      discountPrice: splitBillToCustomer(booking.customerIdList.length + 1, booking.discountPrice),
       updatedAt: Timestamp.now()
     })
     return new ResponseDto(ResponseCode.OK, `Add passenger to passenger list successfully`, null)
@@ -126,9 +164,15 @@ export async function addCustomerToRide(bookingId: string, newCustomerId: string
 
 export async function deleteCustomerInRide(bookingId: string, customerId: string) {
   try {
-    const bookingRef = doc(db, 'bookings', bookingId)
+    const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
+    const booking = await getSnapshotData(bookingRef)
+    // validate current customer ID list
+    if (booking.customerIdList.length === 1)
+      throw new BadRequestException('The customer ID list can`t be empty')
+    // start updating
     await updateDoc(bookingRef, {
-      customerIdList: arrayRemove(customerId)
+      customerIdList: arrayRemove(customerId),
+      discountPrice: splitBillToCustomer(booking.customerIdList.length - 1, booking.discountPrice)
     })
     console.log(`Customer ${customerId} removed from booking ${bookingId}`)
     return new ResponseDto(
@@ -200,11 +244,7 @@ export async function updateBookingStatus(
     const transactionResult = await runTransaction(db, async (transaction) => {
       // Retrieve the booking
       const bookingRef = doc(db, CollectionName.BOOKINGS, bookingId)
-      const bookingSnapshot = await getDoc(bookingRef)
-      if (!bookingSnapshot.exists()) {
-        throw new NotFoundException('Booking does not exist')
-      }
-      const booking = bookingSnapshot.data() as Booking
+      const booking = await getSnapshotData(bookingRef)
       // Check if the booking can be required status
       if (booking.status !== newStatus) {
         // Update the booking status to required status and set updated time
@@ -350,6 +390,7 @@ function getValidSortField(sortField: string) {
   const validSortFields = ['createdAt', 'price', 'updatedAt']
   return validSortFields.includes(sortField) ? sortField : 'updatedAt'
 }
+
 // Helper function to execute query and map results
 async function getQuerySnapshotData(query: Query) {
   const querySnapshot = await getDocs(query)
@@ -359,6 +400,20 @@ async function getQuerySnapshotData(query: Query) {
     `Render list of booking successfully`,
     new SuccessResponseDto(itemList, '')
   )
+}
+
+async function getSnapshotData(ref: DocumentReference): Promise<Booking> {
+  const bookingSnapshot = await getDoc(ref)
+
+  if (!bookingSnapshot.exists()) {
+    throw new NotFoundException('Booking not found')
+  }
+
+  return bookingSnapshot.data() as Booking
+}
+
+function splitBillToCustomer(listLength: number, currentPrice: number) {
+  return currentPrice / listLength
 }
 
 function handleBookingException(error: any, type: string) {
