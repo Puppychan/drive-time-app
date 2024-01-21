@@ -1,6 +1,7 @@
 import { User, deleteUser } from 'firebase/auth'
 import {
   Timestamp,
+  Transaction,
   arrayUnion,
   collection,
   doc,
@@ -14,13 +15,14 @@ import {
 } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
+import { SuccessResponseDto } from '@/common/response-success.dto'
 import { ResponseDto } from '@/common/response.dto'
 
 import { CollectionName } from '../common/collection-name.enum'
+import { NotFoundException } from '../common/handle-error.interface'
+import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
-import { FavoriteLocation } from '../models/favorite-location.model'
-import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -53,15 +55,29 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
   }
 }
 
-export const updateCustomerMembership = async (userId: string) => {
+export const updateCustomerMembershipPoints = async (
+  userId: string,
+  transaction: null | Transaction = null
+) => {
   try {
     const customerRef = doc(db, CollectionName.ACCOUNTS, userId)
-    const customerSnapshot = await getDoc(customerRef)
-    if (customerSnapshot.exists()) {
-      await updateDoc(customerRef, {
-        membership: increment(ADD_MEMBERSHIP_POINT),
-        updatedAt: Timestamp.fromDate(new Date())
-      })
+    if (transaction) {
+      const customerSnapshot = await transaction.get(customerRef)
+      if (customerSnapshot.exists()) {
+        transaction.update(customerRef, {
+          membershipPoints: increment(ADD_MEMBERSHIP_POINT),
+          updatedAt: Timestamp.fromDate(new Date())
+        })
+      }
+    } else {
+      // if not inside transaction
+      const customerSnapshot = await getDoc(customerRef)
+      if (customerSnapshot.exists()) {
+        await updateDoc(customerRef, {
+          membership: increment(ADD_MEMBERSHIP_POINT),
+          updatedAt: Timestamp.fromDate(new Date())
+        })
+      }
     }
 
     return new ResponseDto(ResponseCode.OK, 'Membership updated successfully', null)
@@ -81,7 +97,7 @@ export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId
         updatedAt: Timestamp.fromDate(new Date())
       })
     } else {
-      throw new Error(`User with id ${userId} does not exist`)
+      throw new NotFoundException(`User with id ${userId} does not exist`)
     }
 
     return new ResponseDto(ResponseCode.OK, 'User device added successfully', null)
@@ -112,6 +128,27 @@ export async function handleUserCreationError(user: User, parentError: any): Pro
     })
 }
 
+export async function getAccountById(accountId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId)
+    const accountSnapshot = await getDoc(accountRef)
+
+    if (!accountSnapshot.exists()) {
+      throw new NotFoundException('Account not found')
+    }
+
+    const accountDetails = accountSnapshot.data()
+    return new ResponseDto(
+      ResponseCode.OK,
+      `Account found`,
+      new SuccessResponseDto(accountDetails, accountRef.id)
+    )
+  } catch (error) {
+    console.error(`Error retrieving account: ${error}`)
+    return handleUserException(error, 'Get account details')
+  }
+}
+// ------------------------------------
 function handleUserException(error: any, type: string) {
   const errorCode = error?.code
   return new ResponseDto(
@@ -120,8 +157,6 @@ function handleUserException(error: any, type: string) {
     `${type} review unsuccessfully: ${error}`
   )
 }
-
-// ------------------------------------
 const isUniqueUser = async (userId: string, email: string, username: string) => {
   try {
     const userCollection = collection(db, CollectionName.ACCOUNTS)
@@ -139,7 +174,6 @@ const isUniqueUser = async (userId: string, email: string, username: string) => 
     const results = await Promise.all(queries.map(getDocs))
     return results.every((querySnapshot) => querySnapshot.empty)
   } catch (error) {
-    // TODO: handle error exception
     throw error
   }
 }

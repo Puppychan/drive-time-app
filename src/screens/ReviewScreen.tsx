@@ -7,12 +7,12 @@ import { ScrollView } from 'react-native-gesture-handler'
 
 import { auth, db } from '../../lib/firebase/firebase'
 import { Review, ReviewFrom } from '../../lib/models/review.model'
-import { CustomButton } from '../components/button/Buttons'
 import DriverInfoCard from '../components/review/ReviewCard/DriverInfoCard'
 import PaymentInfo from '../components/review/ReviewCard/PaymentInfo'
 import ReviewCard from '../components/review/ReviewCard/ReviewCard'
 import RouteInfo from '../components/review/ReviewCard/RouteInfo'
 import TripInsurance from '../components/review/ReviewCard/TripInsurance'
+import { AppButton } from '../components/button/Buttons'
 
 const ReviewScreen = () => {
   const screenWidth = Dimensions.get('window').width
@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <CustomButton title="Arrive" style={styles.customButtonStyle} onPress={addReview} />
+      <AppButton title="Arrive" style={styles.customButtonStyle} onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>

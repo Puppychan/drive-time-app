@@ -1,5 +1,6 @@
 import {
   Timestamp,
+  Transaction,
   collection,
   deleteDoc,
   doc,
@@ -8,6 +9,7 @@ import {
   limit,
   orderBy,
   query,
+  runTransaction,
   setDoc,
   updateDoc,
   where
@@ -21,6 +23,7 @@ import { CollectionName } from '../common/collection-name.enum'
 import { db } from '../firebase/firebase'
 import { Customer } from '../models/customer.model'
 import { Membership } from '../models/membership.model'
+import { NotFoundException } from '../common/handle-error.interface'
 
 function handleMembershipException(error: any, type: string) {
   const errorCode = error?.code
@@ -31,17 +34,19 @@ function handleMembershipException(error: any, type: string) {
   )
 }
 
-export async function addMembership(membershipData: Membership) {
+export async function addMembership(membershipData: Membership): Promise<ResponseDto> {
   try {
-    // add created at and updated at
-    const date = new Date()
-    membershipData.createdAt = Timestamp.fromDate(date)
-    membershipData.updatedAt = Timestamp.fromDate(date)
+    await runTransaction(db, async () => {
+      // add created at and updated at
+      const date = new Date()
+      membershipData.createdAt = Timestamp.fromDate(date)
+      membershipData.updatedAt = Timestamp.fromDate(date)
 
-    // Create a reference to the document with the custom ID
-    const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipData.membershipId)
-    // Set the data for the document with the custom ID
-    await setDoc(membershipRef, membershipData)
+      // Create a reference to the document with the custom ID
+      const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipData.membershipId)
+      // Set the data for the document with the custom ID
+      await setDoc(membershipRef, membershipData)
+    })
 
     // Return success response
     return new ResponseDto(
@@ -54,13 +59,16 @@ export async function addMembership(membershipData: Membership) {
     return handleMembershipException(error, 'Saving')
   }
 }
-export const upgradeMembershipIfEligible = async (accountId: string) => {
+export const upgradeMembershipIfEligible = async (
+  accountId: string,
+  transaction: null | Transaction = null
+): Promise<ResponseDto> => {
   try {
     // Get the account document to find the user's current membershipPoints and membershipId
     const accountRef = doc(db, CollectionName.ACCOUNTS, accountId)
     const accountDoc = await getDoc(accountRef)
     if (!accountDoc.exists()) {
-      throw new Error('Account does not exist')
+      throw new NotFoundException('Account does not exist')
     }
     const account = accountDoc.data() as Customer
 
@@ -95,9 +103,11 @@ export const upgradeMembershipIfEligible = async (accountId: string) => {
         'Successfully update membership for member',
         new SuccessResponseDto(null, accountRef.id)
       )
+    } else {
+      return new ResponseDto(ResponseCode.OK, 'This membership is the highest one', null)
     }
   } catch (err) {
-    handleMembershipException(err, 'Update membership for member')
+    return handleMembershipException(err, 'Update membership for member')
   }
 }
 
@@ -107,7 +117,7 @@ export const getNextHigherMembershipId = async (currentMembershipId: string) => 
     const currentMembershipRef = doc(db, CollectionName.MEMBERSHIPS, currentMembershipId)
     const currentMembershipDoc = await getDoc(currentMembershipRef)
     if (!currentMembershipDoc.exists()) {
-      throw new Error('Current membership does not exist')
+      throw new NotFoundException('Current membership does not exist')
     }
     const currentMembership = currentMembershipDoc.data() as Membership
 

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native'
 
 import { Voucher } from '@/lib/models/voucher.model'
 import { fetchVouchers } from '@/lib/services/voucher.service'
+import { ResponseCode } from '@/common/response-code.enum'
 
 export const VoucherScreen = () => {
   const [vouchers, setVouchers] = useState<Voucher[]>([])
@@ -10,10 +11,13 @@ export const VoucherScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
-        const vouchersData = await fetchVouchers()
-        // setVouchers(vouchersData)
-
+        const vouchersResponse = await fetchVouchers()
+        if (vouchersResponse.code !== ResponseCode.OK) {
+            ToastAndroid.show(vouchersResponse.message ?? 'Render voucher list unsuccessfully', ToastAndroid.SHORT);
+        }
+        else {
+            setVouchers(vouchersResponse.body.data)
+        }
 
       } catch (error) {
         console.error('Error fetching vouchers:', error)
