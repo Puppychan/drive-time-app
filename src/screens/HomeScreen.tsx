@@ -29,6 +29,7 @@ import { auth } from '@/lib/firebase/firebase'
 import { User } from 'firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
+import { signOut } from '@/lib/firebase/auth'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
@@ -105,11 +106,12 @@ const HomeScreen = () => {
             }} */}
 
           <Button
-            onPress={() => {
-              router.push('/driver/register')
+            onPress={async () => {
+              await signOut()
+              router.push('/signin')
             }}
           >
-            Register Driver
+            Sign Out
           </Button>
 
           {/* Explore Nearby Card */}
