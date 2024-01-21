@@ -1,4 +1,12 @@
-import { DocumentData, DocumentSnapshot, Timestamp, collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import {
+  DocumentData,
+  DocumentSnapshot,
+  Timestamp,
+  collection,
+  doc,
+  getDocs,
+  setDoc
+} from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -16,7 +24,6 @@ function handleVoucherException(error: any, type: string) {
     `${type} voucher unsuccessfully: ${error}`
   )
 }
-
 
 export async function addVoucher(voucherData: Voucher) {
   try {
@@ -42,21 +49,21 @@ export async function addVoucher(voucherData: Voucher) {
   }
 }
 
-export const  fetchVouchers = async () => {
+export const fetchVouchers = async () => {
   try {
-    const vouchersCollection = collection(db, CollectionName.VOUCHERS); // Replace 'vouchers' with your actual collection name
-    const querySnapshot = await getDocs(vouchersCollection);
+    const vouchersCollection = collection(db, CollectionName.VOUCHERS) // Replace 'vouchers' with your actual collection name
+    const querySnapshot = await getDocs(vouchersCollection)
 
-    const vouchersList: Voucher[] = [];
+    const vouchersList: Voucher[] = []
     querySnapshot.forEach((doc: DocumentSnapshot<DocumentData>) => {
-      const voucherData = { id: doc.id, ...(doc.data() as Voucher) };
-      vouchersList.push(voucherData);
-    });
+      const voucherData = { id: doc.id, ...(doc.data() as Voucher) }
+      vouchersList.push(voucherData)
+    })
 
     // return vouchersList;
-    console.log('querySnapshot',vouchersCollection);
+    console.log('querySnapshot', vouchersCollection)
   } catch (error) {
-    console.error('Error fetching vouchers2222:', error);
-    throw error; // You might want to handle this error in your application
+    console.error('Error fetching vouchers2222:', error)
+    throw error // You might want to handle this error in your application
   }
 }

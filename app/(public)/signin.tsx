@@ -1,3 +1,4 @@
+import { firebase } from '@react-native-firebase/messaging'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
@@ -5,21 +6,22 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  ToastAndroid,
   TouchableOpacity,
   View,
   Image,
-  Alert
+  Alert,
+  ToastAndroid
 } from 'react-native'
 
 import { ResponseCode } from '@/common/response-code.enum'
-import { signIn } from '@/lib/firebase/auth'
+import { signIn, resetPasswordWithEmail } from '@/lib/firebase/auth'
+import { fetchVouchers } from '@/lib/services/voucher.service'
 import CheckBox from '@/src/components/input/Checkbox'
+import BottomSheet from '@/src/components/modal/bottom-sheet'
 
 import { Colors, specialColors } from '../../components/Colors'
 import FontSize from '../../components/FontSize'
 import Spacing from '../../components/Spacing'
-import BottomSheet from '@/src/components/modal/bottom-sheet'
 
 export default function Page() {
   const router = useRouter()
@@ -28,9 +30,14 @@ export default function Page() {
   const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState(false)
 
+  const handleResetPassword = (email: string) => {
+    resetPasswordWithEmail(email)
+  }
   const handleRegister = () => router.push('/signup')
 
   const handleLogin = async () => {
+    const vouchers = await fetchVouchers()
+    console.log(vouchers)
     if (email.trim() === '') {
       ToastAndroid.show('Email is required', ToastAndroid.SHORT)
       return
@@ -61,10 +68,8 @@ export default function Page() {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false)
 
   const handleBottomSheetSubmit = (email: string) => {
-    // Do something with the email state, e.g., send it to the server
-    console.log('Submitted email:', email)
+    handleResetPassword(email)
 
-    // Close the BottomSheet
     setBottomSheetVisible(false)
   }
 
