@@ -9,6 +9,11 @@ export enum AccountRole {
 
 export const accountRoleList = [AccountRole.Admin, AccountRole.Driver, AccountRole.Customer]
 
+export const genderList = [
+  { label: 'Female', value: 'Female' },
+  { label: 'Male', value: 'Male' },
+  { label: 'Other', value: 'Other' }
+]
 
 export interface Account {
   userId: string

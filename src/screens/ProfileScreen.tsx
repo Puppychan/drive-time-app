@@ -16,14 +16,20 @@ import { Constant } from '@/components/Constant'
 import { router } from 'expo-router'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import SOSDetailModal from '../components/modal/sos-detail'
+import EditProfileModal from '../components/modal/edit-profile'
 
 export const UserProfileScreen = () => {
   const [user, setUser] = useState<User | null>()
   const [role, setRole] = useState<string>(AccountRole.Customer)
   const [sosModalVisible, setSOSModalVisible] = useState(false)
+  const [editProfileVisible, setEditProfileVisible] = useState(false)
 
   const handleSOSSubmit = () => {
     setSOSModalVisible(false)
+  }
+
+  const handlEditProfileSubmit = () => {
+    setEditProfileVisible(false)
   }
 
   useEffect(() => {
@@ -57,6 +63,10 @@ export const UserProfileScreen = () => {
     );
   }
 
+  const handleEditProfile = () => {
+    setEditProfileVisible(true)
+  }
+
   return (
     <ScrollView>
       <View style={styles.topContainer}>
@@ -84,9 +94,11 @@ export const UserProfileScreen = () => {
         <ActionList imagePath="ic_gift" title="Send a gift" />
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_fav" title="Favourites" />
-        <ActionList imagePath="ic_setting" title="Settings" />
+        <ActionList imagePath="ic_setting" title="Edit profile" onPress={handleEditProfile} />
         <ActionList imagePath="ic_about" title="About us" />
       </View>
+      <EditProfileModal isVisible={editProfileVisible} onSubmit={handlEditProfileSubmit} />
+
     </ScrollView>
   )
 }

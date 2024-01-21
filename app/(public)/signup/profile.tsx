@@ -9,21 +9,19 @@ import { AppDropDown } from '@/src/components/menu/DropDownMenu'
 import { auth } from '@/lib/firebase/firebase'
 import { deleteUser, User } from 'firebase/auth'
 import { addUser, signOut } from '@/lib/firebase/auth'
-import { Account, AccountRole } from '@/lib/models/account.model'
+import { Account, AccountRole, genderList } from '@/lib/models/account.model'
 import { uploadImage } from '@/lib/firebase/storage'
 import { Timestamp } from 'firebase/firestore'
 import { AVATAR_REF } from '@/components/Constant'
 import { ResponseCode } from '@/common/response-code.enum'
 import { AccountType } from '@/lib/common/model-type'
-import { ScrollView } from 'react-native-gesture-handler'
-import { handleUserCreationError } from '@/lib/services/account.service'
 import FontSize from '@/components/FontSize'
 
-const genderList = [
-  { label: 'Female', value: 'Female' },
-  { label: 'Male', value: 'Male' },
-  { label: 'Other', value: 'Other' }
-]
+// const genderList = [
+//   { label: 'Female', value: 'Female' },
+//   { label: 'Male', value: 'Male' },
+//   { label: 'Other', value: 'Other' }
+// ]
 
 export default function Page() {
   const { uid, role } = useLocalSearchParams<{ uid: string; role?: string }>();

@@ -14,10 +14,10 @@ const imagePaths: Record<string, any> = {
   ic_about: require(`${basePath}ic_info.png`)
 }
 
-export const ActionList = ({ imagePath = 'ic_message', title = 'Messages' }) => {
+export const ActionList = ({ imagePath = 'ic_message', title = 'Messages', onPress = () => {}}) => {
   const selectedImage = imagePaths[imagePath]
   return (
-    <TouchableOpacity style={styles.btnContainer}>
+    <TouchableOpacity style={styles.btnContainer} onPress={onPress}>
       <Image style={styles.btnIcon as ImageStyle} source={selectedImage} />
 
       <Text style={styles.btnText}> {title}</Text>

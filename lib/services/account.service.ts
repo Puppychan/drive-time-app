@@ -72,6 +72,28 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
   }
 }
 
+
+export const updateUserProfile = async (user: User, additionalUserInfo: AccountType) => {
+  try {
+
+    // add created at and updated at
+    const currentDate = new Date()
+    additionalUserInfo.updatedDate = Timestamp.fromDate(currentDate)
+    additionalUserInfo.userId = user.uid
+
+
+    // Create a reference to the document with the custom ID
+    const accountRef = doc(db, CollectionName.ACCOUNTS, additionalUserInfo.userId)
+    console.log("accountRef: ", accountRef)
+    // Set the data for the document with the custom ID
+    await setDoc(accountRef, additionalUserInfo)
+    return new ResponseDto(ResponseCode.OK, "Updated", accountRef)
+  } catch (error) {
+    console.log('~~~~~ Errorrr addUserToDatabase', error)
+    throw error
+  }
+}
+
 export const updateCustomerMembershipPoints = async (
   userId: string,
   transaction: null | Transaction = null
