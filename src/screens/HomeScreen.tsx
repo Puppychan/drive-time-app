@@ -25,10 +25,8 @@ import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
 import Footer from '../components/footer/Footer'
+import { auth } from '@/lib/firebase/firebase'
 
-// TODO: change to dynamic later
-const homeInfo = '123 Main St'
-const usernameInfo = 'John Doe'
 
 const HomeScreen = () => {
   const navigation = useNavigation()
@@ -58,14 +56,13 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Title style={styles.welcome}>Welcome, {usernameInfo}</Title>
+          <Title style={styles.welcome}>Welcome, {auth.currentUser?.email}</Title>
 
           <SearchInput />
 
           {/* Home section */}
-          <TouchableOpacity onPress={onClickHomeSection}>
+          {/* <TouchableOpacity onPress={onClickHomeSection}>
             <View style={{ ...horizontalLeftView, gap: 15 }}>
-              {/* <MaterialIcons name="home" size={24} color="black" /> */}
               <CircleIcon
                 name="home"
                 size={24}
@@ -79,7 +76,7 @@ const HomeScreen = () => {
               </View>
               <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Recent card */}
 
@@ -182,7 +179,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 15,
-    paddingVertical: 25
+    paddingVertical: 35
   },
   insideContainer: {
     // padding: 15,
