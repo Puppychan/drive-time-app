@@ -5,8 +5,12 @@ import { Voucher } from '@/lib/models/voucher.model'
 import { fetchVouchers } from '@/lib/services/voucher.service'
 import { ResponseCode } from '@/common/response-code.enum'
 
+interface RenderItemType {
+  item: Voucher
+}
+
 export const VoucherScreen = () => {
-  const [vouchers, setVouchers] = useState<Voucher[]>([])
+  const [vouchers, setVouchers] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +35,7 @@ export const VoucherScreen = () => {
     <View style={{ flex: 1 }}>
       <FlatList
         data={vouchers}
-        renderItem={({ item }) => (
+        renderItem={({ item }: RenderItemType) => (
           <View style={{ height: 100, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity
               // onPress={() => setSelected(item)}
@@ -42,10 +46,8 @@ export const VoucherScreen = () => {
                 //   }
               ]}
             >
-
-                <Image style={styles.driveImage} source={require('../../assets/car.png')} />
-                <View style={styles.driveDetails}>
-
+              <Image style={styles.driveImage} source={require('../../assets/car.png')} />
+              <View style={styles.driveDetails}>
                 <Text style={styles.driveTitle}>{item.name}</Text>
                 <Text>1 day</Text>
               </View>
@@ -58,7 +60,6 @@ export const VoucherScreen = () => {
 }
 
 const styles = StyleSheet.create({
-
   driveItem: {
     flexDirection: 'row',
     backgroundColor: '#ffffff',

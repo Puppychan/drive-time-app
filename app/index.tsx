@@ -80,7 +80,7 @@ export default function App() {
   }
 
   const handleDone = () => {
-    router.replace('/signin')
+    router.replace('/(user)/driver/dashboard')
   }
   const doneButton = ({ ...props }) => {
     return (

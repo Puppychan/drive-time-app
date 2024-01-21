@@ -1,117 +1,78 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  where
-} from 'firebase/firestore'
-import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react'
-import { View } from 'react-native'
-import { GiftedChat, IMessage } from 'react-native-gifted-chat'
+import { useEffect, useState } from 'react'
+import { View, ActivityIndicator } from 'react-native'
+import { collection, getDocs, addDoc, doc, getDoc, query, where } from 'firebase/firestore'
 
 import { ChatHeader } from '../components/chat/header/ChatHeader'
 import { ChatInputField } from '../components/chat/input/ChatInputField'
 import { ChatMessageView } from '../components/chat/message/MessageView'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
-import { db } from '../../lib/firebase/firebase'
-import { CollectionName } from '../../lib/common/collection-name.enum'
-import { Account } from '../../lib/models/account.model'
+import { db } from '@/lib/firebase/firebase'
 
-const ChatScreen: React.FC = () => {
-  const [messages, setMessages] = useState<IMessage[]>([])
-  const TEST_CHAT_ID = '12347'
+export type Chat = {
+  id: string
+  members: string[]
+  createdAt: number
+}
+
+export type Message = {
+  id: string
+  chatId: string
+  content: string
+  senderId: string
+  senderName: string
+  createdAt: number
+}
+
+export const ChatScreen = () => {
+  const testChatId = 'test-chat-id'
+
+  const [loading, setLoading] = useState(true)
+  const [chat, setChat] = useState<Chat | null>(null)
+  const [messages, setMessages] = useState<Message[]>([])
 
   useEffect(() => {
-    // Subscribe to the Firestore collection on component mount
-    const collectionRef = collection(db, CollectionName.CHATS)
-    const q = query(
-      collectionRef,
-      where('chatId', '==', TEST_CHAT_ID),
-      orderBy('createdAt', 'desc')
-    )
+    const fetchChatAndMessages = async () => {
+      // Fetch chat
+      const chatDoc = doc(db, 'chats', testChatId)
+      const chatSnapshot = await getDoc(chatDoc)
+      const chatData = chatSnapshot.data() as Chat
+      setChat(chatData)
 
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      //Update state with Firestore data
-      const chatData = await Promise.all(
-        snapshot.docs.map(async (doc) => {
-          const userData = await getUserAccount(doc.data().user)
-          return {
-            _id: doc.id,
-            text: doc.data().text,
-            user: userData as Account,
-            createdAt: doc.data().createdAt.toDate(),
-            chatId: doc.data().chatId
-          }
-        })
-      )
+      // Fetch messages filtered by chat
+      const messagesQuery = query(collection(db, 'messages'), where('chatId', '==', testChatId))
+      const messagesSnapshot = await getDocs(messagesQuery)
+      const fetchedMessages = messagesSnapshot.docs.map((doc) => doc.data())
+      setMessages(fetchedMessages.reverse() as Message[])
 
-      setMessages(chatData)
-    })
+      setLoading(false)
+    }
 
-    // Cleanup the listener when the component unmounts or changes
-    return () => unsubscribe()
+    fetchChatAndMessages()
   }, [])
 
-  const getUserAccount = async (userId: string) => {
-    try {
-      // Assuming you have initialized Firebase with your configuration
-      const userCollection = collection(db, 'accounts') // Replace 'accounts' with your actual collection name
-
-      // Use a query to retrieve the user with the specified userId
-      const q = query(userCollection, where('_id', '==', userId))
-      const querySnapshot = await getDocs(q)
-
-      if (!querySnapshot.empty) {
-        // If there is a matching document, directly access its data
-        const userAccountData = querySnapshot.docs[0].data()
-        return userAccountData
-      } else {
-        console.log('User Account not found for userId:', userId)
-        return null
-      }
-    } catch (error) {
-      console.error('Error fetching user account:', error)
-      throw error // You might want to handle the error according to your application's needs
-    }
+  const onSent = async (message: Message) => {
+    console.log('onSent', message)
+    const messagesCollection = collection(db, 'messages')
+    await addDoc(messagesCollection, message)
+    setMessages((prevMessages) => [...prevMessages, message])
   }
 
-  const onSend = useCallback(async (newMessages: IMessage[] = []) => {
-    // Update state with the new messages
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages))
-
-    const { _id, createdAt, text, user, chatId } = newMessages[0]
-
-    //Add new message to Firestore
-    try {
-      const docRef = await addDoc(collection(db, CollectionName.CHATS), {
-        id: _id.toString(), // Convert to string if needed
-        createdAt,
-        text,
-        user: user._id.toString(),
-        chatId: TEST_CHAT_ID
-      })
-
-      // If you need the ID of the newly added document, you can log it
-      console.log('Document added with ID: ', docRef.id)
-    } catch (error) {
-      console.error('Error adding document: ', error)
-    }
-  }, [])
+  if (loading) {
+    return (
+      <View style={{ height: '100%', marginTop: 100 }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )
+  }
 
   return (
-    <View style={{ flex: 1, height: 500, width: 400 }}>
-      <GiftedChat
-        messages={messages}
-        onSend={onSend}
-        user={{
-          _id: 'yl0w9YyAxxfiqwPlYcyADItMVJt2'
-        }}
-      />
+    <View style={{ height: '100%' }}>
+      <ChatHeader />
+      <View style={{ marginTop: 10 }}>
+        <HorizontalDivider height={2} />
+      </View>
+      <ChatMessageView messages={messages} />
+      {chat ? <ChatInputField chatId={chat.id} onSent={onSent} /> : null}
     </View>
   )
 }
-export default ChatScreen

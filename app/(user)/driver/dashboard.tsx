@@ -1,10 +1,10 @@
 import { View } from 'react-native'
 
-import { ChatScreen } from '@/src/screens/ChatScreen'
+import { DriverDashBoardScreen } from '@/src/screens/driver/DashBoardScreen'
 export default function Page() {
   return (
     <View>
-      <ChatScreen />
+      <DriverDashBoardScreen />
     </View>
   )
 }
