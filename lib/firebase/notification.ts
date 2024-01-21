@@ -4,7 +4,6 @@ import * as Notifications from 'expo-notifications'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { NotificationDto } from '../../common/notification.dto'
 import { firebaseApp } from './firebase'
-import Constants from 'expo-constants'
 import messaging from '@react-native-firebase/messaging'
 
 export async function registerForPushNotificationsAsync() {

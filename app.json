@@ -19,7 +19,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.drivetimeapp",
-      "googleServicesFile": "./android/google-services.json",
+      "googleServicesFile": "./android/app/google-services.json",
       "jsEngine": "hermes"
     },
     "web": {
