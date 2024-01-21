@@ -24,6 +24,7 @@ import { AppButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
+import Footer from '../components/footer/Footer'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
@@ -81,20 +82,6 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {/* Recent card */}
-
-          {/* <CustomButton
-            title="Register Driver"
-            onPress={() => {
-              router.push('/driver/register')
-            }} */}
-
-          <Button
-            onPress={() => {
-              router.push('/driver/register')
-            }}
-          >
-            Register Driver
-          </Button>
 
           {/* Explore Nearby Card */}
           <FullScreenCard
@@ -178,23 +165,15 @@ const HomeScreen = () => {
 
           {/* Discover Map */}
           <Title>Around You</Title>
-          <View>{/* <MapScreen/> */}</View>
-          {/* <Image
+          {/* <View><MapScreen/></View> */}
+          <Image
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/007/017/843/non_2x/abstract-polygon-world-map-illustration-geometric-structure-in-blue-color-for-presentation-booklet-website-and-other-design-projects-polygonal-background-free-vector.jpg'
             }}
             style={styles.planningImage}
-          /> */}
+          />
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <Appbar style={styles.bottom}>
-        <Appbar.Action icon="home" onPress={() => { }} />
-        <Appbar.Action icon="magnify" onPress={() => { }} />
-        <Appbar.Action icon="bell" onPress={() => { }} />
-        <Appbar.Action icon="account" onPress={() => { }} />
-      </Appbar>
     </View>
   )
 }
@@ -202,7 +181,8 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10
+    paddingHorizontal: 15,
+    paddingVertical: 25
   },
   insideContainer: {
     // padding: 15,

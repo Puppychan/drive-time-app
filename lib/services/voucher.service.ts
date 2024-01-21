@@ -111,29 +111,14 @@ export function revertDiscountPrice(discountedPrice: number, currentVoucher: Vou
 
 export const fetchVouchers = async () => {
   try {
-    console.log('Create doc ref')
-    const docRef = doc(db, 'vouchers', '21ccbb4c-720c-4c0b-b8b2-1858c85d2d9b')
-    console.log('Before calling get doc')
-    const docSnap = await getDoc(docRef)
-    console.log('After get doc snap')
-    if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data())
-    } else {
-      console.log('No such document!')
-    }
-
     const vouchersCollection = collection(db, CollectionName.VOUCHERS) // Replace 'vouchers' with your actual collection name
-    console.log('before getting snapshot')
     const querySnapshot = await getDocs(vouchersCollection)
-    console.log('After getting snapshot', querySnapshot)
 
     const vouchersList: Voucher[] = []
     querySnapshot.forEach((doc: DocumentSnapshot<DocumentData>) => {
       const voucherData = { id: doc.id, ...(doc.data() as Voucher) }
-      console.log('voucher Data', voucherData)
       vouchersList.push(voucherData)
     })
-    console.log('Aftndjfs ')
     // return vouchersList
     return new ResponseDto(
       ResponseCode.OK,
