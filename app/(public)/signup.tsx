@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { View, Text, Image, Pressable, TextInput, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,6 +11,7 @@ import Button from '../../src/components/button/Button'
 import COLORS from '../../src/constants/Color'
 
 const Signup = () => {
+  const router = useRouter()
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
   return (
@@ -255,13 +257,11 @@ const Signup = () => {
             marginVertical: 30
           }}
         >
-          <Text style={{ fontSize: 16, color: COLORS.black }}>Already have an account</Text>
-          <Pressable
-          // onPress={() => navigation.navigate("Login")}
-          >
+          <Text style={{ fontSize: 18, color: COLORS.black }}>Already have an account? </Text>
+          <TouchableOpacity onPress={() => router.replace('/signin')}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 18,
                 color: COLORS.primary,
                 fontWeight: 'bold',
                 marginLeft: 6
@@ -269,7 +269,7 @@ const Signup = () => {
             >
               Login
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
