@@ -9,7 +9,7 @@ export type VoucherApplyType = AddtionalApplyType | TransportType
 export interface Voucher {
   voucherId: string
   name: string
-  discountPercent: number
+  discountPercent: number // in percent %
   expireDate: Date
   startDate: Date
   code: string
@@ -17,5 +17,4 @@ export interface Voucher {
   generatedByAdmin: string
   createdAt?: Timestamp
   updatedAt?: Timestamp
-  customerUsed: string[]
 }

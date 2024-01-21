@@ -27,8 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.drivetimeapp",
-      "googleServicesFile": "./android/google-services.json",
-
+      "googleServicesFile": "./android/app/google-services.json",
       "jsEngine": "hermes",
       "permissions": [
         "android.permission.POST_NOTIFICATIONS",
@@ -69,9 +68,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "c3e83c5c-ff3d-46e4-9ef8-c5f50d2e505a"
       }
     }
   }
