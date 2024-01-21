@@ -32,9 +32,7 @@ import { Constant } from '@/components/Constant'
 import { signOut } from '@/lib/firebase/auth'
 
 // TODO: change to dynamic later
-const homeInfo = '123 Main St'
 const HomeScreen = () => {
-  const navigation = useNavigation()
   const colorsTheme = useThemeColors(DEFAULT_THEME)
   const [user, setUser] = useState<User | null>()
   const [role, setRole] = useState<string>(AccountRole.Customer)
@@ -52,7 +50,7 @@ const HomeScreen = () => {
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.push('/driver/register/driver-profile')
+    router.replace(`/${role.toLowerCase( )}/profile`)
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}

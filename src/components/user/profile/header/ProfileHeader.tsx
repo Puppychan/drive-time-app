@@ -2,12 +2,13 @@ import React from 'react'
 import { Text, View, Image } from 'react-native'
 
 import { styles } from './header-style'
+import { User } from 'firebase/auth'
 
-export const ProfileHeader = () => {
+export const ProfileHeader = ({authUser}) => {
   return (
     <View style={styles.headerContainer}>
       <View>
-        <Text style={styles.userNameTxt}>Quoc Doan</Text>
+        <Text style={styles.userNameTxt}>{authUser.displayName ?? "User"}</Text>
 
         <View style={styles.userRatingContainer}>
           <Image style={styles.ratingImg} source={require('../../../../../assets/ic_star.png')} />
