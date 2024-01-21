@@ -4,7 +4,7 @@ import Modal from 'react-native-modal'
 import { AppButton } from '../button/Buttons'
 interface BottomSheetProps {
   isVisible: boolean
-  onSubmit: (email: string) => void;
+  onSubmit: (email: string) => void
 }
 
 const { height: windowHeight } = Dimensions.get('window')
@@ -12,9 +12,8 @@ const modalHeight = windowHeight * 0.8
 const BottomSheet = ({ isVisible, onSubmit }: BottomSheetProps) => {
   const [email, setEmail] = useState<string>('')
   const handleSend = () => {
-
-    onSubmit(email);
-  };
+    onSubmit(email)
+  }
   return (
     <Modal
       isVisible={isVisible}
@@ -39,7 +38,7 @@ const BottomSheet = ({ isVisible, onSubmit }: BottomSheetProps) => {
           <View style={{ marginBottom: 10 }}>
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Recover email:</Text>
           </View>
-          <View style={{marginBottom: 10}}>
+          <View style={{ marginBottom: 10 }}>
             <TextInput
               style={styles.input}
               placeholder="E.g. huuquoc7603@gmail.com"
@@ -48,7 +47,11 @@ const BottomSheet = ({ isVisible, onSubmit }: BottomSheetProps) => {
             />
           </View>
         </View>
-        <AppButton title="Send" onPress={handleSend} style={{ height: 55, borderRadius: 8, marginBottom: 10 }} />
+        <AppButton
+          title="Send"
+          onPress={handleSend}
+          style={{ height: 55, borderRadius: 8, marginBottom: 10 }}
+        />
       </View>
     </Modal>
   )

@@ -37,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
         // packages.add(new MainReactPackage());
          // Check if the package is already included by auto-linking
         // boolean hasFirebaseAppPackage = false;
+        // packages.add(new ReactNativeFirebaseAppPackage());
         // for (ReactPackage pkg : packages) {
         //   if (pkg instanceof ReactNativeFirebaseAppPackage) {
         //     hasFirebaseAppPackage = true;

@@ -10,7 +10,6 @@ import {
   orderBy,
   query,
   runTransaction,
-  setDoc,
   updateDoc,
   where
 } from 'firebase/firestore'
@@ -19,11 +18,13 @@ import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
 import { ResponseDto } from '@/common/response.dto'
 
+import { updateCustomersWithMemberships } from './account.service'
 import { CollectionName } from '../common/collection-name.enum'
+import { BadRequestException, NotFoundException } from '../common/handle-error.interface'
 import { db } from '../firebase/firebase'
+import { AccountRole } from '../models/account.model'
 import { Customer } from '../models/customer.model'
 import { Membership } from '../models/membership.model'
-import { NotFoundException } from '../common/handle-error.interface'
 
 function handleMembershipException(error: any, type: string) {
   const errorCode = error?.code
@@ -35,30 +36,44 @@ function handleMembershipException(error: any, type: string) {
 }
 
 export async function addMembership(membershipData: Membership): Promise<ResponseDto> {
+  const membershipId = ''
+
   try {
-    await runTransaction(db, async () => {
-      // add created at and updated at
+    await runTransaction(db, async (transaction) => {
+      // Add created at and updated at timestamps
       const date = new Date()
       membershipData.createdAt = Timestamp.fromDate(date)
       membershipData.updatedAt = Timestamp.fromDate(date)
 
       // Create a reference to the document with the custom ID
       const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipData.membershipId)
+
       // Set the data for the document with the custom ID
-      await setDoc(membershipRef, membershipData)
+      transaction.set(membershipRef, membershipData)
     })
+
+    // Retrieve list of all current memberships
+    const membershipsSnapshot = await getDocs(collection(db, CollectionName.MEMBERSHIPS))
+    const memberships = membershipsSnapshot.docs.map((doc) => doc.data() as Membership)
+
+    // Update customers based on the new list of memberships
+    const updateCustomerResponse = await updateCustomersWithMemberships(memberships)
+    if (updateCustomerResponse.code !== ResponseCode.OK) {
+      return updateCustomerResponse
+    }
 
     // Return success response
     return new ResponseDto(
       ResponseCode.OK,
-      'Membership added successfully with custom ID',
-      new SuccessResponseDto(membershipData, membershipRef.id)
+      'Membership added and customers updated successfully',
+      new SuccessResponseDto(membershipData, membershipId)
     )
   } catch (error) {
-    console.error('Error adding membership with custom ID:', error)
+    console.error('Error adding membership and updating customers:', error)
     return handleMembershipException(error, 'Saving')
   }
 }
+
 export const upgradeMembershipIfEligible = async (
   accountId: string,
   transaction: null | Transaction = null
@@ -167,10 +182,31 @@ export async function updateMembership(membershipId: string, updatedData: Partia
 }
 export async function deleteMembership(membershipId: string) {
   try {
-    const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipId)
-    await deleteDoc(membershipRef)
+    // Query to check if any customers have the membershipId
+    const customersWithMembership = query(
+      collection(db, CollectionName.ACCOUNTS), // Assuming 'customers' is the name of your customers collection
+      where('role', '==', AccountRole.Customer),
+      where('membershipId', '==', membershipId) // Adjust the field if necessary
+    )
 
-    return new ResponseDto(ResponseCode.OK, 'Membership deleted successfully', null)
+    // Get documents based on query
+    const querySnapshot = await getDocs(customersWithMembership)
+
+    // Check if customers are associated with the membership
+    if (querySnapshot.empty) {
+      // No customers found, safe to delete membership
+      const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipId)
+      await deleteDoc(membershipRef)
+
+      console.log('Membership deleted successfully')
+      return new ResponseDto(ResponseCode.OK, 'Membership deleted successfully', null)
+    } else {
+      // Customers found, throw an error or handle accordingly
+      console.error('Error: Cannot delete membership as customers are associated with it.')
+      return new BadRequestException(
+        'Cannot delete membership as customers are associated with it.'
+      )
+    }
   } catch (error) {
     console.error('Error deleting membership:', error)
     return handleMembershipException(error, 'Deleting')

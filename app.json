@@ -12,7 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -20,7 +19,6 @@
       "supportsTablet": true,
       "bitcode": false
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -44,7 +42,6 @@
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.WAKE_LOCK"
       ]
-
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -60,7 +57,9 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
         }
-      ]
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging"
     ],
     "experiments": {
       "tsconfigPaths": true
@@ -68,7 +67,11 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "7f31de24-b25e-4d17-b782-01c46b410ef0"
       }
-    }
+    },
+    "owner": "drivetimeapp"
   }
 }

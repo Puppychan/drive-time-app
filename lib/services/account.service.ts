@@ -11,7 +11,8 @@ import {
   query,
   setDoc,
   updateDoc,
-  where
+  where,
+  writeBatch
 } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -23,6 +24,9 @@ import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
+import { AccountRole } from '../models/account.model'
+import { Customer } from '../models/customer.model'
+import { Membership } from '../models/membership.model'
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -84,6 +88,34 @@ export const updateCustomerMembershipPoints = async (
   } catch (error) {
     console.error('Error updating membership:', error)
     return handleUserException(error, 'Updating membership point')
+  }
+}
+export async function updateCustomersWithMemberships(memberships: Membership[]) {
+  try {
+    const customersRef = collection(db, CollectionName.ACCOUNTS) // Adjust if necessary
+    const customersQuery = query(customersRef, where('userRole', '==', AccountRole.Customer))
+    const customersSnapshot = await getDocs(customersQuery)
+    const batch = writeBatch(db)
+
+    customersSnapshot.forEach((customerDoc) => {
+      const customer = customerDoc.data() as Customer
+
+      // Find the nearest membership the customer qualifies for
+      const suitableMembership = memberships
+        .filter((membership) => customer.membershipPoints >= membership.minPoints)
+        .sort((a, b) => b.minPoints - a.minPoints) // Sort in descending order by minPoints
+        .find(() => true) // Get the first (nearest) membership
+
+      if (suitableMembership && customer.membershipId !== suitableMembership.membershipId) {
+        // Update customer's membership ID if it's different
+        batch.update(customerDoc.ref, { membershipId: suitableMembership.membershipId })
+      }
+    })
+
+    await batch.commit()
+    return new ResponseDto(ResponseCode.OK, `Update customers' membership ID successfully`, null)
+  } catch (err) {
+    return handleUserException(err, 'Update customers` membership ID')
   }
 }
 
