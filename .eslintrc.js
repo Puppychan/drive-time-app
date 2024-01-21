@@ -1,12 +1,5 @@
 module.exports = {
-  extends: [
-    'universe',
-    'universe/shared/typescript-analysis',
-    'plugin:react-hooks/recommended',
-    'plugin:react/recommended',
-    'prettier',
-    'prettier/react'
-  ],
+  extends: ['plugin:react/recommended', 'prettier', 'prettier/react'],
   plugins: ['react', 'react-native'],
   overrides: [
     {
