@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { TextInput, View, StyleSheet } from 'react-native'
 
 import { Label } from './Label'
-import { Colors } from '@/components/Colors'
+import { Colors, specialColors } from '@/components/Colors'
 import { Constant } from '@/components/Constant'
+import FontSize from '@/components/FontSize'
+import Spacing from '@/components/Spacing'
 
 const styles = StyleSheet.create({
   container: {
@@ -14,15 +16,19 @@ const styles = StyleSheet.create({
   input: {
     borderColor: Colors.silver,
     borderWidth: 1,
-    borderRadius: 3,
-    backgroundColor: '#FFFFFF',
+    borderRadius: 5,
     height: Constant.inputHeight,
-    padding: 10,
-    fontSize: Constant.normalTextSize,
-    width: '100%'
+    width: '100%',
+    fontSize: FontSize.small,
+    padding: Spacing,
   },
   onFocus: {
-    borderColor: Colors.primary
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    shadowOffset: { width: 4, height: Spacing },
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.2,
+    shadowRadius: Spacing,
   }
 })
 
@@ -57,7 +63,10 @@ export const Input = (props: TextInputProps) => {
     <View style={styles.container}>
       {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
       <TextInput
-        style={[styles.input, isFocused && styles.onFocus, style]}
+        style={[
+          styles.input,
+          isFocused && styles.onFocus,
+        ]}
         placeholder={placeHolder}
         value={value}
         editable={editable}

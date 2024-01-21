@@ -17,6 +17,7 @@ import { ResponseCode } from '@/common/response-code.enum'
 import { AccountType } from '@/lib/common/model-type'
 import { ScrollView } from 'react-native-gesture-handler'
 import { handleUserCreationError } from '@/lib/services/account.service'
+import FontSize from '@/components/FontSize'
 
 const genderList = [
   { label: 'Female', value: 'Female' },
@@ -186,18 +187,20 @@ export default function Page() {
 
 const styles = StyleSheet.create({
   formContainer: {
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     gap: 30,
-    backgroundColor: Colors.cream,
+    backgroundColor: Colors.white,
     width: '100%',
     maxWidth: 400,
     paddingVertical: 50,
     paddingHorizontal: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    paddingTop: 100
   },
   formTitle: {
-    fontSize: 20,
+    fontSize: FontSize.xLarge,
     fontWeight: 'bold'
   },
   form: {

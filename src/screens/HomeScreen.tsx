@@ -22,6 +22,8 @@ import SearchInput from '@/src/components/input/SearchInput'
 import ReviewScreen from './ReviewScreen'
 import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
+import { Driver } from '../../lib/models/driver.model'
+import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
 
 // TODO: change to dynamic later
 const homeInfo = '123 Main St'
@@ -39,16 +41,16 @@ const HomeScreen = () => {
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => {}
 
   const onClickExploreNearby = () => {
-    router.push('/driver/register')
+    router.push('/(user)/customer/nearby_place')
   }
 
   const onClickSuggestions = () => {
-    router.push('/driver/register/book_driver')
+    router.push('/(user)/customer/nearby_place')
   }
-  
+
   const onClickInstruction = () => {
     // navigation.navigate(link)
-    router.push('./(user)/driver/register/review')
+    router.push('/(user)/customer/voucher')
   }
 
   return (
@@ -79,10 +81,20 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {/* Recent card */}
+
+          {/* <CustomButton
+            title="Register Driver"
+            onPress={() => {
+              router.push('/driver/register')
+            }} */}
+
           <Button
-            title='Register Driver'
-            onPress={() => {router.push('/driver/register')}}
-          />
+            onPress={() => {
+              router.push('/driver/register')
+            }}
+          >
+            Register Driver
+          </Button>
 
           {/* Explore Nearby Card */}
           <FullScreenCard
@@ -101,11 +113,13 @@ const HomeScreen = () => {
             {/* Add see more if more than 4 suggestions */}
             {SUGGESTION_LIST.length > 4 && (
               <Button
-                title="See More"
+                // title="See More"
                 onPress={() => {
                   onClickSeeMore('suggestion')
                 }}
-              />
+              >
+                See More
+              </Button>
             )}
           </View>
           <FlatList
@@ -135,11 +149,13 @@ const HomeScreen = () => {
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
               <Button
-                title="See More"
+                // title="See More"
                 onPress={() => {
                   onClickSeeMore('instruction')
                 }}
-              />
+              >
+                See More
+              </Button>
             )}
           </View>
           <FlatList
@@ -163,12 +179,13 @@ const HomeScreen = () => {
 
           {/* Discover Map */}
           <Title>Around You</Title>
-          <Image
+          <View>{/* <MapScreen/> */}</View>
+          {/* <Image
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/007/017/843/non_2x/abstract-polygon-world-map-illustration-geometric-structure-in-blue-color-for-presentation-booklet-website-and-other-design-projects-polygonal-background-free-vector.jpg'
             }}
             style={styles.planningImage}
-          />
+          /> */}
         </View>
       </ScrollView>
 
@@ -185,10 +202,11 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingHorizontal: 10
   },
   insideContainer: {
-    padding: 15,
+    // padding: 15,
     gap: 15,
     marginTop: 20,
     marginBottom: 50

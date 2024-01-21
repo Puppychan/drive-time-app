@@ -3,8 +3,9 @@ import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import COLORS from '../../constants/Color'
 import { Ionicons } from '@expo/vector-icons'
-import Checkbox from 'expo-checkbox'
+import CheckBox from '@/src/components/input/Checkbox'
 import Button from '../../components/button/Button'
+import { Colors } from '@/components/Colors'
 
 const Signup = () => {
   const [isPasswordShown, setIsPasswordShown] = useState(false)
@@ -169,17 +170,18 @@ const Signup = () => {
             marginVertical: 6
           }}
         >
-          <Checkbox
-            style={{ marginRight: 8 }}
-            value={isChecked}
-            onValueChange={setIsChecked}
-            color={isChecked ? COLORS.primary : undefined}
+         <CheckBox
+            title="Remember me"
+            isChecked={isChecked}
+            onPress={() => setIsChecked(!isChecked)}
+            style={{ color: Colors.sky_blue }}
+            textStyle={{ color: Colors.white }}
           />
 
           <Text>I aggree to the terms and conditions</Text>
         </View>
 
-        <Button
+        <Button 
           title="Sign Up"
           filled
           style={{
