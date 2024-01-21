@@ -32,7 +32,7 @@ export default function Page() {
   const handleResetPassword = (email: string) => {
     resetPasswordWithEmail(email)
   }
-  const handleRegister = () => router.push('/signup')
+  const handleRegister = () => router.push('/(user)/customer/chat')
 
   const handleLogin = async () => {
     const vouchers = await fetchVouchers()

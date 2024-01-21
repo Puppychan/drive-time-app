@@ -9,12 +9,12 @@ export default function _layout() {
           headerShown: false
         }}
       />
-      {/* <Stack.Screen
-        name="(user)"
+      <Stack.Screen
+        name="(user)/customer"
         options={{
           headerShown: false
         }}
-      /> */}
+      />
       <Stack.Screen
         name="(public)"
         options={{
