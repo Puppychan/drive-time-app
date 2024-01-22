@@ -79,7 +79,8 @@ export const updateAllDriverAccountsTransport = async () => {
             
             updateDoc(driverRef, {
                 transport: generateRandomTransportData(),
-                location: new GeoPoint(driverLocation.latitude, driverLocation.longitude)
+                location: new GeoPoint(driverLocation.latitude, driverLocation.longitude),
+                updatedAt: Timestamp.now()
             });
         }
     });
@@ -98,7 +99,8 @@ export const updateAllDriverAccountsToBeTrueRandomly = async () => {
       console.log("Driver id", driverRef.id);
       
       updateDoc(driverRef, {
-        isAvailable: faker.datatype.boolean()
+        isAvailable: faker.datatype.boolean(),
+        updatedAt: Timestamp.now()
       });
     });
     

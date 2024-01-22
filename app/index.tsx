@@ -94,7 +94,7 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        {/* <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button> */}
+        <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button>
         <View
           style={styles.container}
           onLayout={onLayoutRootView}
