@@ -1,5 +1,6 @@
 import { User, deleteUser } from 'firebase/auth'
 import {
+  Query,
   Timestamp,
   Transaction,
   arrayUnion,
@@ -24,6 +25,7 @@ import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 import { AccountRole } from '../models/account.model'
+import { TransportType } from '../models/transport.model'
 
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
@@ -132,18 +134,54 @@ export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId
   }
 }
 
-export const getAllAccountsByUserRole = async (role: string) => {
+export const getAllAccountsByUserRole = async (role: AccountRole) => {
+  try {
+    const accountCollection = collection(db, CollectionName.ACCOUNTS)
+    const q = query(
+      accountCollection,
+      where('role', '==', role),
+    )
+    return getQuerySnapshotData(q)
+  } catch (err) {
+    return handleUserException(err, `Render account list based on user role`)
+  }
+};
+
+export const getDriverListByStatusAndTransport = async (driverStatus: boolean, transportType: TransportType) => {
   try {
     const driverCollection = collection(db, CollectionName.ACCOUNTS)
     const q = query(
       driverCollection,
       where('role', '==', AccountRole.Driver),
+      where('isAvailable', '==', driverStatus),
+      where('transport.type', '==', transportType)
     )
     return getQuerySnapshotData(q)
   } catch (err) {
-    return handleBookingException(err, `Render driver list using customer ID`)
+    return handleUserException(err, `Render driver list based on status and transport type`)
   }
 };
+
+export async function getAccountById(accountId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId)
+    const accountSnapshot = await getDoc(accountRef)
+
+    if (!accountSnapshot.exists()) {
+      throw new NotFoundException('Account not found')
+    }
+
+    const accountDetails = accountSnapshot.data()
+    return new ResponseDto(
+      ResponseCode.OK,
+      `Account found`,
+      new SuccessResponseDto(accountDetails, accountRef.id)
+    )
+  } catch (error) {
+    console.error(`Error retrieving account: ${error}`)
+    return handleUserException(error, 'Get account details')
+  }
+}
 
 export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
@@ -216,4 +254,14 @@ export async function getUserById(userId: string){
     throw e
   }
   
+}
+
+async function getQuerySnapshotData(query: Query) {
+  const querySnapshot = await getDocs(query)
+  const itemList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  return new ResponseDto(
+    ResponseCode.OK,
+    `Render list of accounts successfully`,
+    new SuccessResponseDto(itemList, '')
+  )
 }
