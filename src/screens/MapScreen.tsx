@@ -86,13 +86,10 @@ const MapScreen = () => {
 
   useEffect(() => {
     console.log("cars in use effect", cars)
-<<<<<<< HEAD
     if (cars.length >= 1) {
       getBestMatchBooking(cars, requests)
     }
-=======
-    getBestMatchBooking(cars, requests)
->>>>>>> bbe723aade67f18efac2762364a0a8573aa0f2a5
+
   }, [cars])
 
 
