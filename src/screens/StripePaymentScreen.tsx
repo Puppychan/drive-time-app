@@ -85,8 +85,8 @@ export const PaymentScreen = () => {
   return (
     <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={handlePaymentPress}>
-          <Text style={styles.buttonText}>Make Payment</Text>
+        <TouchableOpacity className='bg-black flex-1 px-4 w-full py-2 rounded-lg' onPress={handlePaymentPress}>
+          <Text className='text-lg text-white text-center w-full' style={{ fontWeight: '900' }}>Make payment</Text>
         </TouchableOpacity>
       </View>
     </StripeProvider>
@@ -98,11 +98,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5
   },
   buttonText: {
     color: 'white',
