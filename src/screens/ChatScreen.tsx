@@ -23,7 +23,11 @@ export type Message = {
   createdAt: number
 }
 
-export const ChatScreen = () => {
+interface Props {
+  onBack: () => void
+}
+
+export const ChatScreen = ({ onBack }: Props) => {
   const testChatId = 'test-chat-id'
 
   const [loading, setLoading] = useState(true)

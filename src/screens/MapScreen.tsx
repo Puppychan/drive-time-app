@@ -22,8 +22,13 @@ import RideSelectionCard, { ItemType } from '../components/map-screen/RideSelect
 import { GooglePlacesInput } from './GooglePlacesInputScreen'
 import { Text } from 'react-native-paper'
 import { PaymentScreen } from './StripePaymentScreen'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const MapScreen = () => {
+interface Props {
+  onChat: () => void
+}
+
+const MapScreen = ({ onChat }: Props) => {
   const currentLocation = useSelector(selectCurrentLocation)
 
   const [option, setOption] = useState<ItemType | null>(null)
@@ -38,11 +43,19 @@ const MapScreen = () => {
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
-  // Generate Request
   const requests: CarRequest[] = [
-    { pickup: { id: 'P1', x: 10.785255359834135, y: 106.6932718123096 }, delivery: { id: 'D1', x: destination?.location?.lat || 10.7289515, y: destination?.location?.long || 106.6957667 } },
-    // { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
-    // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
+    {
+      pickup: {
+        id: 'P1',
+        x: origin?.location?.lat || 10.785255359834135,
+        y: origin?.location?.long || 106.6932718123096
+      },
+      delivery: {
+        id: 'D1',
+        x: destination?.location?.lat || 10.7289515,
+        y: destination?.location?.long || 106.6957667
+      }
+    },
   ]
 
   // const cars: Car[] = [
@@ -71,7 +84,6 @@ const MapScreen = () => {
       {isRideSelectionVisible ? <GooglePlacesInput /> : null}
       <MapView
         ref={mapRef}
-        // mapType="mutedStandard"
         style={{
           height: (origin && destination && isRideSelectionVisible) ? 0.4 * height : height,
           width: width,
@@ -178,7 +190,9 @@ const MapScreen = () => {
             </View>
 
             <View className='flex flex-row items-center gap-2'>
-              <Text className='text-lg text-black bg-white border border-black/30 flex-1 text-center px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>Chat with driver</Text>
+              <TouchableOpacity
+                onPress={onChat}
+                className='text-lg text-black bg-white border border-black/30 flex-1 text-center px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}><Text>Chat with driver</Text></TouchableOpacity>
               <Text className='text-lg text-white border border-black/30 px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>
                 <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
               </Text>
