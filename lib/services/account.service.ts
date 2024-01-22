@@ -24,21 +24,6 @@ import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 
-export async function getUserById(userId: string){
-  try {
-    const userRef = doc(db, CollectionName.ACCOUNTS, userId)
-    const userSnap = await getDoc(userRef)
-    let user = null
-    if (userSnap.exists()) {
-      user = userSnap.data();
-    }
-    return user
-  }
-  catch (e) {
-    throw e
-  }
-  
-}
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {
@@ -165,27 +150,6 @@ export async function handleUserCreationError(user: User, parentError: any): Pro
         `Failed to delete user after unsuccessful info addition: ${error}`
       )
     })
-}
-
-export async function getAccountById(accountId: string) {
-  try {
-    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId)
-    const accountSnapshot = await getDoc(accountRef)
-
-    if (!accountSnapshot.exists()) {
-      throw new NotFoundException('Account not found')
-    }
-
-    const accountDetails = accountSnapshot.data()
-    return new ResponseDto(
-      ResponseCode.OK,
-      `Account found`,
-      new SuccessResponseDto(accountDetails, accountRef.id)
-    )
-  } catch (error) {
-    console.error(`Error retrieving account: ${error}`)
-    return handleUserException(error, 'Get account details')
-  }
 }
 // ------------------------------------
 function handleUserException(error: any, type: string) {

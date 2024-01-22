@@ -8,13 +8,14 @@ import { Text } from "react-native-paper";
 
 const VoucherScreen = () => {
   const [vouchers, setVouchers] = useState([]);
-  // const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const loadVouchers = async () => {
       try {
         const data = await fetchVouchers();
         if (data.code === ResponseCode.OK) {
+          // Ensure that data.body.data is an array of vouchers
+          console.log(data.body.data);
           setVouchers(data.body.data);
         }
         else {
@@ -24,37 +25,31 @@ const VoucherScreen = () => {
         ToastAndroid.show('Could not fetch voucher', ToastAndroid.LONG)
       }
     };
-    console.log("Calldsnldks");
     loadVouchers();
   }, []);
 
   useEffect(() => {
     console.log("Vouchers now", vouchers);
-
-    return () => { }
   }, [vouchers])
-
 
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         data={vouchers}
         keyExtractor={(item: Voucher) => item.voucherId.toString()}
-        renderItem={({ item }: { item: Voucher }) => <View style={{ height: 100, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <TouchableOpacity
-            style={[
-              styles.driveItem
-              //   {
-              //     backgroundColor: selected?.id === item.id ? '#99ccff' : '#ffffff'
-              //   }
-            ]}
-          >
-            <View style={styles.driveDetails}>
-              <Text style={styles.driveTitle}>{item.name}</Text>
-              <Text>1 day</Text>
-            </View>
-          </TouchableOpacity>
-        </View>}
+        renderItem={({ item }: { item: Voucher }) => (
+          <View style={{ height: 100, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <TouchableOpacity
+              style={styles.driveItem}
+            >
+              <View style={styles.driveDetails}>
+                {/* Ensure that each voucher has a name property */}
+                <Text style={styles.driveTitle}>{item.name}</Text>
+                <Text>1 day</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
       />
 
       <Text>{JSON.stringify(vouchers)}</Text>
@@ -154,4 +149,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 })
+
 export default VoucherScreen
