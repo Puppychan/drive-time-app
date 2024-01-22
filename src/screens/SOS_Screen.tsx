@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Linking, Alert } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert } from "react-native";
 import Modal from 'react-native-modal'
 import { Audio } from 'expo-av';
 import Ring from '../components/animation/ring.circle';
@@ -20,13 +20,13 @@ export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
 
         setSound(sound)
         console.log('Playing Sound');
-        // await sound.playAsync();
+        await sound.playAsync();
     }
 
     useEffect(() => {
         // play the file tone.mp3
         try {
-            if (!sound) {
+            if (!sound && isVisible) {
                 playSound()
             }
         } catch (e) {
@@ -39,7 +39,9 @@ export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
                     return prevTimer - 1;
                 } else {
                     sound?.unloadAsync()
-                    setTimerReachedZero(true);
+                    if (isVisible) {
+                        setTimerReachedZero(true);
+                    }
                     clearInterval(interval); // Stop the interval once timer reaches 0
                     return 0;
                 }
@@ -88,7 +90,7 @@ export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
                     }
                 });
             }, 1000);
-        
+
             // Clean up the interval when the component is unmounted
             return () => clearInterval(interval);
         }
@@ -99,7 +101,7 @@ export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
 
         Alert.alert(
             'Safety Report',
-            'Trigger SOS or Edit/Add your SOS Contact',
+            'Cancel SOS Report',
             [
                 {
                     text: 'Ok', // This is the cancel button

@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(128, 128, 128, 0.1)',
     borderRadius: 15,
     width: '100%',
-    marginTop: 20,
+    marginTop: 10,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -17,7 +17,8 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginBottom: 5
   },
   footer: {
     fontSize: 16,

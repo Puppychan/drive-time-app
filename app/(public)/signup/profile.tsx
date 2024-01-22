@@ -34,8 +34,6 @@ export default function Page() {
   const [lastName, setLastName] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
   const [dob, setDob] = useState<string>('')
-  const [avatarUri, setAvatarUri] = useState<any>(null)
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
 
   useEffect(() => {
     let user = auth.currentUser || undefined;
@@ -52,18 +50,6 @@ export default function Page() {
       // check if all required input fields are filled
       if (!checkRequire()) return;
   
-      // upload avatar photo (if any) to storage and get the downloadurl from it
-      if (avatarUri) {
-        const res = await uploadImage(avatarUri, `${AVATAR_REF}/${authUser?.uid}.jpg`);
-        if (res.code === ResponseCode.OK) {
-          const {downloadUrl} = res.body
-          setAvatarUrl(downloadUrl)
-        }
-        else {
-          console.log("Upload image failed: " , res)
-        }
-      }
-  
       // create account
       const account: Account = {
         userId: authUser.uid,
@@ -73,7 +59,7 @@ export default function Page() {
         lastName: lastName,
         role: accountRole,
         phone: phone,
-        avatar: avatarUrl,
+        avatar: null,
         birthday: (dob && Timestamp.fromDate(new Date(dob))) || null,
         createdDate: Timestamp.fromDate(new Date()),
         gender: gender

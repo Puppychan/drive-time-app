@@ -2,15 +2,15 @@ import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   btnContainer: {
-    height: 70,
+    height: 65,
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row'
   },
   btnIcon: {
-    height: 18,
-    width: 26,
+    height: 27,
+    width: 27,
     marginEnd: 25,
     overflow: 'hidden'
   },

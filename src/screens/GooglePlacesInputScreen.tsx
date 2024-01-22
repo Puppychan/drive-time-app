@@ -1,25 +1,19 @@
-// GooglePlacesInput.tsx
-import { useNavigation } from '@react-navigation/native'
 import { View } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
-
-import { setOrigin, setDestination } from '@/src/slices/navSlice'
-
-import { styles } from '../components/google-place-input/google-places-input.style' // Import the styles
+import { useDispatch, } from 'react-redux'
+import { setOrigin, setDestination, } from '@/src/slices/navSlice'
 import { useRouter } from 'expo-router'
 
 const GooglePlacesInput = () => {
   const dispatch = useDispatch()
   const router = useRouter()
 
+
   return (
-    <SafeAreaView style={styles.container}>
-      {/* GooglePlacesAutocomplete for Origin */}
-      <View style={styles.autocompleteContainer}>
+    <View className='mt-4 absolute top-0 inset-x-0 z-50'>
+      <View className='flex flex-row mx-4'>
         <GooglePlacesAutocomplete
-          placeholder="Where From ..."
+          placeholder="Where from?"
           query={{
             key: 'AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps',
             language: 'en'
@@ -36,19 +30,13 @@ const GooglePlacesInput = () => {
           onFail={(error) => console.error('Autocomplete failed:', error)}
           nearbyPlacesAPI="GooglePlacesSearch"
           fetchDetails={true}
-          styles={{
-            textInputContainer: styles.textInputContainer,
-            textInput: styles.textInput,
-            predefinedPlacesDescription: styles.predefinedPlacesDescription
-          }}
           enablePoweredByContainer={false}
         />
       </View>
 
-      {/* GooglePlacesAutocomplete for Destination */}
-      <View style={styles.autocompleteContainer}>
+      <View className='flex flex-row mx-4'>
         <GooglePlacesAutocomplete
-          placeholder="Where To ..."
+          placeholder="Where to?"
           query={{
             key: 'AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps',
             language: 'en'
@@ -65,16 +53,10 @@ const GooglePlacesInput = () => {
           onFail={(error) => console.error('Autocomplete failed:', error)}
           nearbyPlacesAPI="GooglePlacesSearch"
           fetchDetails={true}
-          styles={{
-            flex: 0,
-            textInputContainer: styles.textInputContainer,
-            textInput: styles.textInput,
-            predefinedPlacesDescription: styles.predefinedPlacesDescription
-          }}
           enablePoweredByContainer={false}
         />
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
