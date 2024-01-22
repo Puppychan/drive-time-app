@@ -15,9 +15,6 @@ export default function _layout() {
           }}
         />
       </Stack>
-
-      {/* Your reusable Footer component */}
-      <Footer />
     </View >
   )
 }

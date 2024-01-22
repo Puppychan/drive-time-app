@@ -313,7 +313,7 @@ async function getQuerySnapshotData(query: Query) {
   )
 }
 
-const getQuerySnapshotAsCar = async (query: Query): Promise<Car[]> => {
+const getQuerySnapshotAsCar = async (query: Query) => {
   const querySnapshot = await getDocs(query);
   const cars = querySnapshot.docs.map((doc) => {
     const data = doc.data() as Driver;
@@ -328,5 +328,6 @@ const getQuerySnapshotAsCar = async (query: Query): Promise<Car[]> => {
       }
     };
   });
-  return cars;
+  // return cars;
+  return new ResponseDto(ResponseCode.OK, 'Fetch car list successfully', new SuccessResponseDto(cars, ''))
 };

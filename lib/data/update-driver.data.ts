@@ -99,7 +99,8 @@ export const updateAllDriverAccountsToBeTrueRandomly = async () => {
       console.log("Driver id", driverRef.id);
       
       updateDoc(driverRef, {
-        isAvailable: faker.datatype.boolean(),
+        // isAvailable: faker.datatype.boolean(),
+        isAvailable: true,
         updatedAt: Timestamp.now()
       });
     });
