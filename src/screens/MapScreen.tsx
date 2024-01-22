@@ -5,6 +5,7 @@ import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dimensions } from 'react-native';
 import { CarRequest } from '@/lib/services/car-matching.service'
+import { faker } from '@faker-js/faker'
 
 const { height, width } = Dimensions.get('window');
 
@@ -23,6 +24,10 @@ import { GooglePlacesInput } from './GooglePlacesInputScreen'
 import { Text } from 'react-native-paper'
 import { PaymentScreen } from './StripePaymentScreen'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import { addBooking } from '@/lib/services/booking.service'
+import { Booking, BookingStatus } from '@/lib/models/booking.model'
+import { auth } from '@/lib/firebase/firebase'
 
 interface Props {
   onChat: (driverId: string) => void
@@ -78,6 +83,25 @@ const MapScreen = ({ onChat }: Props) => {
     console.log("origin", currentLocation)
     getTravelTime();
   }, [origin, destination, apiKey]);
+
+  useEffect(() => {
+    if (driverId) {
+      const newBooking: Booking = {
+        bookingId: faker.string.uuid(),
+        customerIdList: [auth.currentUser?.uid ? auth.currentUser?.uid : ''],
+        driverId: driverId,
+        preScheduleTime: null,
+        price: option?.amount ? (parseFloat(option?.amount.toFixed(2)) * 100) : 0,
+        discountPrice: 0,
+        voucherId: null,
+        departure: origin?.description,
+        destinationList: [destination?.description],
+        status: BookingStatus.InProgress,
+      };
+      
+      addBooking(newBooking)
+    }
+  }, [driverId])
 
   return (
     <View className='h-screen relative'>

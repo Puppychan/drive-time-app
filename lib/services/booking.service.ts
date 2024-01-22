@@ -193,6 +193,7 @@ export async function addBooking(bookingData: Booking) {
     // bookingData.driverId = 'driverId'
 
     const currentDate = new Date()
+
     // Add createdAt and updatedAt timestamps
     bookingData.updatedAt = Timestamp.fromDate(currentDate)
     bookingData.createdAt = Timestamp.fromDate(currentDate)
