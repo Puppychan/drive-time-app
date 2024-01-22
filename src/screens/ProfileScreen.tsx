@@ -44,21 +44,6 @@ export const UserProfileScreen = () => {
   const handleSOSScreen = () => {
     setSosScreenVisible(false)
   }
-  // useEffect(() => {
-  //   const prepare = async () => {
-  //     if (auth.currentUser) {
-  //       setUser(auth.currentUser)
-  //       let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
-  //       setRole(role ?? AccountRole.Customer)
-  //     }
-  //     else {
-  //       ToastAndroid.show("Unauthorize. Please login", ToastAndroid.SHORT)
-  //       router.push('/signin')
-  //       return
-  //     }
-  //   }
-  //   prepare()
-  // }, [])
 
   const showEditAvatarModal = () => {
     setEditAvatarVisible(true)

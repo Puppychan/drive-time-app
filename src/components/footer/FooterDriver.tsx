@@ -2,14 +2,13 @@ import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 import { Appbar } from "react-native-paper";
 
-const Footer= () => {
+const FooterDriver = () => {
     const router = useRouter()
     return (
         <Appbar style={styles.bottom}>
-            <Appbar.Action icon="home" onPress={() => { router.push('/customer/home') }} />
-            <Appbar.Action icon="ticket-confirmation" onPress={() => { router.push('/customer/voucher') }} />
-            {/* <Appbar.Action icon="bell" onPress={() => { router.push('/customer/history') }} /> */}
-            <Appbar.Action icon="account" onPress={() => { router.push('/customer/profile') }} />
+            <Appbar.Action icon="home" onPress={() => { router.push('/driver/home') }} />
+            <Appbar.Action icon="star" onPress={() => { router.push('/driver/dashboard') }} />
+            <Appbar.Action icon="account" onPress={() => { router.push('/driver/profile') }} />
         </Appbar>
     );
 };
@@ -29,4 +28,4 @@ const styles = StyleSheet.create({
         color: '#fff', // White color for the icons
     },
 });
-export default Footer
+export default FooterDriver

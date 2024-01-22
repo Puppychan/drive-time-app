@@ -138,7 +138,10 @@ export default function Page() {
   
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.formTitle}>Profile Information</Text>
+      <View style={{alignItems: 'center'}}>
+        <Text style={styles.formTitle}>Profile Information</Text>
+        <Text >Last step to finish</Text>
+      </View>
       <View style={styles.form}>
         <View style={styles.inline}>
           <View style={styles.elementSameRow}>

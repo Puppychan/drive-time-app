@@ -1,4 +1,4 @@
-import FooterAdmin from '@/src/components/footer/FooterAdmin'
+import FooterDriver from '@/src/components/footer/FooterDriver'
 import { Stack } from 'expo-router'
 import { View } from 'react-native'
 
@@ -29,7 +29,7 @@ export default function _layout() {
         
       </Stack>
 
-      <FooterAdmin />
+      <FooterDriver />
     </View >
   )
 }

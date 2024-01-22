@@ -23,10 +23,6 @@ const Signup = () => {
   const {role} = useLocalSearchParams<{ role?: string }>();
   const [isPasswordShown, setIsPasswordShown] = useState(true)
   const [isChecked, setIsChecked] = useState(false)
-  const handleCancel = async () => {
-    router.push(`/signin`);
-    return
-  }
 
   const handleNext = async () => {
     if (email.trim() === '') {
@@ -61,34 +57,8 @@ const Signup = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white,  paddingHorizontal: 20,  paddingVertical: 60, }}>
-      {/* <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Register {role !== AccountRole.Customer ?  role : ""}</Text>
-        <View style={styles.form}>
-          <Input
-            label="Email"
-            placeHolder="Email"
-            required={true}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <Input
-            label="Password"
-            placeHolder="Password"
-            secureTextEntry={true}
-            required={true}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <CustomButton title="Continue" onPress={handleNext} disabled={btnDisable} />
-          <CustomButton type={ButtonType.outlined} title="Already have an account? LOGIN" onPress={handleCancel} />
-        </View>
-      </View> */}
-
-
-
-
       <View style={{flexDirection: 'column', gap: 20}}>
-        <View >
+        <View style={{marginBottom: 20}}>
           <Text
             style={{
               fontSize: 32,
@@ -149,53 +119,6 @@ const Signup = () => {
             </View>
           </View>
 
-          {/* <View style={{ marginBottom: 12 }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '400',
-                marginVertical: 8
-              }}
-            >
-              Mobile Number *
-            </Text>
-
-            <View
-              style={{
-                width: '100%',
-                height: 55,
-                borderColor: COLORS.black,
-                borderWidth: 1,
-                borderRadius: 8,
-                alignItems: 'center',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingLeft: 20
-              }}
-            >
-              <TextInput
-                placeholder="+84"
-                placeholderTextColor={COLORS.black}
-                keyboardType="numeric"
-                editable={false}
-                style={{
-                  width: '12%',
-                  borderRightWidth: 1,
-                  borderLeftColor: COLORS.grey,
-                }}
-              />
-
-              <TextInput
-                placeholder="Enter your phone number"
-                placeholderTextColor={COLORS.black}
-                keyboardType="numeric"
-                style={{
-                  width: '80%'
-                }}
-              />
-            </View>
-          </View> */}
-
           <View style={{ marginBottom: 12 }}>
             <Text
               style={{
@@ -237,7 +160,7 @@ const Signup = () => {
                   right: 12
                 }}
               >
-                {isPasswordShown ? (
+                {!isPasswordShown ? (
                   <Ionicons name="eye-off" size={24} color={COLORS.black} />
                 ) : (
                   <Ionicons name="eye" size={24} color={COLORS.black} />
@@ -294,53 +217,6 @@ const Signup = () => {
         >
           <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold'}}>Continue</Text>
         </TouchableOpacity>
-
-        {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-          <View
-            style={{
-              flex: 1,
-              height: 1,
-              backgroundColor: COLORS.grey,
-              marginHorizontal: 10
-            }}
-          />
-          <Text style={{ fontSize: 14 }}>Or</Text>
-          <View
-            style={{
-              flex: 1,
-              height: 1,
-              backgroundColor: COLORS.grey,
-              marginHorizontal: 10
-            }}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={() => console.log('Pressed')}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            height: 55,
-            borderWidth: 1,
-            borderColor: COLORS.grey,
-            marginRight: 4,
-            borderRadius: 15
-          }}
-        >
-          <Image
-            source={require('@/assets/ic_google.png')}
-            style={{
-              height: 36,
-              width: 36,
-              marginRight: 8
-            }}
-            resizeMode="contain"
-          />
-
-          <Text style={{ fontSize: 18 }}>Sign in with Google</Text>
-        </TouchableOpacity> */}
-
         <View
           style={{
             flexDirection: 'row',
@@ -355,7 +231,8 @@ const Signup = () => {
                 fontSize: 18,
                 color: COLORS.primary,
                 fontWeight: 'bold',
-                marginLeft: 6
+                marginLeft: 6,
+                textDecorationLine: 'underline'
               }}
             >
               Login

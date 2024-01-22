@@ -87,7 +87,6 @@ export const addUserToDatabase = async (user: User, additionalUserInfo: AccountT
 
     // Create a reference to the document with the custom ID
     const accountRef = doc(db, CollectionName.ACCOUNTS, additionalUserInfo.userId)
-    console.log("accountRef: ", accountRef)
     // Set the data for the document with the custom ID
     await setDoc(accountRef, additionalUserInfo)
 

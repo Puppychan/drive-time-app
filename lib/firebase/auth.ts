@@ -126,7 +126,6 @@ export async function createAuthAccount(email: string, password: string): Promis
 export async function addUser(user: User, additionalUserInfo: AccountType): Promise<ResponseDto> {
   try {
     const doc = await addUserToDatabase(user, additionalUserInfo)
-    console.log("user doc created: ", doc)
     await updateProfile(user, {
       displayName: additionalUserInfo.username,
       photoURL: additionalUserInfo.avatar

@@ -11,7 +11,6 @@ export const ProfileHeader = ({ avatarOnPress }: {
   const [image, setImage] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(auth.currentUser?.photoURL)
     setImage(auth.currentUser?.photoURL ?? null)
   }, [])
 
