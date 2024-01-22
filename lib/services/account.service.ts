@@ -33,24 +33,27 @@ import { Driver } from '../models/driver.model'
 
 
 
-export async function updateAvatar(userId: string, avatarUri: string) {
+export async function updateAvatar(userId: string, avatarUri: string | null) {
   try {
-    const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
-    if (res.code === ResponseCode.OK) {
-      const {downloadUrl} = res.body
-      await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
-        avatar: downloadUrl,
-        updatedDate: Timestamp.fromDate(new Date())
-      });
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, {
-          photoURL: downloadUrl
-        })
+    let avatar = null
+    if (avatarUri) {
+      const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
+      if (res.code === ResponseCode.OK) {
+        const {downloadUrl} = res.body
+        avatar = downloadUrl
       }
-      return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", downloadUrl);
+      else throw res
     }
-    else throw res
-
+    await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
+      avatar: avatar,
+      updatedDate: Timestamp.fromDate(new Date())
+    });
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, {
+        photoURL: avatar
+      })
+    }
+    return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", avatar);
   }
   catch (e) {
     throw e
