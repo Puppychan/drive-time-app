@@ -2,9 +2,14 @@ import { StripeProvider, useStripe } from '@stripe/stripe-react-native'
 import { StyleSheet, TouchableOpacity, View, Text, Alert, ToastAndroid } from 'react-native'
 
 import { StripePaymentIntent, StripeUserPaymentMethod } from '@/lib/services/payment.service'
+<<<<<<< HEAD
 import { getCustomerStripeId, setCustomerStripeId } from '@/lib/services/account.service'
 import { auth } from '@/lib/firebase/firebase'
 import { ResponseCode } from '@/common/response-code.enum'
+import { useEffect } from 'react'
+=======
+import { useEffect } from 'react'
+>>>>>>> c8bbace6b299ad2d37ec859faf4121ce122a9d67
 
 const STRIPE_PUBLISHABLE_KEY =
   'pk_test_51OZSSiJPx7rQ3VEwkLAPlP8cQGg5wSpSATi3XYmshpbtRECUeW0JAhntQ3jy30fuBAcYH7wl1K1pM2m5LBjteXaU00px9UD5jV'
@@ -76,6 +81,11 @@ export const PaymentScreen = () => {
       console.error('Payment Error:', error)
     }
   }
+
+  useEffect(() => {
+    handlePaymentPress()
+  }, [])
+
   return (
     <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
       <View style={styles.container}>

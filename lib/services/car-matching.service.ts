@@ -1,40 +1,42 @@
+import { getDistanceAndTime } from "./google.maps.service"
+
 // Interfaces
-interface mLocation {
+export interface mLocation {
   id: string
   x: number
   y: number
 }
 
-interface CarRequest {
+export interface CarRequest {
   pickup: mLocation
   delivery: mLocation
 }
 
-interface DriverMetrics {
+export interface DriverMetrics {
   id: string
   totalIncomeToday: number
   totalDistanceTraveled: number
 }
 
-interface Arc {
+export interface Arc {
   from: string
   to: string
   cost: number
   waitTime: number
-  loadBalanceScore: number
+  // loadBalanceScore: number
 }
 
-interface Car {
+export interface Car {
   id: string
   mLocation: mLocation
 }
 
-interface Solution {
+export interface Solution {
   x: { [carId: string]: { [mLocationId: string]: number } }
 }
 
 // Get all routes
-function generateAllArcs(locations: mLocation[]): Arc[] {
+export async function generateAllArcs(locations: mLocation[]): Promise<Arc[]> {
   const arcs: Arc[] = []
 
   // Filter out arcs only between customer locations (C) and pickup locations (P)
@@ -43,18 +45,22 @@ function generateAllArcs(locations: mLocation[]): Arc[] {
 
   for (const fromLocation of customerLocations) {
     for (const toLocation of pickupLocations) {
-      const cost = Math.floor(Math.random() * 10) + 1
-      const waitingTime = Math.floor(Math.random() * 10) + 1
+      const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ? process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY : ''
 
-      const driverMetrics = driverMetricsArray.find((metrics) => metrics.id === fromLocation.id)
-      const loadBalanceScore = driverMetrics ? calculateLoadBalanceScore(driverMetrics) : 0
+      const result = await getDistanceAndTime(fromLocation, toLocation, apiKey)
+
+      const cost = parseFloat(result.distance)
+      const waitingTime = parseFloat(result.duration)
+
+      // const driverMetrics = driverMetricsArray.find((metrics) => metrics.id === fromLocation.id)
+      // const loadBalanceScore = driverMetrics ? calculateLoadBalanceScore(driverMetrics) : 0
 
       arcs.push({
         from: fromLocation.id,
         to: toLocation.id,
         cost,
         waitTime: waitingTime,
-        loadBalanceScore
+        // loadBalanceScore
       })
     }
   }
@@ -63,7 +69,7 @@ function generateAllArcs(locations: mLocation[]): Arc[] {
 }
 
 // Convert Request and car location to single Location
-function generateLocations(cars: Car[], requests: CarRequest[]): mLocation[] {
+export function generateLocations(cars: Car[], requests: CarRequest[]): mLocation[] {
   const locations: mLocation[] = []
 
   // Add pickup and delivery locations
@@ -85,7 +91,7 @@ function generateLocations(cars: Car[], requests: CarRequest[]): mLocation[] {
 }
 
 // Following NNP algorithm
-function generateInitialSolution(cars: Car[], requests: CarRequest[], allArcs: Arc[]): Solution {
+export function generateInitialSolution(cars: Car[], requests: CarRequest[], allArcs: Arc[]): Solution {
   const solution: Solution = { x: {} }
 
   cars.forEach((car) => {
@@ -202,9 +208,10 @@ const calculateObjectiveFunction = (
   }, 0)
 
   // T3 calculation (Load balancer)
-  const loadBalanceScore = arcs.reduce((acc, arc) => acc + arc.loadBalanceScore, 0)
+  // const loadBalanceScore = arcs.reduce((acc, arc) => acc + arc.loadBalanceScore, 0)
 
-  return operationalCost + penalty + loadBalanceScore
+  // return operationalCost + penalty + loadBalanceScore
+  return operationalCost + penalty
 }
 
 // Get all neighborhood of a solution
@@ -248,7 +255,7 @@ function generateSwapNeighbors(currentSolution: Solution): Solution[] {
 
 // shift moves the last request of one car’s route to the end of another car’s route
 // Each car guaranteed to have atleast 1 pickup after shift
-function generateShiftNeighbors(currentSolution: Solution): Solution[] {
+export function generateShiftNeighbors(currentSolution: Solution): Solution[] {
   const shiftNeighbors: Solution[] = []
 
   for (const carId1 of Object.keys(currentSolution.x)) {
@@ -287,7 +294,7 @@ function generateShiftNeighbors(currentSolution: Solution): Solution[] {
 
 // transforms the solution by exchanging requests of two different cars’ routes
 // Each car guaranteed to have atleast 1 pickup after interchange
-function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
+export function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
   const interchangeNeighbors: Solution[] = []
 
   for (const carId1 of Object.keys(currentSolution.x)) {
@@ -327,8 +334,20 @@ function generateInterchangeNeighbors(currentSolution: Solution): Solution[] {
   return interchangeNeighbors
 }
 
+export function filterNonEmptyAttributes(solution: Solution): string[] {
+  const result: string[] = [];
+
+  for (const carId in solution.x) {
+    if (Object.keys(solution.x[carId]).length > 0) {
+      result.push(carId);
+    }
+  }
+
+  return result;
+}
+
 // Search best solution
-const tabuSearchRoute = (
+export const tabuSearchRoute = (
   initialSolution: Solution,
   Routes: Arc[],
   Request: CarRequest[],
@@ -399,14 +418,17 @@ const driverMetricsArray: DriverMetrics[] = [
 
 const requests: CarRequest[] = [
   { pickup: { id: 'P1', x: 2, y: 2 }, delivery: { id: 'D1', x: 3, y: 3 } },
-  { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
-  { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
+  // { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
+  // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
 ]
 
-const locations = generateLocations(cars, requests)
-const arcs = generateAllArcs(locations)
-const initialSolution = generateInitialSolution(cars, requests, arcs)
+export async function getBestMatchBooking(cars: Car[], requests: CarRequest[]) {
+  const locations = generateLocations(cars, requests)
+  const arcs = await generateAllArcs(locations)
+  const initialSolution = generateInitialSolution(cars, requests, arcs)
+  const bestSolution = tabuSearchRoute(initialSolution, arcs, requests)
 
-// Test
-const bestSolution = tabuSearchRoute(initialSolution, arcs, requests)
-console.log('Best Solution:', bestSolution)
+  const result = filterNonEmptyAttributes(bestSolution)
+  console.log("Mathced Car: " + result)
+  return result
+}

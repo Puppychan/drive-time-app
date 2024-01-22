@@ -323,13 +323,13 @@ const isUniqueUser = async (userId: string, email: string, username: string) => 
     const qMail = query(userCollection, where("email", "==", email))
     const qUsername = query(userCollection, where('username', "==", username))
 
-    const mailSnap = await getDocs(qMail); 
+    const mailSnap = await getDocs(qMail);
     console.log(mailSnap)
     if (!mailSnap.empty) {
       return new ResponseDto(ResponseCode.OK, "Email already in use", false)
     }
 
-    const usernameSnap = await getDocs(qUsername); 
+    const usernameSnap = await getDocs(qUsername);
     if (!usernameSnap.empty) {
       return new ResponseDto(ResponseCode.OK, "Username already in use", false)
     }
@@ -357,7 +357,7 @@ export async function getUserById(userId: string){
   catch (e) {
     throw e
   }
-  
+
 }
 
 async function getQuerySnapshotData(query: Query) {
