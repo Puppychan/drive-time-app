@@ -429,6 +429,6 @@ export async function getBestMatchBooking(cars: Car[], requests: CarRequest[]) {
   const bestSolution = tabuSearchRoute(initialSolution, arcs, requests)
 
   const result = filterNonEmptyAttributes(bestSolution)
-  console.log("Mathced Car: " + result)
+  console.log("Matched Car: " + result)
   return result
 }

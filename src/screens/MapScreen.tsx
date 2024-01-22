@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dimensions } from 'react-native';
-import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.service'
+import { CarRequest } from '@/lib/services/car-matching.service'
 
 const { height, width } = Dimensions.get('window');
 
@@ -18,15 +18,16 @@ import {
 } from '@/src/slices/navSlice'
 
 import LoadingBar from './FindingDriverScreen'
-import RideSelectionCard from '../components/map-screen/RideSelectionCard'
+import RideSelectionCard, { ItemType } from '../components/map-screen/RideSelectionCard'
 import { GooglePlacesInput } from './GooglePlacesInputScreen'
 import { Text } from 'react-native-paper'
 import { PaymentScreen } from './StripePaymentScreen'
 
 const MapScreen = () => {
   const currentLocation = useSelector(selectCurrentLocation)
-  const [cars, setCars] = useState([])
-  // const [driverId, setDriverId] = useState(second)
+
+  const [option, setOption] = useState<ItemType | null>(null)
+  const [driverId, setDriverId] = useState<string | null>(null)
 
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -36,7 +37,6 @@ const MapScreen = () => {
   const dispatch = useDispatch()
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
-
 
   // Generate Request
   const requests: CarRequest[] = [
@@ -55,7 +55,6 @@ const MapScreen = () => {
   useEffect(() => {
     if (!origin || !destination) return;
 
-
     const getTravelTime = async () => {
       fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin?.description || 'RMIT University Vietnam - Saigon South campus'}&destinations=${destination?.description || 'Crescent Mall, Đường Tôn Dật Tiên, Khu đô thị Phú Mỹ Hưng'}&key=${apiKey}`)
         .then((res) => res.json())
@@ -66,30 +65,6 @@ const MapScreen = () => {
     console.log("origin", currentLocation)
     getTravelTime();
   }, [origin, destination, apiKey]);
-
-  useEffect(() => {
-    console.log("cars in use effect", cars)
-    if (cars.length >= 1) {
-      getBestMatchBooking(cars, requests)
-    }
-  }, [cars])
-
-  //   getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
-  //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-  //   console.log("Bikeeee Carrrrrr", res.body.data)
-  // })
-
-  // getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
-  //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-  //   setCars(res.body.data)
-  //   console.log("Carrrrrr", res.body.data)
-  // })
-
-  // getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
-  //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-  //   console.log("XL Carrrrr", res.body.data)
-  // })
-
 
   return (
     <View className='h-screen relative'>
@@ -178,39 +153,43 @@ const MapScreen = () => {
       </MapView>
 
       {(origin && destination) ? isRideSelectionVisible ?
-        <RideSelectionCard /> :
-        <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
-          <Text className='text-2xl' style={{ fontWeight: '700' }}>Meet up at the pick-up point</Text>
-          <Text className='w-full bg-black/10 text-black p-4 rounded-lg mt-2' style={{ fontWeight: '700' }}>{origin.description}</Text>
+        <RideSelectionCard requests={requests} onRideSelected={({ option, driverId }) => { setOption(option); setDriverId(driverId); }} /> :
+        driverId ?
+          <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
+            <Text className='text-2xl' style={{ fontWeight: '700' }}>Meet up at the pick-up point</Text>
+            <Text className='w-full bg-black/10 text-black p-4 rounded-lg mt-2' style={{ fontWeight: '700' }}>{origin.description}</Text>
 
-          <View className='h-0.5 w-full bg-black/10 my-4' />
+            <View className='h-0.5 w-full bg-black/10 my-4' />
 
-          <Text className='text-2xl mb-2' style={{ fontWeight: '700' }}>Your driver</Text>
-          <View className='p-2 mb-4 border border-black/30 rounded-lg'>
-            <View className='flex flex-row gap-2 justify-between'>
-              <View>
-                <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>Võ Hoàng Phúc</Text>
-                <Text className='text-lg mb-2 text-black' style={{ fontWeight: '900' }}>Biege Toyota Camry</Text>
+            <Text className='text-2xl mb-2' style={{ fontWeight: '700' }}>Your driver</Text>
+            <View className='p-2 mb-4 border border-black/30 rounded-lg'>
+              <View className='flex flex-row gap-2 justify-between'>
+                <View>
+                  <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>Võ Hoàng Phúc</Text>
+                  <Text className='text-lg mb-2 text-black' style={{ fontWeight: '900' }}>Biege Toyota Camry</Text>
+                </View>
+                <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>5.0★</Text>
               </View>
-              <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>5.0★</Text>
+              <View className='mt-2 flex flex-row gap-2 items-center'>
+                <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Top-rated</Text>
+                <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Professional</Text>
+                <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Careful</Text>
+              </View>
             </View>
-            <View className='mt-2 flex flex-row gap-2 items-center'>
-              <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Top-rated</Text>
-              <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Professional</Text>
-              <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Careful</Text>
+
+            <View className='flex flex-row items-center gap-2'>
+              <Text className='text-lg text-black bg-white border border-black/30 flex-1 text-center px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>Chat with driver</Text>
+              <Text className='text-lg text-white border border-black/30 px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>
+                <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
+              </Text>
             </View>
-          </View>
 
-          <View className='flex flex-row items-center gap-2'>
-            <Text className='text-lg text-black bg-white border border-black/30 flex-1 text-center px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>Chat with driver</Text>
-            <Text className='text-lg text-white border border-black/30 px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>
-              <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
-            </Text>
+            <View className='h-0.5 w-full bg-black/10 my-4' />
+            <PaymentScreen />
           </View>
-
-          <View className='h-0.5 w-full bg-black/10 my-4' />
-          <PaymentScreen />
-        </View>
+          : <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
+            <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>
+          </View>
         : null}
     </View>
   )
