@@ -218,30 +218,30 @@ export const getDriverListByStatusAndTransport = async (driverStatus: boolean, t
 //       break;
 //   }
 
-  // const driverListResponse = await getDriverListByStatusAndTransport(driverStatus, transportType, 'Default') as ResponseDto
-  // if (driverListResponse.code && driverListResponse)
+// const driverListResponse = await getDriverListByStatusAndTransport(driverStatus, transportType, 'Default') as ResponseDto
+// if (driverListResponse.code && driverListResponse)
 
-  // const bookingCollection = collection(db, CollectionName.BOOKINGS);
+// const bookingCollection = collection(db, CollectionName.BOOKINGS);
 
-  // const q = query(
-  //   bookingCollection,
-  //   where('status', '==', BookingStatus.Success),
-  //   where('updatedAt', '>=', startTime)
-  // );
+// const q = query(
+//   bookingCollection,
+//   where('status', '==', BookingStatus.Success),
+//   where('updatedAt', '>=', startTime)
+// );
 
-  // const querySnapshot = await getDocs(q);
+// const querySnapshot = await getDocs(q);
 
-  // const results = querySnapshot.docs.map((doc) => {
-  //   let totalIncome = 0;
-  //   let totalDistance = 0;
+// const results = querySnapshot.docs.map((doc) => {
+//   let totalIncome = 0;
+//   let totalDistance = 0;
 
-  //   const data = doc.data();
-  //   totalIncome += data.fare;
-  //   totalDistance += data.distance;
+//   const data = doc.data();
+//   totalIncome += data.fare;
+//   totalDistance += data.distance;
 
-  // });
+// });
 
-  // return { totalIncome, totalDistance };
+// return { totalIncome, totalDistance };
 // };
 
 export async function getAccountById(accountId: string) {
@@ -278,7 +278,7 @@ export async function getCustomerStripeId(accountId: string) {
     } else {
       throw new NotFoundException(`Account with id ${accountId} does not exist`)
     }
-  } catch(err) {
+  } catch (err) {
     return handleUserException(err, 'Get Customer Stripe ID')
   }
 }
@@ -351,7 +351,7 @@ const isUniqueUser = async (userId: string, email: string, username: string) => 
   }
 }
 
-export async function getUserById(userId: string){
+export async function getUserById(userId: string) {
   try {
     const userRef = doc(db, CollectionName.ACCOUNTS, userId)
     const userSnap = await getDoc(userRef)
