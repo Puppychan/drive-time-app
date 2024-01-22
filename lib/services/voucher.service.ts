@@ -85,9 +85,9 @@ export function isAppliedVoucherValid(transportType: TransportType, voucher: Vou
     return false
 
   // validate voucher expire or started
-  const expirationDate = new Date(voucher.expireDate)
-  const startDate = new Date(voucher.startDate)
-  const currentDate = new Date()
+  const expirationDate = voucher.expireDate.toDate();
+  const startDate = voucher.startDate.toDate();
+  const currentDate = new Date();
   if (currentDate >= expirationDate || currentDate <= startDate) return false
 
   return true
