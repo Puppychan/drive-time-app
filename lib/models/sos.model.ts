@@ -3,3 +3,4 @@ export interface SOS {
   phone: string
   address: string
 }
+
