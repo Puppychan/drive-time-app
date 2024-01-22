@@ -11,20 +11,24 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     minWidth: 100,
-    gap: 10
+    gap: 10,
   },
   input: {
     borderColor: Colors.silver,
     borderWidth: 1,
-    borderRadius: 3,
-    backgroundColor: '#FFFFFF',
+    borderRadius: 5,
     height: Constant.inputHeight,
-    padding: 10,
-    fontSize: Constant.normalTextSize,
-    width: '100%'
+    width: '100%',
+    fontSize: FontSize.small,
+    padding: Spacing,
   },
   onFocus: {
-    borderColor: Colors.primary
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    shadowOffset: { width: 4, height: Spacing },
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.2,
+    shadowRadius: Spacing,
   }
 })
 
@@ -60,22 +64,8 @@ export const Input = (props: TextInputProps) => {
       {label && <Label label={label} required={required} labelStyle={labelStyle}></Label>}
       <TextInput
         style={[
-          {
-            // fontFamily: Font["poppins-regular"],
-            fontSize: FontSize.small,
-            padding: Spacing * 2,
-            backgroundColor: specialColors.lightPrimary,
-            borderRadius: Spacing,
-            marginVertical: Spacing,
-          },
-          isFocused && {
-            borderWidth: 3,
-            borderColor: Colors.primary,
-            shadowOffset: { width: 4, height: Spacing },
-            shadowColor: Colors.primary,
-            shadowOpacity: 0.2,
-            shadowRadius: Spacing,
-          },
+          styles.input,
+          isFocused && styles.onFocus,
         ]}
         placeholder={placeHolder}
         value={value}

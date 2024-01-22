@@ -7,9 +7,9 @@ export const SafetyReportButton = () => {
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Safety checkup</Text>
+        <Text style={styles.title}>Safety Report</Text>
         <Text style={styles.footer}>
-          Boost your safety profile by turning on additional features
+          Boost your safety. You can trigger SOS in case of emergency. 
         </Text>
       </View>
       <Image style={styles.icon} source={require('../../../../../assets/ic_check.png')} />

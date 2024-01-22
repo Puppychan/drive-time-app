@@ -52,9 +52,11 @@ const RideSelectionCard = () => {
   const [selected, setSelected] = useState<ItemType | null>(null)
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <View>
-        <Text style={styles.headerText}>Select a Drive - {travelInformation?.distance.text}</Text>
+    <View style={{ flex: 1, padding: 16, backgroundColor: 'red',height: 150 }}>
+      <View style={{backgroundColor: 'green'}}>
+        <Text style={styles.headerText}>
+          Select a Drive -{travelInformation?.distance.text}
+          </Text>
       </View>
       <FlatList
         data={data}
@@ -91,12 +93,14 @@ const RideSelectionCard = () => {
         </View>
       </View>
 
+      <Text> Hello world </Text>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.selectButton}
           onPress={() => {
-            dispatch(toggleRideSelectionVisibility())
-            dispatch(toggleLoading())
+            dispatch(toggleRideSelectionVisibility());
+            dispatch(toggleLoading());
           }}
         >
           <Text style={styles.buttonText}>Select {selected?.title}</Text>
@@ -104,6 +108,7 @@ const RideSelectionCard = () => {
       </View>
     </View>
   )
+
 }
 
 export default RideSelectionCard
