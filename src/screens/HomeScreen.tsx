@@ -94,7 +94,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
-          <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? role}</Title>
+          <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? "User"}</Title>
           <SearchInput />
 
           <TouchableOpacity className='mx-4 bg-white border border-black/10 px-4 py-1 rounded-lg' onPress={onClickHomeSection}>

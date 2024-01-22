@@ -30,7 +30,7 @@ export const ProfileHeader = ({ avatarOnPress }: {
       <View style={{ alignItems: 'flex-end' }}>
         <Image
           style={styles.userProfileImage}
-          source={image ? { uri: image } : require('@/assets/user_profile.jpg')}
+          source={auth.currentUser?.photoURL ? { uri: auth.currentUser?.photoURL } : require('@/assets/user_profile.jpg')}
         />
         <TouchableOpacity
           onPress={avatarOnPress}

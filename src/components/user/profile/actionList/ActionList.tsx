@@ -18,7 +18,7 @@ const imagePaths: Record<string, any> = {
 export const ActionList = ({ imagePath = 'ic_message', title = 'Messages', onPress = () => {}}) => {
   const selectedImage = imagePaths[imagePath]
   return (
-    <TouchableOpacity style={styles.btnContainer} onPress={() => console.log("hehe")}>
+    <TouchableOpacity style={styles.btnContainer} onPress={onPress}>
       <Image style={styles.btnIcon as ImageStyle} source={selectedImage} />
 
       <Text style={styles.btnText}> {title}</Text>

@@ -25,7 +25,7 @@ import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { auth, db } from '../firebase/firebase'
-import { uploadImage } from '@/lib/firebase/storage'
+import { getDownloadUrl, uploadImage } from '@/lib/firebase/storage'
 import { AVATAR_REF } from '@/components/Constant'
 import { AccountRole } from '../models/account.model'
 import { TransportType } from '../models/transport.model'
@@ -37,13 +37,16 @@ export async function updateAvatar(userId: string, avatarUri: string | null) {
   try {
     let avatar = null
     if (avatarUri) {
-      const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
+      const imageRef = `${AVATAR_REF}/${userId}.jpg`
+      await uploadImage(avatarUri, imageRef)
+      const res = await getDownloadUrl(imageRef)
       if (res.code === ResponseCode.OK) {
-        const {downloadUrl} = res.body
+        const downloadUrl = res.body
         avatar = downloadUrl
       }
-      else throw res
     }
+    console.log("avatar: ", avatar)
+
     await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
       avatar: avatar,
       updatedDate: Timestamp.fromDate(new Date())
@@ -56,6 +59,7 @@ export async function updateAvatar(userId: string, avatarUri: string | null) {
     return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", avatar);
   }
   catch (e) {
+    console.log(e)
     throw e
 
   }

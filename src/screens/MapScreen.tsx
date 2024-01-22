@@ -32,7 +32,7 @@ const MapScreen = () => {
   const currentLocation = useSelector(selectCurrentLocation)
 
 
-  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  // const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cars, setCars] = useState([])
 
   const origin = useSelector(selectOrigin)

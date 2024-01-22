@@ -97,7 +97,7 @@ export const UserProfileScreen = () => {
   }
   
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
         <ProfileHeader avatarOnPress={showEditAvatarModal}/>
 

@@ -5,13 +5,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 15
   },
   userProfileImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    overflow: 'hidden'
+    // overflow: 'hidden'
   },
   userNameTxt: {
     fontSize: 40,
