@@ -7,9 +7,9 @@ export const SUGGESTION_LIST = [
   },
   {
     id: 'ID2',
-    name: 'Bike',
+    name: 'Car4',
     iconImage: require('../../../assets/motorbike.png'),
-    link: '/bike'
+    link: '/Car4'
   },
   {
     id: 'ID3',

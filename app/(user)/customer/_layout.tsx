@@ -1,17 +1,17 @@
 import Footer from '@/src/components/footer/Footer'
 import { store } from '@/store'
 import { Stack } from 'expo-router'
-import { StyleProp, View } from 'react-native'
+import { View } from 'react-native'
 import { Provider } from 'react-redux'
 
 const headerCustomStyle = {
   headerStyle: {
     backgroundColor: 'black',
-
   },
   headerTitleStyle: {
     color: 'white'
-  }
+  },
+  headerTintColor: 'white' // This will change the color of the back button
 }
 
 export default function _layout() {
@@ -27,7 +27,7 @@ export default function _layout() {
             options={{
               headerBackVisible: false,
               headerTitle: "Home Drive Time",
-              ...headerCustomStyle
+              ...headerCustomStyle,
             }}
           />
           <Stack.Screen
@@ -43,6 +43,13 @@ export default function _layout() {
             options={{
               headerBackVisible: false,
               headerTitle: "Profile",
+              ...headerCustomStyle
+            }}
+          />
+          <Stack.Screen
+            name="nearby_place"
+            options={{
+              headerTitle: "Nearby Place",
               ...headerCustomStyle
             }}
           />

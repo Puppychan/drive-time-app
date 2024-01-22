@@ -6,6 +6,10 @@ export enum AddtionalApplyType {
 }
 export type VoucherApplyType = AddtionalApplyType | TransportType
 
+export const voucherFilterMap = {
+  'applyType': [AddtionalApplyType.ALL, TransportType.]
+}
+
 export interface Voucher {
   voucherId: string
   name: string

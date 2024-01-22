@@ -8,7 +8,7 @@ import { Voucher } from "@/lib/models/voucher.model";
 import { FlatList } from "react-native-gesture-handler";
 import { formatTimestampToReadableTime } from "@/common/time.helper";
 
-const colors = ['bg-indigo-100', 'bg-rose-100', 'bg-cyan-100'];
+const colors = ['bg-cyan-100', 'bg-indigo-100', 'bg-rose-100'];
 export default function Page() {
     const router = useRouter();
     const [vouchers, setVouchers] = useState([]);
@@ -33,12 +33,12 @@ export default function Page() {
     }, []);
 
     if (!vouchers) {
-        return <View className="bg-white w-full pt-20 min-h-screen flex justify-center">
+        return <View className="bg-white w-full pt-20 min-h-screen flex justify-center items-center">
             <Text className={`text-lg text-neutral-500 font-bold mb-2`}>Loading....</Text>
         </View>
     }
     if (vouchers.length == 0) {
-        return <View className="bg-white w-full pt-20 min-h-screen flex justify-center">
+        return <View className="bg-white w-full pt-20 min-h-screen flex justify-center items-center">
             <Text className={`text-lg text-neutral-500 font-bold mb-2`}>There is no voucher</Text>
         </View>
     }
@@ -58,7 +58,12 @@ export default function Page() {
 
     return (
         <View className="bg-white w-full pt-20 min-h-screen">
-            {/* <Text className={`text-lg font-bold mb-2`}>{item.name}</Text> */}
+
+            {filterOptions.map((filter, index) => (
+                <TouchableOpacity key={index} onPress={() => handleFilterClick(filter)}>
+                    <Text style={{ backgroundColor: colors[index % colors.length] }}>{filter}</Text>
+                </TouchableOpacity>
+            ))}
             <FlatList
                 data={vouchers}
                 keyExtractor={(item: Voucher) => item.voucherId.toString()}
