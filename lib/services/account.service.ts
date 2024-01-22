@@ -23,6 +23,7 @@ import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
+import { AccountRole } from '../models/account.model'
 
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
@@ -130,6 +131,19 @@ export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId
     return handleUserException(error, 'Adding user device')
   }
 }
+
+export const getAllAccountsByUserRole = async (role: string) => {
+  try {
+    const driverCollection = collection(db, CollectionName.ACCOUNTS)
+    const q = query(
+      driverCollection,
+      where('role', '==', AccountRole.Driver),
+    )
+    return getQuerySnapshotData(q)
+  } catch (err) {
+    return handleBookingException(err, `Render driver list using customer ID`)
+  }
+};
 
 export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.

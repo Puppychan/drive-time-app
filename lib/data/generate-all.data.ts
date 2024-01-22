@@ -22,10 +22,10 @@ export function generateData() {
   // })
 
   // generate voucher
-  // generateRandomVouchers().then((message) => {
-  //   ToastAndroid.show(message, ToastAndroid.LONG)
-  //   console.log('Voucher', message)
-  // })
+  generateRandomVouchers().then((message) => {
+    ToastAndroid.show(message, ToastAndroid.LONG)
+    console.log('Voucher', message)
+  })
 
   // generate location
   //   generateRandomLocations(10).then((message) => {
@@ -40,8 +40,8 @@ export function generateData() {
   //   })
 
   // generate booking
-  generateRandomBookings(5).then((message) => {
-    ToastAndroid.show(message, ToastAndroid.LONG)
-    console.log('Booking', message)
-  })
+  // generateRandomBookings(5).then((message) => {
+  //   ToastAndroid.show(message, ToastAndroid.LONG)
+  //   console.log('Booking', message)
+  // })
 }

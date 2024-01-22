@@ -10,4 +10,5 @@ export interface Driver extends Account {
   banTime?: Timestamp | null
   ladtitude: number
   longitude: number
+  isAvailable?: boolean
 }

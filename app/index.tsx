@@ -6,7 +6,7 @@ import { User } from 'firebase/auth'
 import { useEffect, useState, useCallback } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Onboarding from 'react-native-onboarding-swiper'
-import { Provider as PageProvider } from 'react-native-paper'
+import { Button, Provider as PageProvider } from 'react-native-paper'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { auth } from '@/lib/firebase/firebase'
@@ -27,6 +27,10 @@ SplashScreen.preventAutoHideAsync()
 // })
 
 const { width: screenWidth } = getScreenSize()
+
+const generateSampleClick = () => {
+  generateData()
+}
 
 export default function App() {
   const router = useRouter()
@@ -56,7 +60,7 @@ export default function App() {
       if (auth.currentUser) {
         let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
         if (role) {
-          router.replace(`/${role.toLowerCase( )}/home`)
+          router.replace(`/${role.toLowerCase()}/home`)
           return
         }
       }
@@ -72,7 +76,7 @@ export default function App() {
       let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
       console.log("role: ", role)
       if (role) {
-        router.replace(`/${role.toLowerCase( )}/home`)
+        router.replace(`/${role.toLowerCase()}/home`)
         return
       }
     }
@@ -90,18 +94,7 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        {/*
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Home Page</Text>
-          <Button onPress={onClickData}>Generate Data</Button>
-          <Link href="/signin" asChild>
-            <ReactNativeButton title="Open Signin" />
-          </Link>
-          <Link href="../driver/register/chat" asChild>
-            <Button>Open SignIn</Button>
-          </Link>
-        </View>
-        */}
+        {/* <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button> */}
         <View
           style={styles.container}
           onLayout={onLayoutRootView}

@@ -10,7 +10,8 @@ import {
   toggleLoading
 } from '@/src/slices/navSlice'
 
-import { styles } from './ride-selection-card.style'
+// import { styles } from './ride-selection-card.style'
+import { StyleSheet } from 'react-native'
 
 const data = [
   {
@@ -52,13 +53,14 @@ const RideSelectionCard = () => {
   const [selected, setSelected] = useState<ItemType | null>(null)
 
   return (
-    <View style={{ flex: 1, padding: 16, backgroundColor: 'red',height: 150 }}>
-      <View style={{backgroundColor: 'green'}}>
+    <View style={styles.mainContainer}>
+      <View style={styles.headerContainer}>
         <Text style={styles.headerText}>
           Select a Drive -{travelInformation?.distance.text}
-          </Text>
+        </Text>
       </View>
       <FlatList
+        style={styles.driverItemContainer}
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
@@ -110,5 +112,125 @@ const RideSelectionCard = () => {
   )
 
 }
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    height: 150,
+    paddingHorizontal: 16,
+    paddingTop: 36,
+    paddingBottom: 150,
+    backgroundColor: 'black',
+    borderTopLeftRadius: 20, // Set top left border radius
+    borderTopRightRadius: 20, // Set top right border radius
+    overflow: 'hidden', // This ensures that children don't overlap the rounded corners
+  },
+  headerContainer: {
+    backgroundColor: 'transparent'
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 23,
+    marginBottom: 17,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  driverItemContainer: {
+    paddingHorizontal: 10,
+    marginVertical: 20,
+    // minHeight: 200,
+  },
+  driveItem: {
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 8,
+    paddingVertical: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+  },
+  driveImage: {
+    paddingLeft: 10,
+    width: 65,
+    height: 65,
+    resizeMode: 'contain',
+  },
+  driveDetails: {
+    marginLeft: 16,
+    paddingLeft: 10,
+    paddingRight: 15,
+    justifyContent: 'center',
+  },
+  driveTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  priceText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    position: 'absolute',
+    right: 12,
+  },
+  paymentInfo: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    justifyContent: 'space-between',
+  },
+  paymentMethod: {
+    flexDirection: 'row',
+  },
+  paymentIcon: {
+    fontSize: 15,
+    marginRight: 10,
+    color: '#3498db',
+  },
+  paymentText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  divider: {
+    height: '100%',
+    width: 2,
+    backgroundColor: '#ccc',
+    alignItems: 'center',
+  },
+  voucherInfo: {
+    flexDirection: 'row',
+    right: 40,
+  },
+  voucherIcon: {
+    fontSize: 15,
+    marginRight: 10,
+    color: '#e44d26',
+  },
+  voucherText: {
+    fontSize: 15,
+    color: '#e44d26',
+  },
+  buttonContainer: {
+    marginTop: 20,
+    backgroundColor: 'red'
+  },
+  selectButton: {
+    height: 50,
+    backgroundColor: '#3498db',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
+
 
 export default RideSelectionCard
