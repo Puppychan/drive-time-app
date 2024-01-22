@@ -99,7 +99,7 @@ export const UserProfileScreen = () => {
   return (
     <ScrollView>
       <View style={styles.topContainer}>
-        <ProfileHeader authUser={auth.currentUser} avatarOnPress={showEditAvatarModal}/>
+        {/* <ProfileHeader authUser={auth.currentUser} avatarOnPress={showEditAvatarModal}/> */}
 
         <View style={styles.smallBtnContainer}>
           <UtilityButton imagePath="ic_help" title="Help" />
@@ -120,7 +120,7 @@ export const UserProfileScreen = () => {
       </View>
 
       <View style={styles.bottomContainer}>
-        <ActionList imagePath="ic_message" title="Messages" onPress={() => router.push('/(user)/customer/sos')} />
+        <ActionList imagePath="ic_message" title="Messages" />
         <ActionList imagePath="ic_gift" title="Send a gift" />
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_fav" title="Favourites" />

@@ -32,7 +32,7 @@ const MapScreen = () => {
   const currentLocation = useSelector(selectCurrentLocation)
 
 
-  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  // const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cars, setCars] = useState([])
 
   const origin = useSelector(selectOrigin)
@@ -43,12 +43,13 @@ const MapScreen = () => {
   const dispatch = useDispatch()
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
-
+  const latitude = currentLocation?.coords.latitude ? currentLocation?.coords.latitude : 10.785255359834135;
+  const longitude = currentLocation?.coords.longitude ? currentLocation?.coords.longitude : 106.6932718123096;
   let carRequest;
 
   // Generate Request
   const requests: CarRequest[] = [
-    { pickup: { id: 'P1', x: 10.785255359834135, y: 106.6932718123096 }, delivery: { id: 'D1', x: destination.location.lat, y: destination.location.long } },
+    { pickup: { id: 'P1', x: latitude, y: longitude}, delivery: { id: 'D1', x: destination.location.lat, y: destination.location.long } },
     // { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
     // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
   ]
