@@ -48,6 +48,7 @@
     "firebase-functions": "^4.6.0",
     "jsonwebtoken": "^9.0.2",
     "metro-react-native-babel-preset": "^0.77.0",
+    "nativewind": "^2.0.11",
     "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -109,6 +110,7 @@
     "path": "^0.12.7",
     "prettier": "3.2.4",
     "react-native-view-shot": "3.7.0",
+    "tailwindcss": "^3.3.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
