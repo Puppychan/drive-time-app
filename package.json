@@ -41,6 +41,7 @@
     "expo-constants": "~14.4.2",
     "expo-crypto": "~12.4.1",
     "expo-dev-client": "~2.4.12",
+    "expo-image-picker": "~14.3.2",
     "expo-linking": "~5.0.2",
     "expo-router": "^2.0.4",
     "expo-splash-screen": "~0.20.5",
@@ -87,8 +88,7 @@
     "stream-chat": "^8.14.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.1.3",
-    "uuid": "^9.0.1",
-    "expo-image-picker": "~14.3.2"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -122,5 +122,4 @@
   "resolutions": {
     "@types/react": "~18.2.14"
   }
-
 }
