@@ -1,10 +1,9 @@
-import { useNavigation, router } from 'expo-router'
-import { Image, StyleSheet, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { router } from 'expo-router'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
-import { Appbar, Button, Paragraph, Title } from 'react-native-paper'
+import { Button, Paragraph, Title } from 'react-native-paper'
 
 import { useThemeColors } from '@/components/Colors'
-import { generateRandomAccounts } from '@/lib/data/generate-account.data'
 import { AccountRole } from '@/lib/models/account.model'
 import { DEFAULT_THEME } from '@/src/common/constants/default-value.constant'
 import {
@@ -12,26 +11,18 @@ import {
   SHORT_INSTRUCTION_LIST
 } from '@/src/common/constants/instruction-list.constant'
 import { SUGGESTION_LIST } from '@/src/common/constants/suggestion-list.constant'
-import { horizontalLeftView, verticalLeftView } from '@/src/common/utils/custom-view.style'
+import { verticalLeftView } from '@/src/common/utils/custom-view.style'
 import FullScreenCard from '@/src/components/cards/FullScreenCard'
 import InstructionCard from '@/src/components/cards/InstructionCard'
 import ServiceCard from '@/src/components/cards/ServiceCard'
 import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
-
-import ReviewScreen from './ReviewScreen'
-import { CustomButton } from '../components/button/Buttons'
-import { HorizontalDivider } from '../components/divider/HorizontalDivider'
-import { Driver } from '../../lib/models/driver.model'
-import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
 import { useEffect, useState } from 'react'
 import { auth } from '@/lib/firebase/firebase'
 import { User } from 'firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
-import { signOut } from '@/lib/firebase/auth'
 
-// TODO: change to dynamic later
 const HomeScreen = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
   const [user, setUser] = useState<User | null>()
@@ -72,14 +63,11 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Title style={styles.welcome}>Welcome, {user?.displayName ?? role}</Title>
-
+          <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? role}</Title>
           <SearchInput />
 
-          {/* Home section */}
-          <TouchableOpacity onPress={onClickHomeSection}>
-            <View style={{ ...horizontalLeftView, gap: 15 }}>
-              {/* <MaterialIcons name="home" size={24} color="black" /> */}
+          <TouchableOpacity className='mx-4 bg-white border border-black/10 px-4 py-1 rounded-lg' onPress={onClickHomeSection}>
+            <View className='flex flex-row gap-4 items-center'>
               <CircleIcon
                 name="home"
                 size={24}
@@ -95,67 +83,51 @@ const HomeScreen = () => {
             </View>
           </TouchableOpacity>
 
-          {/* Recent card */}
+          <View className='h-0.5 w-full bg-black/10' />
 
-
-          <Button
-            onPress={async () => {
-              await signOut()
-              router.push('/signin')
-            }}
-          >
-            Sign Out
-          </Button>
-
-          {/* Explore Nearby Card */}
-          <FullScreenCard
-            imageUrl={{ uri: 'https://source.unsplash.com/random?travel' }}
-            title="Explore nearby"
-            subtitle="Find the perfect ride for your next trip"
-            onClick={onClickExploreNearby}
-          />
-
-          {/* Divider */}
-          <HorizontalDivider height={7} {...{ marginVertical: 10 }} />
-
-          {/* Suggestions */}
-          <View style={styles.subsection}>
-            <Title>Suggestions</Title>
-            {/* Add see more if more than 4 suggestions */}
-            {SUGGESTION_LIST.length > 4 && (
-              <Button
-                // title="See More"
-                onPress={() => {
-                  onClickSeeMore('suggestion')
-                }}
-              >
-                See More
-              </Button>
-            )}
+          <View className='px-4'>
+            <FullScreenCard
+              imageUrl={{ uri: 'https://source.unsplash.com/random?travel' }}
+              title="Explore nearby"
+              subtitle="Find the perfect ride for your next trip"
+              onClick={onClickExploreNearby}
+            />
           </View>
-          <FlatList
-            horizontal
-            data={SUGGESTION_LIST}
-            renderItem={({ item, index }) => (
-              <ServiceCard
-                iconImage={item.iconImage}
-                title={item.name}
-                onClick={() => onClickSuggestions(index)}
-              />
-            )}
-            ItemSeparatorComponent={() => <View style={{ width: 20 }} />} // Gap width
-            keyExtractor={(item) => item.id}
-            // You can add this line to remove the horizontal scrollbar
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingRight: 50 }} // Increase this value if needed
-          />
 
-          {/* Divider */}
-          <HorizontalDivider height={7} {...{ marginVertical: 10 }} />
+
+          <View style={styles.subsection}>
+            <Title className='text-2xl px-2'>Suggestions</Title>
+          </View>
+
+          <View className='flex flex-row gap-2 px-8'>
+            <ServiceCard
+              iconImage={require('../../assets/normal.png')}
+              title='Book Car'
+              onClick={() => onClickSuggestions(1)}
+            />
+            <ServiceCard
+              iconImage={require('../../assets/motorbike.png')}
+              title='Book Motorbike'
+              onClick={() => onClickSuggestions(2)}
+            />
+          </View>
+
+          <View className='flex flex-row gap-2 px-8'>
+            <ServiceCard
+              iconImage={require('../../assets/reserve.png')}
+              title='Reserve Trip'
+              onClick={() => onClickSuggestions(3)}
+            />
+            <ServiceCard
+              iconImage={require('../../assets/popular.png')}
+              title='Popular Places'
+              onClick={() => onClickSuggestions(4)}
+            />
+          </View>
 
           {/* Ways to plan with Uber */}
-          <View style={styles.subsection}>
-            <Title>Instruction</Title>
+          <View className='mt-4 flex flex-row justify-between px-2'>
+            <Title className='text-2xl px-2'>Instructions</Title>
             {/* Add see more if more than 4 instructions */}
             {INSTRUCTION_LIST.length > 4 && (
               <Button
@@ -168,6 +140,7 @@ const HomeScreen = () => {
               </Button>
             )}
           </View>
+
           <FlatList
             horizontal
             data={SHORT_INSTRUCTION_LIST}
@@ -182,14 +155,15 @@ const HomeScreen = () => {
             keyExtractor={(item) => item.id}
             // You can add this line to remove the horizontal scrollbar
             showsHorizontalScrollIndicator={false}
+            className='px-4'
           />
 
-          {/* Divider */}
-          <HorizontalDivider height={7} {...{ marginVertical: 10 }} />
-
+          {/* <View className='h-0.5 w-full mt-4 bg-black/10' /> */}
           {/* Discover Map */}
-          <Title>Around You</Title>
-          <View>{/* <MapScreen/> */}</View>
+          {/* <Title>Around You</Title> */}
+          {/* <View>
+            <MapScreen/>
+          </View> */}
           {/* <Image
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/007/017/843/non_2x/abstract-polygon-world-map-illustration-geometric-structure-in-blue-color-for-presentation-booklet-website-and-other-design-projects-polygonal-background-free-vector.jpg'
@@ -205,11 +179,9 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
     paddingVertical: 35
   },
   insideContainer: {
-    // padding: 15,
     gap: 15,
     marginTop: 20,
     marginBottom: 50

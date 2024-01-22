@@ -33,7 +33,7 @@ export default function Page() {
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
-  const [dob, setDob] = useState<Date>()
+  const [dob, setDob] = useState<string>('')
   const [avatarUri, setAvatarUri] = useState<any>(null)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
 
@@ -74,13 +74,12 @@ export default function Page() {
         role: accountRole,
         phone: phone,
         avatar: avatarUrl,
-        birthday: (dob && Timestamp.fromDate(dob)) || null,
-        createdDate: Timestamp.fromDate(new Date())
+        birthday: (dob && Timestamp.fromDate(new Date(dob))) || null,
+        createdDate: Timestamp.fromDate(new Date()),
+        gender: gender
       }
   
       let roleAccount : AccountType
-      console.log("accountRole: ", accountRole)
-  
       switch (accountRole) {
         case AccountRole.Driver: //driver
           roleAccount = {
@@ -165,7 +164,7 @@ export default function Page() {
         </View>
         <Input label="Username" placeHolder="Username" required={true} onChangeText={setUsername}/>
         <Input label="Phone" placeHolder="Phone Number" required={true} onChangeText={setPhone}/>
-        <Input label="Date of Birth" placeHolder="Date of Birth" onChangeText={setDob}/>
+        <Input label="Date of Birth" placeHolder="yyyy-MM-dd" onChangeText={setDob}/>
         <AppDropDown
           label="Gender"
           options={genderList}
