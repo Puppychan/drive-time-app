@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, StatusBar, SafeAreaView, Text, StyleSheet, ScrollView, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Profile {
     name: string;
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         flexDirection: 'row',
         marginTop: 20,
-        justifyContent: 'space-around', // or 'space-around' depending on your preference
+        justifyContent: 'space-around',
     },
     cardItem: {
         marginRight: 20,
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         borderRadius: 15,
         padding: 20,
-        width: 200, // Adjust the width as needed
+        width: 200,
     },
     avatar: {
         width: 80,

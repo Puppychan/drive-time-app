@@ -84,8 +84,13 @@ export const CallScreen = ({ goToHomeScreen, callId }: Props) => {
 
   if (outgoingCall) {
     return (
-      <StreamCall call={outgoingCall}>
-        <View style={styles.container}>
+      <StreamCall call={call}>
+        {/* Temp for Demoing purpose*/}
+        <CallContent />
+
+        {/* Real Code */}
+
+        {/* <View style={styles.container}>
           <OutgoingCall
             onHangupCallHandler={async () => {
               try {
@@ -99,7 +104,7 @@ export const CallScreen = ({ goToHomeScreen, callId }: Props) => {
               }
             }}
           />
-        </View>
+        </View> */}
       </StreamCall>
     )
   }
