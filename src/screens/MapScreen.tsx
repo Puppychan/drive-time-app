@@ -9,6 +9,7 @@ import { Dimensions } from 'react-native';
 const { height, width } = Dimensions.get('window');
 
 import {
+  selectCurrentLocation,
   selectDestination,
   selectIsLoading,
   selectIsRideSelectionVisible,
@@ -22,6 +23,7 @@ import { getScreenSize } from '../common/helpers/default-device-value.helper'
 
 const { width: screenWidth, height: screenHeight } = getScreenSize()
 const MapScreen = () => {
+  const currentLocation = useSelector(selectCurrentLocation)
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible)
@@ -41,7 +43,7 @@ const MapScreen = () => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
         });
     }
-
+    console.log("origin", currentLocation)
     getTravelTime();
   }, [origin, destination, apiKey]);
 
