@@ -50,7 +50,7 @@ const HomeScreen = () => {
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.replace(`/${role.toLowerCase( )}/profile`)
+    router.replace(`/${role.toLowerCase()}/profile`)
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => { }
@@ -203,14 +203,6 @@ const HomeScreen = () => {
           /> */}
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <Appbar style={styles.bottom}>
-        <Appbar.Action icon="home" onPress={() => { }} />
-        <Appbar.Action icon="magnify" onPress={() => { }} />
-        <Appbar.Action icon="bell" onPress={() => { }} />
-        <Appbar.Action icon="account" onPress={() => { }} />
-      </Appbar>
     </View>
   )
 }
@@ -218,7 +210,8 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10
+    paddingHorizontal: 20,
+    paddingVertical: 35
   },
   insideContainer: {
     // padding: 15,
