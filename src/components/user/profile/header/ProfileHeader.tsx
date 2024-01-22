@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View, Image, Alert } from 'react-native'
-
+import { useEffect, useState } from 'react'
+import { Text, View, Image, } from 'react-native'
 import { styles } from './header-style'
-import { User } from 'firebase/auth'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { AntDesign } from '@expo/vector-icons';
 import { auth } from '@/lib/firebase/firebase'
