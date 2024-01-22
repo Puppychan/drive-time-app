@@ -312,7 +312,7 @@ export default function Page() {
   })
   return (
     <View>
-      <SignIn promptAsync={promptAsync}/>
+      <SignIn promptAsync={promptAsync} />
     </View>
   )
 }

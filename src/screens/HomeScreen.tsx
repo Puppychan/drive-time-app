@@ -20,21 +20,37 @@ import CircleIcon from '@/src/components/image/CircleIcon'
 import SearchInput from '@/src/components/input/SearchInput'
 
 import ReviewScreen from './ReviewScreen'
-import { AppButton } from '../components/button/Buttons'
+import { CustomButton } from '../components/button/Buttons'
 import { HorizontalDivider } from '../components/divider/HorizontalDivider'
 import { Driver } from '../../lib/models/driver.model'
 import { Transport, TransportColor, TransportType } from '../../lib/models/transport.model'
-import Footer from '../components/footer/Footer'
+import { useEffect, useState } from 'react'
 import { auth } from '@/lib/firebase/firebase'
+import { User } from 'firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
+import { signOut } from '@/lib/firebase/auth'
 
-
+// TODO: change to dynamic later
 const HomeScreen = () => {
-  const navigation = useNavigation()
   const colorsTheme = useThemeColors(DEFAULT_THEME)
+  const [user, setUser] = useState<User | null>()
+  const [role, setRole] = useState<string>(AccountRole.Customer)
+  useEffect(() => {
+    const prepare = async () => {
+      if (auth.currentUser) {
+        setUser(auth.currentUser)
+        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+        setRole(role ?? AccountRole.Customer)
+      }
+    }
+    prepare()
+
+  }, [])
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.push('/driver/register/driver-profile')
+    router.replace(`/${role.toLowerCase( )}/profile`)
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => { }
@@ -56,13 +72,14 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Title style={styles.welcome}>Welcome, {auth.currentUser?.email}</Title>
+          <Title style={styles.welcome}>Welcome, {user?.displayName ?? role}</Title>
 
           <SearchInput />
 
           {/* Home section */}
-          {/* <TouchableOpacity onPress={onClickHomeSection}>
+          <TouchableOpacity onPress={onClickHomeSection}>
             <View style={{ ...horizontalLeftView, gap: 15 }}>
+              {/* <MaterialIcons name="home" size={24} color="black" /> */}
               <CircleIcon
                 name="home"
                 size={24}
@@ -76,9 +93,24 @@ const HomeScreen = () => {
               </View>
               <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
             </View>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
           {/* Recent card */}
+
+          {/* <CustomButton
+            title="Register Driver"
+            onPress={() => {
+              router.push('/driver/register')
+            }} */}
+
+          <Button
+            onPress={async () => {
+              await signOut()
+              router.push('/signin')
+            }}
+          >
+            Sign Out
+          </Button>
 
           {/* Explore Nearby Card */}
           <FullScreenCard
@@ -162,15 +194,23 @@ const HomeScreen = () => {
 
           {/* Discover Map */}
           <Title>Around You</Title>
-          {/* <View><MapScreen/></View> */}
-          <Image
+          <View>{/* <MapScreen/> */}</View>
+          {/* <Image
             source={{
               uri: 'https://static.vecteezy.com/system/resources/previews/007/017/843/non_2x/abstract-polygon-world-map-illustration-geometric-structure-in-blue-color-for-presentation-booklet-website-and-other-design-projects-polygonal-background-free-vector.jpg'
             }}
             style={styles.planningImage}
-          />
+          /> */}
         </View>
       </ScrollView>
+
+      {/* Bottom Navigation */}
+      <Appbar style={styles.bottom}>
+        <Appbar.Action icon="home" onPress={() => { }} />
+        <Appbar.Action icon="magnify" onPress={() => { }} />
+        <Appbar.Action icon="bell" onPress={() => { }} />
+        <Appbar.Action icon="account" onPress={() => { }} />
+      </Appbar>
     </View>
   )
 }
@@ -178,8 +218,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 35
+    paddingHorizontal: 10
   },
   insideContainer: {
     // padding: 15,

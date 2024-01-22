@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions } from 'react-native'
 import Modal from 'react-native-modal'
-import { AppButton } from '../button/Buttons'
+import { CustomButton } from '../button/Buttons'
 interface BottomSheetProps {
   isVisible: boolean
   onSubmit: (email: string) => void;
@@ -48,7 +48,7 @@ const BottomSheet = ({ isVisible, onSubmit }: BottomSheetProps) => {
             />
           </View>
         </View>
-        <AppButton title="Send" onPress={handleSend} style={{ height: 55, borderRadius: 8, marginBottom: 10 }} />
+        <CustomButton title="Send" onPress={handleSend} style={{ height: 55, borderRadius: 8, marginBottom: 10 }} />
       </View>
     </Modal>
   )
