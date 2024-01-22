@@ -77,7 +77,8 @@ export const styles = StyleSheet.create({
     height: 80, // Adjust the size as needed
     marginBottom: 5,
     alignItems: 'center', // Center the content horizontally
-    justifyContent: 'center'
+    justifyContent: 'center',
+    
   },
   imageButtonText: {
     textAlign: 'center'

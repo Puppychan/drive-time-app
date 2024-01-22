@@ -1,3 +1,4 @@
+import { LocationObject, LocationObjectCoords } from "expo-location";
 import { mLocation } from "./car-matching.service";
 import {spot} from "./car-matching.service"
 interface DistanceAndTime {
@@ -29,9 +30,9 @@ export const getDistanceAndTime = async (origin: mLocation, destination: mLocati
     }
 };
 
-export const getDistanceAndTimeNearby = async (origin: spot, destination: spot, apiKey: string): Promise<DistanceAndTime> => {
-    const originCoords = `${origin.x},${origin.y}`;
-    const destinationCoords = `${destination.x},${destination.y}`;
+export const getDistanceAndTimeNearby = async (origin: LocationObjectCoords, destination: LocationObjectCoords, apiKey: string): Promise<DistanceAndTime> => {
+    const originCoords = `${origin.latitude},${origin.longitude}`;
+    const destinationCoords = `${destination.latitude},${destination.longitude}`;
 
     try {
         const response = await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${originCoords}&destinations=${destinationCoords}&key=${apiKey}`);

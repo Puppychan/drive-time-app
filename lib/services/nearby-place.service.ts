@@ -7,7 +7,7 @@ const API_KEY = "AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps";
 const headers = {
   "Content-Type": "application/json",
   "X-Goog-Api-Key": "AIzaSyADa2562hFV2teFIzhpf3krc5TJIuW-Pl4",
-  "X-Goog-FieldMask": ['places.displayName', 'places.formattedAddress', 'places.photos', 'places.iconMaskBaseUri', 'places.rating', 'places.priceLevel', 'places.currentOpeningHours','places.types','places.userRatingCount']
+  "X-Goog-FieldMask": ['places.displayName', 'places.formattedAddress', 'places.photos', 'places.iconMaskBaseUri', 'places.rating', 'places.priceLevel', 'places.currentOpeningHours','places.types','places.userRatingCount','places.location']
 }
 
 const nearByPlace = () => axios.post(BASE_URL, {

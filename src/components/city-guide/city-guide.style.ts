@@ -61,16 +61,18 @@ export const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginBottom: 5,
-
+    backgroundColor: '#e9e9e9',
+    borderRadius: 40,
     alignItems: 'center', // Center the content horizontally
     justifyContent: 'center'
   },
   image: {
-    width: 60, // Adjust the size as needed
-    height: 60 // Adjust the size as needed
+    width: 40, // Adjust the size as needed
+    height: 40 // Adjust the size as needed
   },
   selectedImage: {
     borderColor: 'black',
+    backgroundColor: '#e9e9e9',
     borderWidth: 2,
     borderRadius: 40,
     width: 80, // Adjust the size as needed

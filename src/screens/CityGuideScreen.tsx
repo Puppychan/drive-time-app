@@ -12,7 +12,7 @@ import NearByPlaceCard from '../components/nearby-place-card/nearby-place-card'
 import GlobalAPI from '../../lib/services/nearby-place.service'
 import { styles } from '../components/city-guide/city-guide.style'
 import { getScreenSize } from '../common/helpers/default-device-value.helper'
-import {store} from '@/store'
+import { store } from '@/store'
 import { Provider, useSelector } from 'react-redux'
 
 interface ButtonProps {
@@ -60,18 +60,18 @@ const imageButtons: ImageButtonProps[] = [
   {
     buttonId: 'convenience_store',
     label: 'Convinence Store',
-    image: require('../../assets/car.png')
+    image: require('../../assets/convenience-store.png')
   },
-  { buttonId: 'coffee_shop', label: 'Coffee Shop', image: require('../../assets/car.png') },
+  { buttonId: 'coffee_shop', label: 'Coffee Shop', image: require('../../assets/coffee-shop.png') },
   {
     buttonId: 'shopping_mall',
     label: 'Shopping Mall',
-    image: require('../../assets/car.png')
+    image: require('../../assets/mall.png')
   },
-  { buttonId: 'bar', label: 'Bar', image: require('../../assets/car.png') }
+  { buttonId: 'bar', label: 'Bar', image: require('../../assets/night-club.png') }
 ]
 
-const {height : screenHeight} = getScreenSize()
+const { height: screenHeight } = getScreenSize()
 
 const CityGuideScreen = () => {
   const [placeList, setPlaceList] = useState<Place[]>([]);
@@ -88,7 +88,7 @@ const CityGuideScreen = () => {
   const GetNearBySearchPlaces = async () => {
     GlobalAPI.nearByPlace()
       .then((res) => {
-        console.log(JSON.stringify(res.data.places))
+        // console.log(JSON.stringify(res.data.places))
         console.log('res', res.data.places.length)
         setPlaceList(res.data.places)
       })
@@ -101,7 +101,7 @@ const CityGuideScreen = () => {
     setSelectedOption(buttonId)
     console.log('buttonId', buttonId)
     console.log('selectedFilter', selectedFilter)
-    console.log('selectedFilter', placeList )
+    console.log('selectedFilter', placeList)
   }
 
   const handlePressFilter = (buttonId: string) => {
@@ -115,13 +115,13 @@ const CityGuideScreen = () => {
     console.log('buttonId', buttonId)
     console.log('selectedFilter', selectedFilter)
   }
-const filterPlaces = () => {
-  if (selectedFilter.length === 0) {
-    return placeList;
-  } else {
-    return placeList.filter(place => place.types.some(type => selectedFilter.includes(type)));
-  }
-};
+  const filterPlaces = () => {
+    if (selectedFilter.length === 0) {
+      return placeList;
+    } else {
+      return placeList.filter(place => place.types.some(type => selectedFilter.includes(type)));
+    }
+  };
   const renderButton = ({ buttonId, label }: ButtonProps) => (
     <TouchableOpacity
       key={buttonId}
@@ -133,14 +133,14 @@ const filterPlaces = () => {
       onPress={() => handlePress(buttonId)}
     >
       <View style={{ flexDirection: 'row' }}>
-        <Image
+        {/* <Image
           source={require('../../assets/starRating.png')}
           style={{
             width: 12,
             height: 12,
             marginRight: 5 // Add margin to separate the image and text
           }}
-        />
+        /> */}
 
         <Text style={styles.buttonText}>{label}</Text>
       </View>
@@ -158,18 +158,31 @@ const filterPlaces = () => {
     >
       <View style={styles.ImageButtonContainer}>
         <View style={selectedFilter.includes(buttonId) ? styles.selectedImage : styles.borderImage}>
+          {selectedFilter.includes(buttonId) && (
+            <Image
+              source={require('../../assets/check.png')}
+              style={{
+                position: 'absolute',
+                top: 3,  // Adjust the top position as needed
+                left: 57, // Adjust the left position as needed
+                width: 15,
+                height: 15,
+                zIndex: 1, // Make sure the checkmark is above the main image
+              }}
+            />
+          )}
           <Image
             source={image}
             // style={selectedOption === buttonId ? styles.selectedImage : styles.image}
             style={styles.image}
           />
         </View>
-        <Text style={selectedFilter.includes(buttonId) ? styles.selectedImageButtonText : styles.imageButtonText }>{label}</Text>
+        <Text style={selectedFilter.includes(buttonId) ? styles.selectedImageButtonText : styles.imageButtonText}>{label}</Text>
       </View>
     </TouchableOpacity>
   )
   return (
-    <View style={{height: screenHeight}}>
+    <View style={{ height: screenHeight }}>
       <View style={{ height: 120 }}>
         <ScrollView
           style={{ flexDirection: 'row', marginHorizontal: 12 }}
@@ -179,8 +192,14 @@ const filterPlaces = () => {
           {imageButtons.map(renderImageButton)}
         </ScrollView>
       </View>
-      <View style={{ flexDirection: 'row', marginHorizontal: 12 }}>
-        {buttons.map(renderButton)}
+      <View style={{ height: 50 }}>
+        <ScrollView
+          style={{ flexDirection: 'row', marginHorizontal: 12 }}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        >
+          {buttons.map(renderButton)}
+        </ScrollView>
       </View>
       <FlatList
         data={filterPlaces()}
@@ -189,7 +208,7 @@ const filterPlaces = () => {
 
             <NearByPlaceCard place={item} />
           </Provider>
-     
+
         )}
         horizontal={false}
         style={{ height: 230, marginTop: 10 }}

@@ -85,6 +85,7 @@ const HomeScreen = () => {
           longitude: location.coords.longitude,
         })
       )
+      console.log("abcb",location)
       setLocation(location);
     })();
   }, []);
