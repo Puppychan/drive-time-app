@@ -11,8 +11,8 @@ type ServiceCardProps = {
 
 const ServiceCard = ({ title, iconImage, onClick }: ServiceCardProps) => {
   return (
-    <TouchableOpacity onPress={onClick} style={{ alignItems: 'center' }}>
-      <Card style={styles.card}>
+    <TouchableOpacity onPress={onClick} className='w-1/2 mr-4'>
+      <Card className='h-32 flex flex-row justify-center items-center'>
         <Card.Content style={styles.cardContent}>
           <Image source={iconImage} style={styles.icon} resizeMode="contain" />
         </Card.Content>
@@ -26,12 +26,11 @@ const ServiceCard = ({ title, iconImage, onClick }: ServiceCardProps) => {
 
 const styles = StyleSheet.create({
   card: {
-    minWidth: '25%',
-    height: 100,
+    height: 150,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 2,
-    borderRadius: 8
+    borderRadius: 8,
   },
   cardContent: {
     justifyContent: 'center',
@@ -43,9 +42,8 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 4,
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'center',
-    width: 100 // Width is needed to control the ellipsis
   }
 })
 
