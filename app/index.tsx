@@ -76,7 +76,7 @@ export default function App() {
         return
       }
     }
-    router.replace('/(user)/customer/profile')
+    router.replace('/(user)/customer/home')
   }
 
   const doneButton = ({ ...props }) => {

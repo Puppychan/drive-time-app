@@ -32,21 +32,21 @@ export const UserProfileScreen = () => {
     setEditProfileVisible(false)
   }
 
-  useEffect(() => {
-    const prepare = async () => {
-      if (auth.currentUser) {
-        setUser(auth.currentUser)
-        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
-        setRole(role ?? AccountRole.Customer)
-      }
-      else {
-        ToastAndroid.show("Unauthorize. Please login", ToastAndroid.SHORT)
-        router.push('/signin')
-        return
-      }
-    }
-    prepare()
-  }, [])
+  // useEffect(() => {
+  //   const prepare = async () => {
+  //     if (auth.currentUser) {
+  //       setUser(auth.currentUser)
+  //       let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+  //       setRole(role ?? AccountRole.Customer)
+  //     }
+  //     else {
+  //       ToastAndroid.show("Unauthorize. Please login", ToastAndroid.SHORT)
+  //       router.push('/signin')
+  //       return
+  //     }
+  //   }
+  //   prepare()
+  // }, [])
 
   const handleSOS = () => {
     Alert.alert(
