@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl = 'http://13.211.134.29:3000'
+const apiUrl = 'http://3.27.123.148:3000'
 
 export const StripePaymentIntent = async (requestBody: object) => {
   try {

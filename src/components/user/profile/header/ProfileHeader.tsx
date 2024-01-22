@@ -13,15 +13,15 @@ export const ProfileHeader = ({ avatarOnPress }: {
   useEffect(() => {
     console.log(auth.currentUser?.photoURL)
     setImage(auth.currentUser?.photoURL ?? null)
-  }, [image])
+  }, [])
 
   return (
     <View style={styles.headerContainer}>
       <View>
-        <Text style={styles.userNameTxt}>{"Johnny Sin"}</Text>
+        <Text style={styles.userNameTxt}>{auth.currentUser?.displayName ?? "User"}</Text>
 
         <View style={styles.userRatingContainer}>
-          <Image style={styles.ratingImg} source={require('../../../../../assets/ic_star.png')} />
+          <Image style={styles.ratingImg} source={require('@/assets/ic_star.png')} />
           <Text style={styles.userRatingTxt}> 5.0 </Text>
         </View>
       </View>

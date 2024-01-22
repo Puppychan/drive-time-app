@@ -1,7 +1,15 @@
 import { StripeProvider, useStripe } from '@stripe/stripe-react-native'
-import { StyleSheet, TouchableOpacity, View, Text, Alert } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text, Alert, ToastAndroid } from 'react-native'
 
 import { StripePaymentIntent, StripeUserPaymentMethod } from '@/lib/services/payment.service'
+<<<<<<< HEAD
+import { getCustomerStripeId, setCustomerStripeId } from '@/lib/services/account.service'
+import { auth } from '@/lib/firebase/firebase'
+import { ResponseCode } from '@/common/response-code.enum'
+import { useEffect } from 'react'
+=======
+import { useEffect } from 'react'
+>>>>>>> c8bbace6b299ad2d37ec859faf4121ce122a9d67
 
 const STRIPE_PUBLISHABLE_KEY =
   'pk_test_51OZSSiJPx7rQ3VEwkLAPlP8cQGg5wSpSATi3XYmshpbtRECUeW0JAhntQ3jy30fuBAcYH7wl1K1pM2m5LBjteXaU00px9UD5jV'
@@ -13,7 +21,16 @@ export const PaymentScreen = () => {
     try {
       const amount = 3000 // in pennies
 
-      const customerStripeId = 'cus_POHmXEYB56m3tg'
+      // render customer stripe id using current user ID
+      const userId = auth.currentUser?.uid ?? ''
+      // const customerStripeId = 'cus_POHmXEYB56m3tg'
+      const getStripeIdResponse = await getCustomerStripeId(userId)
+      // if render unsuccessful
+      if (getStripeIdResponse.code !== ResponseCode.OK) {
+        ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot fetch customer stripe id', ToastAndroid.LONG)
+        return;
+      }
+      let customerStripeId = getStripeIdResponse.body.data
       const paymentMethodList = StripeUserPaymentMethod({ customerStripeId })
 
       const { paymentIntent, ephemeralKey, customer } = await StripePaymentIntent({
@@ -21,6 +38,16 @@ export const PaymentScreen = () => {
         customerStripeId,
         paymentMethodList
       })
+
+      // compare customerStripeID == customer => nothing: update
+      if (customerStripeId != customer) {
+        customerStripeId = customer
+        const updateStripeIdResponse = await setCustomerStripeId(userId, customer)
+        if (updateStripeIdResponse.code !== ResponseCode.OK) {
+          ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot update customer stripe id', ToastAndroid.LONG)
+          return;
+        }
+      }
 
       if (!paymentIntent) {
         Alert.alert('Payment Error', 'Please try again after a few seconds')
@@ -54,6 +81,11 @@ export const PaymentScreen = () => {
       console.error('Payment Error:', error)
     }
   }
+
+  useEffect(() => {
+    handlePaymentPress()
+  }, [])
+
   return (
     <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
       <View style={styles.container}>

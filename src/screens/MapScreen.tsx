@@ -1,13 +1,15 @@
-import { useEffect, useRef } from 'react'
-import { Image, View } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { Image, ToastAndroid, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dimensions } from 'react-native';
+import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.service'
 
 const { height, width } = Dimensions.get('window');
 
 import {
+  selectCurrentLocation,
   selectDestination,
   selectIsLoading,
   selectOrigin,
@@ -16,9 +18,16 @@ import {
 
 import LoadingBar from './FindingDriverScreen'
 import RideSelectionCard from '../components/map-screen/RideSelectionCard'
+import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
+import { TransportType } from '@/lib/models/transport.model'
+import { ResponseCode } from '@/common/response-code.enum'
+import { ResponseDto } from '@/common/response.dto'
 import { GooglePlacesInput } from './GooglePlacesInputScreen'
 
 const MapScreen = () => {
+  const currentLocation = useSelector(selectCurrentLocation)
+  const [cars, setCars] = useState([])
+
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isLoading = useSelector(selectIsLoading)
@@ -27,7 +36,39 @@ const MapScreen = () => {
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
+  let carRequest;
+
+  // Generate Request
+  const requests: CarRequest[] = [
+    { pickup: { id: 'P1', x: 10.785255359834135, y: 106.6932718123096 }, delivery: { id: 'D1', x: destination?.location?.lat || 10.7289515, y: destination?.location?.long || 106.6957667 } },
+    // { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
+    // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
+  ]
+
+  // const cars: Car[] = [
+  //   { id: 'C1', mLocation: { id: 'C1', x: 10.7769, y: 106.7009 } },  // Example coordinates for District 1, Ho Chi Minh City
+  //   { id: 'C2', mLocation: { id: 'C2', x: 10.7778, y: 106.6974 } },  // Example coordinates for District 1, Ho Chi Minh City
+  //   { id: 'C3', mLocation: { id: 'C3', x: 10.7755, y: 106.6962 } },  // Example coordinates for District 1, Ho Chi Minh City
+  //   { id: 'C4', mLocation: { id: 'C4', x: 10.7770, y: 106.6950 } }   // Example coordinates for District 1, Ho Chi Minh City
+  // ];
+
   useEffect(() => {
+    getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
+      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+      console.log("Bikeeee Carrrrrr", res.body.data)
+    })
+
+    getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
+      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+      setCars(res.body.data)
+      console.log("Carrrrrr", res.body.data)
+    })
+
+    getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
+      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+      console.log("XL Carrrrr", res.body.data)
+    })
+
     const getTravelTime = async () => {
       fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin?.description || 'RMIT University Vietnam - Saigon South campus'}&destinations=${destination?.description || 'Crescent Mall, Đường Tôn Dật Tiên, Khu đô thị Phú Mỹ Hưng'}&key=${apiKey}`)
         .then((res) => res.json())
@@ -35,9 +76,15 @@ const MapScreen = () => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
         });
     }
-
+    console.log("origin", currentLocation)
     getTravelTime();
   }, [origin, destination, apiKey]);
+
+  useEffect(() => {
+    console.log("cars in use effect", cars)
+    getBestMatchBooking(cars, requests)
+  }, [cars])
+
 
   return (
     <View className='h-screen relative'>
