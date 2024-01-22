@@ -1,4 +1,4 @@
-import { User, deleteUser } from 'firebase/auth'
+import { User, deleteUser, updateProfile } from 'firebase/auth'
 import {
   Timestamp,
   Transaction,
@@ -22,7 +22,36 @@ import { CollectionName } from '../common/collection-name.enum'
 import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
-import { db } from '../firebase/firebase'
+import { auth, db } from '../firebase/firebase'
+import { uploadImage } from '@/lib/firebase/storage'
+import { AVATAR_REF } from '@/components/Constant'
+
+
+
+export async function updateAvatar(userId: string, avatarUri) {
+  try {
+    const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
+    if (res.code === ResponseCode.OK) {
+      const {downloadUrl} = res.body
+      await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
+        avatar: downloadUrl,
+        updatedDate: Timestamp.fromDate(new Date())
+      });
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          photoURL: downloadUrl
+        })
+      }
+      return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", downloadUrl);
+    }
+    else throw res
+
+  }
+  catch (e) {
+    throw e
+
+  }
+}
 
 export async function getUserById(userId: string){
   try {

@@ -72,7 +72,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.insideContainer}>
-          <Title style={styles.welcome}>Welcome, {user?.displayName ?? role}</Title>
+          <Title style={styles.welcome}>Welcome, {user?.displayName ?? ""}</Title>
 
           <SearchInput />
 

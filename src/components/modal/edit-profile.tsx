@@ -23,14 +23,30 @@ const { height: windowHeight } = Dimensions.get('window')
 const EditProfileModal = ({ isVisible, onSubmit }: ModalProps) => {
   const [user, setUser] = useState<AccountType>()
   const [isReady, setIsReady] = useState(false)
-  const [gender, setGender] = useState(genderList[0].value)
+  const [gender, setGender] = useState<string>('')
   const [username, setUsername] = useState<string>('')
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
   const [dob, setDob] = useState<string>('')
-  const [avatarUri, setAvatarUri] = useState<any>(null)
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+
+  const timestampToString = (timestamp: Timestamp) => {
+    try {
+      let date = timestamp.toDate()
+      let dob = null
+      if (date) {
+        let year = date.getFullYear().toString()
+        let m = date.getMonth() + 1
+        let month = (m < 10)  ? `0${m.toString()}` : m.toString()
+        let day = date.getDate() < 10  ? `0${date.getDate().toString()}` : date.getDate().toString()
+        dob = year + '-' + month + '-' + day
+      }
+      return dob
+    }
+    catch (error) {
+      throw error
+    }
+  }
 
   useEffect(() => {
     const prepare = async () => {
@@ -44,12 +60,11 @@ const EditProfileModal = ({ isVisible, onSubmit }: ModalProps) => {
             setFirstName(userProfile.firstName)
             setLastName(userProfile.lastName)
             setPhone(userProfile.phone)
-            let birthday = userProfile.birthday?.toDate()
-            let dob = ''
-            if (birthday) {
-              dob = birthday.getFullYear() + '-' + birthday.getMonth() + '-' + birthday.getDay()
+            setGender(userProfile.gender ?? genderList[0].value)
+            if (userProfile.birthday) {
+              let temp = timestampToString(userProfile.birthday)
+              if (temp) setDob(temp)
             }
-            setDob(dob)
           }
         }
       } catch (e) {
@@ -88,25 +103,14 @@ const EditProfileModal = ({ isVisible, onSubmit }: ModalProps) => {
       // check if all required input fields are filled
       if (!checkRequire()) return;
   
-      // upload avatar photo (if any) to storage and get the downloadurl from it
-      if (avatarUri) {
-        const res = await uploadImage(avatarUri, `${AVATAR_REF}/${authUser.uid}.jpg`);
-        if (res.code === ResponseCode.OK) {
-          const {downloadUrl} = res.body
-          setAvatarUrl(downloadUrl)
-        }
-        else {
-          console.log("Upload image failed: " , res)
-        }
-      }
-  
       const account: AccountType = {
         ...user,
         firstName: firstName,
         lastName: lastName,
         phone: phone,
-        avatar: avatarUrl,
-        birthday: (dob && Timestamp.fromDate(new Date(dob))) || user?.birthday
+        avatar: null,
+        gender: gender,
+        birthday: (dob && Timestamp.fromDate(new Date(dob))) || null,
       }
 
 

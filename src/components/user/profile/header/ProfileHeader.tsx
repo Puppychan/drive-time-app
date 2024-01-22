@@ -1,10 +1,20 @@
-import React from 'react'
-import { Text, View, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Text, View, Image, Alert } from 'react-native'
 
 import { styles } from './header-style'
 import { User } from 'firebase/auth'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { AntDesign } from '@expo/vector-icons';
+import { auth } from '@/lib/firebase/firebase'
 
-export const ProfileHeader = ({authUser}) => {
+export const ProfileHeader = ({authUser, avatarOnPress}) => {
+  const [image, setImage] = useState<string |null>(null);
+
+  useEffect(() => {
+    console.log(auth.currentUser?.photoURL)
+    setImage(auth.currentUser?.photoURL ?? null)
+  }, [image])
+
   return (
     <View style={styles.headerContainer}>
       <View>
@@ -15,10 +25,17 @@ export const ProfileHeader = ({authUser}) => {
           <Text style={styles.userRatingTxt}> 5.0 </Text>
         </View>
       </View>
-      <Image
-        style={styles.userProfileImage}
-        source={require('../../../../../assets/user_profile.jpg')}
-      />
+      <View style={{alignItems: 'flex-end'}}>
+        <Image 
+          style={styles.userProfileImage}
+          source={image ? { uri: image } : require('@/assets/user_profile.jpg') } 
+        />
+        <TouchableOpacity
+          onPress={avatarOnPress}
+        >
+          <AntDesign name="picture" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

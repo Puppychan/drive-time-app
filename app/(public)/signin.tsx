@@ -131,7 +131,7 @@ export default function Page() {
               style={styles.input}
               placeholder="******"
               value={password}
-              secureTextEntry={showPassword}
+              secureTextEntry={!showPassword}
               onChangeText={(text) => setPassword(text)}
             />
             <TouchableOpacity
@@ -140,7 +140,7 @@ export default function Page() {
               }}
               style={styles.showHideButton}
             >
-              <Text>{!showPassword ? 'Hide' : 'Show'}</Text>
+              <Text>{showPassword ? 'Hide' : 'Show'}</Text>
             </TouchableOpacity>
           </View>
         </View>

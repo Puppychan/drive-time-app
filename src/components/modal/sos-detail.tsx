@@ -25,8 +25,8 @@ const SOSDetailModal = ({ isVisible, onSubmit }: ModalProps) => {
   useEffect(() => {
     const prepare = async () => {
       try {
-        if (auth.currentUser?.uid && auth.currentUser?.uid !== undefined) {
-          setUid(auth.currentUser?.uid)
+        if (auth.currentUser) {
+          setUid(auth.currentUser.uid)
           const sos = await getSOSByUserId(auth.currentUser?.uid)
           if (sos) {
             setSOS(sos)
