@@ -14,6 +14,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore'
+import { startOfDay, startOfMonth, startOfWeek } from 'date-fns'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -26,6 +27,8 @@ import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
 import { AccountRole } from '../models/account.model'
 import { TransportType } from '../models/transport.model'
+import { Driver } from '../models/driver.model'
+import { BookingStatus } from '../models/booking.model'
 
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
@@ -147,7 +150,7 @@ export const getAllAccountsByUserRole = async (role: AccountRole) => {
   }
 };
 
-export const getDriverListByStatusAndTransport = async (driverStatus: boolean, transportType: TransportType) => {
+export const getDriverListByStatusAndTransport = async (driverStatus: boolean, transportType: TransportType, returnType: 'Car' | 'Default' = 'Car') => {
   try {
     const driverCollection = collection(db, CollectionName.ACCOUNTS)
     const q = query(
@@ -156,11 +159,55 @@ export const getDriverListByStatusAndTransport = async (driverStatus: boolean, t
       where('isAvailable', '==', driverStatus),
       where('transport.type', '==', transportType)
     )
-    return getQuerySnapshotData(q)
+    if (returnType == 'Car') return getQuerySnapshotAsCar(q)
+    else return getQuerySnapshotData(q)
   } catch (err) {
     return handleUserException(err, `Render driver list based on status and transport type`)
   }
 };
+// export const getDriversTotalIncomeAndDistance = async (timePeriod: 'Today' | 'Week' | 'Month' | 'All', driverStatus: boolean, transportType: TransportType) => {
+//   let startTime;
+
+//   switch (timePeriod) {
+//     case 'Today':
+//       startTime = Timestamp.fromDate(startOfDay(new Date()));
+//       break;
+//     case 'Week':
+//       startTime = Timestamp.fromDate(startOfWeek(new Date()));
+//       break;
+//     case 'Month':
+//       startTime = Timestamp.fromDate(startOfMonth(new Date()));
+//       break;
+//     case 'All':
+//       startTime = Timestamp.fromDate(new Date(0)); // Start of UNIX time
+//       break;
+//   }
+
+  // const driverListResponse = await getDriverListByStatusAndTransport(driverStatus, transportType, 'Default') as ResponseDto
+  // if (driverListResponse.code && driverListResponse)
+
+  // const bookingCollection = collection(db, CollectionName.BOOKINGS);
+
+  // const q = query(
+  //   bookingCollection,
+  //   where('status', '==', BookingStatus.Success),
+  //   where('updatedAt', '>=', startTime)
+  // );
+
+  // const querySnapshot = await getDocs(q);
+
+  // const results = querySnapshot.docs.map((doc) => {
+  //   let totalIncome = 0;
+  //   let totalDistance = 0;
+
+  //   const data = doc.data();
+  //   totalIncome += data.fare;
+  //   totalDistance += data.distance;
+
+  // });
+
+  // return { totalIncome, totalDistance };
+// };
 
 export async function getAccountById(accountId: string) {
   try {
@@ -265,3 +312,21 @@ async function getQuerySnapshotData(query: Query) {
     new SuccessResponseDto(itemList, '')
   )
 }
+
+const getQuerySnapshotAsCar = async (query: Query): Promise<Car[]> => {
+  const querySnapshot = await getDocs(query);
+  const cars = querySnapshot.docs.map((doc) => {
+    const data = doc.data() as Driver;
+    const id = 'C' + doc.id;
+    const driverCurrentLocation = data.location
+    return {
+      id: id,
+      mLocation: {
+        id: id,
+        x: driverCurrentLocation?.latitude ?? 0,
+        y: driverCurrentLocation?.longitude ?? 0
+      }
+    };
+  });
+  return cars;
+};
