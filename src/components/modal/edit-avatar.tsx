@@ -26,7 +26,7 @@ const EditAvatarModal = ({ isVisible, onSubmit }: ModalProps) => {
       quality: 1
     });
 
-    console.log(result);
+    console.log("pick image from gallery: ", result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -45,6 +45,7 @@ const EditAvatarModal = ({ isVisible, onSubmit }: ModalProps) => {
     }
 
     prepare()
+    setImage(auth.currentUser?.photoURL ?? null)
     setIsReady(true)
   }, [])
 

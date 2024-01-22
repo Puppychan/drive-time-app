@@ -4,15 +4,16 @@ import { getScreenSize } from '@/src/common/helpers/default-device-value.helper'
 const { width: screenWidth } = getScreenSize()
 export const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
     width: screenWidth,
-    height: '100%',
+    height: '100%'
   },
   autocompleteContainer: {
     flex: 0,
     width: '80%',
     paddingTop: 5,
     paddingHorizontal: 10,
-    flexDirection: 'row',
+    flexDirection: 'row'
     // backgroundColor: 'red',
   },
   textInputContainer: {
@@ -29,17 +30,16 @@ export const styles = StyleSheet.create({
     padding: 9,
     paddingHorizontal: 20,
     margin: 5,
-    borderRadius: 15,
+    borderRadius: 15
   },
   buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
+    flexDirection: 'row'
   },
   selectedButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#007BFF'
   },
   buttonText: {
-    color: 'black',
+    color: 'black'
   },
 
   filterImageButton: {
@@ -48,27 +48,26 @@ export const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     // backgroundColor: '#e9e9e9',
-    height: 100,
+    height: 100
   },
   selectedImageButton: {
-    borderColor: 'blue',
+    borderColor: 'blue'
   },
   ImageButtonContainer: {
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   borderImage: {
     width: 80,
     height: 80,
     marginBottom: 5,
-  
+
     alignItems: 'center', // Center the content horizontally
-    justifyContent: 'center', 
+    justifyContent: 'center'
   },
   image: {
     width: 60, // Adjust the size as needed
-    height: 60, // Adjust the size as needed
-   
+    height: 60 // Adjust the size as needed
   },
   selectedImage: {
     borderColor: 'blue',
@@ -78,10 +77,9 @@ export const styles = StyleSheet.create({
     height: 80, // Adjust the size as needed
     marginBottom: 5,
     alignItems: 'center', // Center the content horizontally
-    justifyContent: 'center', 
-    
+    justifyContent: 'center'
   },
   imageButtonText: {
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 })

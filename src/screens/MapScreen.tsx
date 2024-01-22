@@ -9,30 +9,28 @@ import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.ser
 const { height, width } = Dimensions.get('window');
 
 import {
+  selectCurrentLocation,
   selectDestination,
   selectIsLoading,
-  selectIsRideSelectionVisible,
   selectOrigin,
   setTimeTravel
 } from '@/src/slices/navSlice'
 
 import LoadingBar from './FindingDriverScreen'
 import RideSelectionCard from '../components/map-screen/RideSelectionCard'
-import { getScreenSize } from '../common/helpers/default-device-value.helper'
 import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
 import { TransportType } from '@/lib/models/transport.model'
 import { ResponseCode } from '@/common/response-code.enum'
 import { ResponseDto } from '@/common/response.dto'
-
-const { height: screenHeight } = getScreenSize()
+import { GooglePlacesInput } from './GooglePlacesInputScreen'
 
 const MapScreen = () => {
-
-  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const currentLocation = useSelector(selectCurrentLocation)
   const [cars, setCars] = useState([])
+  // const [driverId, setDriverId] = useState(second)
+
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
-  const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible)
   const isLoading = useSelector(selectIsLoading)
   const mapRef = useRef<MapView | null>(null)
   const dispatch = useDispatch()
@@ -43,7 +41,7 @@ const MapScreen = () => {
 
   // Generate Request
   const requests: CarRequest[] = [
-    { pickup: { id: 'P1', x: 10.785255359834135, y: 106.6932718123096 }, delivery: { id: 'D1', x: destination.location.lat, y: destination.location.long } },
+    { pickup: { id: 'P1', x: 10.785255359834135, y: 106.6932718123096 }, delivery: { id: 'D1', x: destination?.location?.lat || 10.7289515, y: destination?.location?.long || 106.6957667 } },
     // { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
     // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
   ]
@@ -57,88 +55,94 @@ const MapScreen = () => {
 
   useEffect(() => {
     if (!origin || !destination) return;
-    getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
-      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-      console.log("Bikeeee Carrrrrr", res.body.data)
+    // getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
+    //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+    //   console.log("Bikeeee Carrrrrr", res.body.data)
 
 
-    })
+    // })
 
-    getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
-      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-      setCars(res.body.data)
-      console.log("Carrrrrr", res.body.data)
-    })
+    // getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
+    //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+    //   setCars(res.body.data)
+    //   console.log("Carrrrrr", res.body.data)
+    // })
 
-    getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
-      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-      console.log("XL Carrrrr", res.body.data)
-    })
+    // getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
+    //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+    //   console.log("XL Carrrrr", res.body.data)
+    // })
 
     const getTravelTime = async () => {
-      fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${apiKey}`)
+      fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin?.description || 'RMIT University Vietnam - Saigon South campus'}&destinations=${destination?.description || 'Crescent Mall, Đường Tôn Dật Tiên, Khu đô thị Phú Mỹ Hưng'}&key=${apiKey}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
         });
     }
-
+    console.log("origin", currentLocation)
     getTravelTime();
   }, [origin, destination, apiKey]);
 
   useEffect(() => {
     console.log("cars in use effect", cars)
+<<<<<<< HEAD
     if (cars.length >= 1) {
       getBestMatchBooking(cars, requests)
     }
+=======
+    getBestMatchBooking(cars, requests)
+>>>>>>> bbe723aade67f18efac2762364a0a8573aa0f2a5
   }, [cars])
 
 
   return (
-    <View style={{ height: screenHeight }}>
+    <View className='h-screen relative'>
+      <GooglePlacesInput />
       <MapView
         ref={mapRef}
-        mapType="mutedStandard"
+        // mapType="mutedStandard"
         style={{
-          height: isRideSelectionVisible ? 0.4 * height : height,
+          height: (origin && destination) ? 0.4 * height : height,
           width: width,
           minWidth: width,
         }}
         initialRegion={{
-          latitude: destination.location.lat,
-          longitude: destination.location.lng,
+          latitude: destination?.location?.lat || 10.7289515,
+          longitude: destination?.location?.lng || 106.6957667,
           latitudeDelta: 0.005,
           longitudeDelta: 0.005
         }}
       >
-        {origin &&
-          destination &&
-          (isRideSelectionVisible ? (
-            <MapViewDirections
-              origin={origin.description}
-              destination={destination.description}
-              strokeColor="blue"
-              strokeWidth={5}
-              apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
-              onReady={(result) => {
-                // Get the coordinates of the direction
-                const coordinates = result.coordinates
-                mapRef.current?.fitToCoordinates(coordinates, {
-                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                  animated: true
-                })
-              }}
-            />
-          ) : (
-            // Your else content goes here
-            mapRef.current?.fitToSuppliedMarkers(['origin'], {
-              edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
-              animated: true
-            })
-          ))}
+        {origin && destination && <MapViewDirections
+          origin={origin?.description}
+          destination={destination?.description}
+          strokeColor="blue"
+          strokeWidth={5}
+          apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
+          onReady={(result) => {
+            // Get the coordinates of the direction
+            const coordinates = result.coordinates;
+            if (coordinates.length > 0) {
+              mapRef.current?.fitToCoordinates(coordinates, {
+                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                animated: true
+              });
+            } else {
+              // Set random position as the center of the map
+              const randomLatitude = Math.random() * 180 - 90;
+              const randomLongitude = Math.random() * 360 - 180;
+              mapRef.current?.animateToRegion({
+                latitude: randomLatitude,
+                longitude: randomLongitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005
+              });
+            }
+          }}
+        />}
 
-
-        <Marker
+        {origin?.location ? <Marker
           coordinate={{
             latitude: origin.location.lat,
             longitude: origin.location.lng
@@ -165,10 +169,9 @@ const MapScreen = () => {
               />
             </View>
           </View>
+        </Marker> : null}
 
-        </Marker>
-
-        <Marker
+        {destination?.location ? <Marker
           coordinate={{
             latitude: destination.location.lat,
             longitude: destination.location.lng
@@ -176,9 +179,9 @@ const MapScreen = () => {
           title="Destination"
           description="Destination"
           identifier="destination"
-        />
+        /> : null}
       </MapView>
-      <RideSelectionCard />
+      {(origin && destination) ? <RideSelectionCard /> : null}
     </View>
   )
 }

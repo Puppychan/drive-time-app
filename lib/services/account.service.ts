@@ -25,7 +25,7 @@ import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { auth, db } from '../firebase/firebase'
-import { uploadImage } from '@/lib/firebase/storage'
+import { getDownloadUrl, uploadImage } from '@/lib/firebase/storage'
 import { AVATAR_REF } from '@/components/Constant'
 import { AccountRole } from '../models/account.model'
 import { TransportType } from '../models/transport.model'
@@ -33,26 +33,33 @@ import { Driver } from '../models/driver.model'
 
 
 
-export async function updateAvatar(userId: string, avatarUri: string) {
+export async function updateAvatar(userId: string, avatarUri: string | null) {
   try {
-    const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
-    if (res.code === ResponseCode.OK) {
-      const {downloadUrl} = res.body
-      await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
-        avatar: downloadUrl,
-        updatedDate: Timestamp.fromDate(new Date())
-      });
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, {
-          photoURL: downloadUrl
-        })
+    let avatar = null
+    if (avatarUri) {
+      const imageRef = `${AVATAR_REF}/${userId}.jpg`
+      await uploadImage(avatarUri, imageRef)
+      const res = await getDownloadUrl(imageRef)
+      if (res.code === ResponseCode.OK) {
+        const downloadUrl = res.body
+        avatar = downloadUrl
       }
-      return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", downloadUrl);
     }
-    else throw res
+    console.log("avatar: ", avatar)
 
+    await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
+      avatar: avatar,
+      updatedDate: Timestamp.fromDate(new Date())
+    });
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, {
+        photoURL: avatar
+      })
+    }
+    return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", avatar);
   }
   catch (e) {
+    console.log(e)
     throw e
 
   }
@@ -211,30 +218,30 @@ export const getDriverListByStatusAndTransport = async (driverStatus: boolean, t
 //       break;
 //   }
 
-  // const driverListResponse = await getDriverListByStatusAndTransport(driverStatus, transportType, 'Default') as ResponseDto
-  // if (driverListResponse.code && driverListResponse)
+// const driverListResponse = await getDriverListByStatusAndTransport(driverStatus, transportType, 'Default') as ResponseDto
+// if (driverListResponse.code && driverListResponse)
 
-  // const bookingCollection = collection(db, CollectionName.BOOKINGS);
+// const bookingCollection = collection(db, CollectionName.BOOKINGS);
 
-  // const q = query(
-  //   bookingCollection,
-  //   where('status', '==', BookingStatus.Success),
-  //   where('updatedAt', '>=', startTime)
-  // );
+// const q = query(
+//   bookingCollection,
+//   where('status', '==', BookingStatus.Success),
+//   where('updatedAt', '>=', startTime)
+// );
 
-  // const querySnapshot = await getDocs(q);
+// const querySnapshot = await getDocs(q);
 
-  // const results = querySnapshot.docs.map((doc) => {
-  //   let totalIncome = 0;
-  //   let totalDistance = 0;
+// const results = querySnapshot.docs.map((doc) => {
+//   let totalIncome = 0;
+//   let totalDistance = 0;
 
-  //   const data = doc.data();
-  //   totalIncome += data.fare;
-  //   totalDistance += data.distance;
+//   const data = doc.data();
+//   totalIncome += data.fare;
+//   totalDistance += data.distance;
 
-  // });
+// });
 
-  // return { totalIncome, totalDistance };
+// return { totalIncome, totalDistance };
 // };
 
 export async function getAccountById(accountId: string) {
@@ -271,7 +278,7 @@ export async function getCustomerStripeId(accountId: string) {
     } else {
       throw new NotFoundException(`Account with id ${accountId} does not exist`)
     }
-  } catch(err) {
+  } catch (err) {
     return handleUserException(err, 'Get Customer Stripe ID')
   }
 }
@@ -344,7 +351,7 @@ const isUniqueUser = async (userId: string, email: string, username: string) => 
   }
 }
 
-export async function getUserById(userId: string){
+export async function getUserById(userId: string) {
   try {
     const userRef = doc(db, CollectionName.ACCOUNTS, userId)
     const userSnap = await getDoc(userRef)

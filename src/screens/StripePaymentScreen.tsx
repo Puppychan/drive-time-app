@@ -1,7 +1,10 @@
 import { StripeProvider, useStripe } from '@stripe/stripe-react-native'
-import { StyleSheet, TouchableOpacity, View, Text, Alert } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text, Alert, ToastAndroid } from 'react-native'
 
 import { StripePaymentIntent, StripeUserPaymentMethod } from '@/lib/services/payment.service'
+import { getCustomerStripeId, setCustomerStripeId } from '@/lib/services/account.service'
+import { auth } from '@/lib/firebase/firebase'
+import { ResponseCode } from '@/common/response-code.enum'
 import { useEffect } from 'react'
 
 const STRIPE_PUBLISHABLE_KEY =
@@ -14,7 +17,16 @@ export const PaymentScreen = () => {
     try {
       const amount = 3000 // in pennies
 
-      const customerStripeId = 'cus_POHmXEYB56m3tg'
+      // render customer stripe id using current user ID
+      const userId = auth.currentUser?.uid ?? ''
+      // const customerStripeId = 'cus_POHmXEYB56m3tg'
+      const getStripeIdResponse = await getCustomerStripeId(userId)
+      // if render unsuccessful
+      if (getStripeIdResponse.code !== ResponseCode.OK) {
+        ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot fetch customer stripe id', ToastAndroid.LONG)
+        return;
+      }
+      let customerStripeId = getStripeIdResponse.body.data
       const paymentMethodList = StripeUserPaymentMethod({ customerStripeId })
 
       const { paymentIntent, ephemeralKey, customer } = await StripePaymentIntent({
@@ -22,6 +34,16 @@ export const PaymentScreen = () => {
         customerStripeId,
         paymentMethodList
       })
+
+      // compare customerStripeID == customer => nothing: update
+      if (customerStripeId != customer) {
+        customerStripeId = customer
+        const updateStripeIdResponse = await setCustomerStripeId(userId, customer)
+        if (updateStripeIdResponse.code !== ResponseCode.OK) {
+          ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot update customer stripe id', ToastAndroid.LONG)
+          return;
+        }
+      }
 
       if (!paymentIntent) {
         Alert.alert('Payment Error', 'Please try again after a few seconds')

@@ -29,15 +29,22 @@ export default function Page() {
         };
         loadVouchers();
     }, []);
-
+    const renderItem = ({ item }: { item: Voucher }) => (
+        <View className='bg-gray-200 mx-5 my-2 p-5 rounded-lg shadow-md'>
+            <Text className='text-lg font-bold mb-2'>{item.name}</Text>
+            <Text className='text-gray-700'>Apply to: {item.applyType}</Text>
+        </View>
+    );
     return (
-        <View>
+        <View className='bg-blue-400 w-full flex flex-col gap-10 p-10'>
+            <View className='bg-red-200 mx-5 my-2 p-5 rounded-lg shadow-md'>
+                <Text className='text-lg font-bold mb-2'>Hello</Text>
+                <Text className='text-gray-700'>Apply to: asbfsjk</Text>
+            </View>
             <FlatList
                 data={vouchers}
                 keyExtractor={(item: Voucher) => item.voucherId.toString()}
-                renderItem={({ item }: { item: Voucher }) => (
-                    <Text>{item.name}</Text>
-                )}
+                renderItem={renderItem}
             />
         </View>
     );

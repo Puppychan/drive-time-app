@@ -1,7 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { LocationObject } from 'expo-location';
 
 // Define a type for the slice state
 interface NavState {
+  currentLocation: LocationObject | null;
   origin: any // Define the type for origin
   destination: any // Define the type for destination
   timeTravel: any // Define the type for timeTravel
@@ -10,6 +12,7 @@ interface NavState {
 }
 
 const initialState = {
+  currentLocation: null,
   origin: null,
   destination: null,
   timeTravel: null,
@@ -21,6 +24,10 @@ export const navSlice = createSlice({
   name: 'nav',
   initialState,
   reducers: {
+    setCurrentLocation: (state, action) => {
+      state.currentLocation = action.payload;
+    },
+  
     setOrigin: (state, action) => {
       state.origin = action.payload
     },
@@ -44,6 +51,7 @@ export const navSlice = createSlice({
 })
 
 export const {
+  setCurrentLocation,
   setOrigin,
   setDestination,
   setTimeTravel,
@@ -51,6 +59,7 @@ export const {
   toggleLoading
 } = navSlice.actions
 
+export const selectCurrentLocation = (state: { nav: NavState }) => state.nav.currentLocation
 export const selectOrigin = (state: { nav: NavState }) => state.nav.origin
 export const selectDestination = (state: { nav: NavState }) => state.nav.destination
 export const selectTimeTravel = (state: { nav: NavState }) => state.nav.timeTravel

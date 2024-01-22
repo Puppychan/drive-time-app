@@ -23,10 +23,20 @@ import { User } from 'firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
 
+import { signOut } from '@/lib/firebase/auth'
+import { LocationObject } from 'expo-location';
+import * as Location from "expo-location";
+import { useDispatch } from 'react-redux'
+import { setCurrentLocation } from '../slices/navSlice'
+// TODO: change to dynamic later
+
 const HomeScreen = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
   const [user, setUser] = useState<User | null>()
   const [role, setRole] = useState<string>(AccountRole.Customer)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const dispatch = useDispatch()
   useEffect(() => {
     const prepare = async () => {
       if (auth.currentUser) {
@@ -51,7 +61,7 @@ const HomeScreen = () => {
   }
 
   const onClickSuggestions = (index: number) => {
-    router.push('/(user)/customer/book_driver')
+    router.push('/(user)/customer/map')
   }
 
   const onClickInstruction = () => {
@@ -59,11 +69,31 @@ const HomeScreen = () => {
     router.push('/(user)/customer/voucher')
   }
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync();
+      // Update the type of location state
+      dispatch(
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        })
+      )
+      setLocation(location);
+    })();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
-          <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? role}</Title>
+          <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? "User"}</Title>
           <SearchInput />
 
           <TouchableOpacity className='mx-4 bg-white border border-black/10 px-4 py-1 rounded-lg' onPress={onClickHomeSection}>
@@ -222,3 +252,4 @@ const styles = StyleSheet.create({
 })
 
 export default HomeScreen
+

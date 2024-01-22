@@ -97,9 +97,9 @@ export const UserProfileScreen = () => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
-        <ProfileHeader authUser={auth.currentUser} avatarOnPress={showEditAvatarModal}/>
+        <ProfileHeader avatarOnPress={showEditAvatarModal}/>
 
         <View style={styles.smallBtnContainer}>
           <UtilityButton imagePath="ic_help" title="Help" />
