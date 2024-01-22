@@ -7,6 +7,7 @@ import { generateRandomLocations } from './generate-location.data'
 import { generateMembershipData } from './generate-membership.data'
 import { generateRandomVouchers } from './generate-voucher.data'
 import { AccountRole } from '../models/account.model'
+import { updateAllDriverAccountsToBeTrueRandomly, updateAllDriverAccountsTransport } from './update-driver.data'
 
 export function generateData() {
   // generate membership
@@ -40,8 +41,25 @@ export function generateData() {
   //   })
 
   // generate booking
-  generateRandomBookings(5).then((message) => {
-    ToastAndroid.show(message, ToastAndroid.LONG)
-    console.log('Booking', message)
+  // generateRandomBookings(5).then((message) => {
+  //   ToastAndroid.show(message, ToastAndroid.LONG)
+  //   console.log('Booking', message)
+  // })
+
+  // update driver
+  // updateAllDriverAccountsTransport().then((message) => {
+  //   ToastAndroid.show(`Done updating drivers`, ToastAndroid.LONG)
+  //   console.log('Done updating drivers', message)
+  // }).catch(err => {
+  //   ToastAndroid.show(`Error updating drivers`, ToastAndroid.LONG)
+  //   console.log('Error updating drivers', err)
+  // })
+  // update driver status
+  updateAllDriverAccountsToBeTrueRandomly().then((message) => {
+    ToastAndroid.show(`Done updating drivers`, ToastAndroid.LONG)
+    console.log('Done updating drivers', message)
+  }).catch(err => {
+    ToastAndroid.show(`Error updating drivers`, ToastAndroid.LONG)
+    console.log('Error updating drivers', err)
   })
 }

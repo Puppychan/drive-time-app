@@ -101,7 +101,8 @@
 - For frontend: React Native Android and Expo
 - Styling: react native paper, unsplash images, google map api, stripe for payment
 
-## Future Improvement
+- Admin: user284@mail.com
+- Customer: user424@mail.com
 
 ## Credits
 
