@@ -28,7 +28,6 @@ const MapScreen = () => {
   const currentLocation = useSelector(selectCurrentLocation)
   const [cars, setCars] = useState([])
   // const [driverId, setDriverId] = useState(second)
-
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isLoading = useSelector(selectIsLoading)
