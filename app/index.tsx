@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging'
-import * as Notifications from 'expo-notifications'
+// import * as Notifications from 'expo-notifications'
 import { useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { User } from 'firebase/auth'
@@ -74,15 +74,15 @@ export default function App() {
   }
 
   const handleDone = async () => {
-    if (auth.currentUser) {
-      let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
-      console.log("role: ", role)
-      if (role) {
-        router.replace(`/${role.toLowerCase()}/home`)
-        return
-      }
-    }
-    router.replace('/(user)/customer/home')
+    // if (auth.currentUser) {
+    //   let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+    //   console.log("role: ", role)
+    //   if (role) {
+    //     router.replace(`/${role.toLowerCase()}/home`)
+    //     return
+    //   }
+    // }
+    router.replace('/(user)/customer/aboutus')
   }
 
   const doneButton = ({ ...props }) => {
