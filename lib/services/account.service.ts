@@ -27,10 +27,13 @@ import { AccountType } from '../common/model-type'
 import { auth, db } from '../firebase/firebase'
 import { uploadImage } from '@/lib/firebase/storage'
 import { AVATAR_REF } from '@/components/Constant'
+import { AccountRole } from '../models/account.model'
+import { TransportType } from '../models/transport.model'
+import { Driver } from '../models/driver.model'
 
 
 
-export async function updateAvatar(userId: string, avatarUri) {
+export async function updateAvatar(userId: string, avatarUri: string) {
   try {
     const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
     if (res.code === ResponseCode.OK) {
@@ -252,6 +255,35 @@ export async function getAccountById(accountId: string) {
   } catch (error) {
     console.error(`Error retrieving account: ${error}`)
     return handleUserException(error, 'Get account details')
+  }
+}
+
+// Function to get a customer's Stripe ID using the account ID
+export async function getCustomerStripeId(accountId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId);
+    const accountSnapshot = await getDoc(accountRef);
+
+    if (accountSnapshot.exists()) {
+      const accountData = accountSnapshot.data();
+      // return accountData.customerStripeId;
+      return new ResponseDto(ResponseCode.OK, `Get customer stripe ID successfully`, new SuccessResponseDto(accountData.customerStripeId, accountId))
+    } else {
+      throw new NotFoundException(`Account with id ${accountId} does not exist`)
+    }
+  } catch(err) {
+    return handleUserException(err, 'Get Customer Stripe ID')
+  }
+}
+
+// Function to set a customer's Stripe ID using the account ID
+export async function setCustomerStripeId(accountId: string, customerStripeId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId);
+    await setDoc(accountRef, { customerStripeId }, { merge: true });
+    return new ResponseDto(ResponseCode.OK, `Set customer stripe ID successfully`, null)
+  } catch (err) {
+    return handleUserException(err, 'Set Customer Stripe ID')
   }
 }
 

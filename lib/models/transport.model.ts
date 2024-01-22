@@ -1,9 +1,9 @@
 import { Timestamp } from 'firebase/firestore'
 
 export enum TransportType {
-  Car = 'Car',
-  Bike = 'Bike',
-  XLCar = 'XLCar'
+  Car = 'Car4',
+  Bike = 'Car4 VIP',
+  XLCar = 'Car7'
 }
 
 export enum TransportColor {
