@@ -15,10 +15,11 @@ export const ProfileHeader = ({authUser, avatarOnPress}) => {
     setImage(auth.currentUser?.photoURL ?? null)
   }, [image])
 
+export const ProfileHeader = ({authUser} : any) => {
   return (
     <View style={styles.headerContainer}>
       <View>
-        <Text style={styles.userNameTxt}>{ "User"}</Text>
+        <Text style={styles.userNameTxt}>{ "Johnny Sin"}</Text>
 
         <View style={styles.userRatingContainer}>
           <Image style={styles.ratingImg} source={require('../../../../../assets/ic_star.png')} />

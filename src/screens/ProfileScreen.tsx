@@ -17,6 +17,7 @@ import { router } from 'expo-router'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import SOSDetailModal from '../components/modal/sos-detail'
 import EditProfileModal from '../components/modal/edit-profile'
+import { SOSScreen } from './SOS_Screen'
 import EditAvatarModal from '../components/modal/edit-avatar'
 
 export const UserProfileScreen = () => {
@@ -24,8 +25,8 @@ export const UserProfileScreen = () => {
   const [authUser, setUser] = useState<User | null>()
   const [sosModalVisible, setSOSModalVisible] = useState(false)
   const [editProfileVisible, setEditProfileVisible] = useState(false)
+  const [sosScreenVisible, setSosScreenVisible] = useState(false)
   const [editAvatarVisible, setEditAvatarVisible] = useState(false)
-
 
   const handleSOSSubmit = () => {
     setSOSModalVisible(false)
@@ -38,6 +39,25 @@ export const UserProfileScreen = () => {
   const hideEditProfileModal = () => {
     setEditProfileVisible(false)
   }
+
+  const handleSOSScreen = () => {
+    setSosScreenVisible(false)
+  }
+  // useEffect(() => {
+  //   const prepare = async () => {
+  //     if (auth.currentUser) {
+  //       setUser(auth.currentUser)
+  //       let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+  //       setRole(role ?? AccountRole.Customer)
+  //     }
+  //     else {
+  //       ToastAndroid.show("Unauthorize. Please login", ToastAndroid.SHORT)
+  //       router.push('/signin')
+  //       return
+  //     }
+  //   }
+  //   prepare()
+  // }, [])
 
   const showEditAvatarModal = () => {
     setEditAvatarVisible(true)
@@ -62,7 +82,7 @@ export const UserProfileScreen = () => {
       'Safety Report',
       'Trigger SOS or Edit/Add yoir SOS Contact',
       [
-        { text: 'Trigger SOS', onPress: () => {}},
+        { text: 'Trigger SOS', onPress: () => {setSosScreenVisible(true)}},
         { text: 'Edit/Add SOS', onPress: () => {setSOSModalVisible(true)}},
       ],
       {
@@ -75,7 +95,7 @@ export const UserProfileScreen = () => {
   if (!isReady) {
     return null
   }
-
+  
   return (
     <ScrollView>
       <View style={styles.topContainer}>
@@ -92,13 +112,15 @@ export const UserProfileScreen = () => {
         >
           <SafetyReportButton />
         </TouchableOpacity>
+        <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
+        <SOSScreen isVisible={sosScreenVisible} onCancel={handleSOSScreen}/>
       </View>
       <View style={{ marginTop: 10 }}>
         <HorizontalDivider height={7} />
       </View>
 
       <View style={styles.bottomContainer}>
-        <ActionList imagePath="ic_message" title="Messages" />
+        <ActionList imagePath="ic_message" title="Messages" onPress={() => router.push('/(user)/customer/sos')} />
         <ActionList imagePath="ic_gift" title="Send a gift" />
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_fav" title="Favourites" />

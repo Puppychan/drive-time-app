@@ -61,7 +61,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
           <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? role}</Title>
           <SearchInput />
