@@ -80,7 +80,8 @@ export default function App() {
     //     return
     //   }
     // }
-    router.replace('/(user)/customer/home')
+    // router.replace('/(user)/customer/home')
+    router.replace('/(public)/signin')
   }
 
   const doneButton = ({ ...props }) => {

@@ -18,11 +18,6 @@ export const ChatHeader = () => {
           </View>
         </View>
       </View>
-
-      {/* Call Button */}
-      <TouchableOpacity>
-        <Image style={styles.callImage} source={require('../../../../assets/ic_call.png')} />
-      </TouchableOpacity>
     </View>
   )
 }
