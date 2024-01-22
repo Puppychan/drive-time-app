@@ -30,6 +30,8 @@ const MapScreen = () => {
 
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cars, setCars] = useState([])
+  // const [driverId, setDriverId] = useState(second)
+
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible)
@@ -57,23 +59,23 @@ const MapScreen = () => {
 
   useEffect(() => {
     if (!origin || !destination) return;
-    getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
-      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-      console.log("Bikeeee Carrrrrr", res.body.data)
+    // getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
+    //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+    //   console.log("Bikeeee Carrrrrr", res.body.data)
 
 
-    })
+    // })
 
-    getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
-      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-      setCars(res.body.data)
-      console.log("Carrrrrr", res.body.data)
-    })
+    // getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
+    //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+    //   setCars(res.body.data)
+    //   console.log("Carrrrrr", res.body.data)
+    // })
 
-    getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
-      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
-      console.log("XL Carrrrr", res.body.data)
-    })
+    // getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
+    //   if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+    //   console.log("XL Carrrrr", res.body.data)
+    // })
 
     const getTravelTime = async () => {
       fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${apiKey}`)
