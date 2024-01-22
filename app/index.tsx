@@ -82,7 +82,7 @@ export default function App() {
     //     return
     //   }
     // }
-    router.replace('/(user)/customer/aboutus')
+    router.replace('/(public)/aboutus')
   }
 
   const doneButton = ({ ...props }) => {
