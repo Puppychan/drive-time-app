@@ -265,6 +265,16 @@ export async function getAccountById(accountId: string) {
   }
 }
 
+export async function getDriverByIdCar(driverId: string) {
+  try {
+    // Remove the first 'C' from the user ID
+    const modifiedUserId = driverId.replace('C', '');
+    return await getAccountById(modifiedUserId)
+  } catch (err) {
+    return handleUserException(err, 'Get account details using CId')
+  }
+}
+
 // Function to get a customer's Stripe ID using the account ID
 export async function getCustomerStripeId(accountId: string) {
   try {

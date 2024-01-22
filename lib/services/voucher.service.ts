@@ -6,7 +6,9 @@ import {
   doc,
   getDocs,
   setDoc,
-  getDoc
+  getDoc,
+  query,
+  where
 } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -127,5 +129,32 @@ export const fetchVouchers = async () => {
     )
   } catch (error) {
     return handleVoucherException(error, 'Fetching voucher list')
+  }
+}
+
+export const fetchVouchersInActiveState = async () => {
+  try {
+    const vouchersCollection = collection(db, CollectionName.VOUCHERS);
+    const currentDate = Timestamp.now()
+    const q = query(vouchersCollection, where("expireDate", ">", currentDate));
+
+    const querySnapshot = await getDocs(q);
+
+    const vouchersList: Voucher[] = [];
+    querySnapshot.forEach((doc: DocumentSnapshot<DocumentData>) => {
+      const voucherData = { id: doc.id, ...(doc.data() as Voucher) };
+      if (voucherData.startDate < currentDate) {
+        vouchersList.push(voucherData);
+      }
+    });
+
+    return new ResponseDto(
+      ResponseCode.OK,
+      'Render voucher list successfully',
+      new SuccessResponseDto(vouchersList, '')
+    );
+  } catch (error) {
+    console.log('Fetch voucher list', error);
+    return handleVoucherException(error, 'Fetching voucher list');
   }
 }

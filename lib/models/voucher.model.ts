@@ -10,8 +10,8 @@ export interface Voucher {
   voucherId: string
   name: string
   discountPercent: number // in percent %
-  expireDate: Date
-  startDate: Date
+  expireDate: Timestamp
+  startDate: Timestamp
   code: string
   applyType: VoucherApplyType
   generatedByAdmin: string

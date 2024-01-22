@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { ToastAndroid, View } from 'react-native'
-import VoucherScreen from "@/src/screens/VoucherScreen";
 import { Text } from "react-native-paper";
-import { fetchVouchers } from "@/lib/services/voucher.service";
+import { fetchVouchersInActiveState } from "@/lib/services/voucher.service";
 import { ResponseCode } from "@/common/response-code.enum";
 import { Voucher } from "@/lib/models/voucher.model";
 import { FlatList } from "react-native-gesture-handler";
+import { formatTimestampToReadableTime } from "@/common/time.helper";
+
 export default function Page() {
     const router = useRouter();
     const [vouchers, setVouchers] = useState([]);
@@ -14,10 +15,10 @@ export default function Page() {
     useEffect(() => {
         const loadVouchers = async () => {
             try {
-                const data = await fetchVouchers();
+                const data = await fetchVouchersInActiveState();
                 if (data.code === ResponseCode.OK) {
                     // Ensure that data.body.data is an array of vouchers
-                    console.log(data.body.data);
+                    // console.log(data.body.data);
                     setVouchers(data.body.data);
                 }
                 else {
@@ -29,22 +30,33 @@ export default function Page() {
         };
         loadVouchers();
     }, []);
+
+    if (!vouchers || vouchers.length == 0) {
+        return <View className="bg-white w-full pt-20 min-h-screen">
+            <Text className={`text-lg text-neutral-500 font-bold mb-2`}>There is no voucher yet</Text>
+        </View>
+    }
+
+
     const renderItem = ({ item }: { item: Voucher }) => (
-        <View className='bg-gray-200 mx-5 my-2 p-5 rounded-lg shadow-md'>
-            <Text className='text-lg font-bold mb-2'>{item.name}</Text>
-            <Text className='text-gray-700'>Apply to: {item.applyType}</Text>
+        <View className={`bg-neutral-100 mx-10 my-2 p-5 rounded-lg shadow-lg overflow-hidden`}>
+            <Text className={`text-lg font-bold mb-2`}>{item.name}</Text>
+            <Text className={`text-gray-700`}>Code: {item.code}</Text>
+            <View className="bg-neutral-400 h-0.5 w-full mt-1 mb-3"></View>
+            <Text className={`text-neutral-700 font-medium text-md`}>Discount: {item.discountPercent}%</Text>
+            <Text className={`text-gray-600 italic`}>{formatTimestampToReadableTime(item.startDate)} - {formatTimestampToReadableTime(item.expireDate)}</Text>
+            <Text className={`text-gray-700`}>Apply to: {item.applyType}</Text>
         </View>
     );
+
     return (
-        <View className='bg-blue-400 w-full flex flex-col gap-10 p-10'>
-            <View className='bg-red-200 mx-5 my-2 p-5 rounded-lg shadow-md'>
-                <Text className='text-lg font-bold mb-2'>Hello</Text>
-                <Text className='text-gray-700'>Apply to: asbfsjk</Text>
-            </View>
+        <View className="bg-white w-full pt-20 min-h-screen">
+            {/* <Text className={`text-lg font-bold mb-2`}>{item.name}</Text> */}
             <FlatList
                 data={vouchers}
                 keyExtractor={(item: Voucher) => item.voucherId.toString()}
                 renderItem={renderItem}
+                className="flex flex-col gap-y-10"
             />
         </View>
     );
