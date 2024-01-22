@@ -8,39 +8,32 @@ import { Text } from "react-native-paper";
 
 const VoucherScreen = () => {
   const [vouchers, setVouchers] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const loadVouchers = async () => {
-    try {
-      const data = await fetchVouchers();
-      if (data.code === ResponseCode.OK) {
-        setVouchers(data.body.data);
-      }
-      else {
-        ToastAndroid.show(data.message ?? 'Could not fetch voucher', ToastAndroid.LONG)
-      }
-    } catch (error) {
-      ToastAndroid.show('Could not fetch voucher', ToastAndroid.LONG)
-    }
-  };
+  // const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
+    const loadVouchers = async () => {
+      try {
+        const data = await fetchVouchers();
+        if (data.code === ResponseCode.OK) {
+          setVouchers(data.body.data);
+        }
+        else {
+          ToastAndroid.show(data.message ?? 'Could not fetch voucher', ToastAndroid.LONG)
+        }
+      } catch (error) {
+        ToastAndroid.show('Could not fetch voucher', ToastAndroid.LONG)
+      }
+    };
     console.log("Calldsnldks");
     loadVouchers();
   }, []);
 
-  const onRefresh = useCallback(() => {
-    let isMounted = true;
-    setRefreshing(true);
-    loadVouchers().then(() => {
-      if (isMounted) {
-        setRefreshing(false);
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  useEffect(() => {
+    console.log("Vouchers now", vouchers);
+
+    return () => { }
+  }, [vouchers])
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -62,9 +55,9 @@ const VoucherScreen = () => {
             </View>
           </TouchableOpacity>
         </View>}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
       />
+
+      <Text>{JSON.stringify(vouchers)}</Text>
     </View>
   );
 };
