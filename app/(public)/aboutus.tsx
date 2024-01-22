@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, StatusBar, SafeAreaView, Text, StyleSheet, ScrollView, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { CallControllerScreen } from '@/src/screens/CallControllerScreen'
 
 interface Profile {
     name: string;
@@ -54,85 +55,86 @@ export default function Page() {
         { name: 'T.H. Khanh', title: 'Software Engineer', phone: '(+84) 838756241', email: 'khanhchan123', image: require('../../assets/ic_khanh.jpg') },
     ];
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+    return ( <CallControllerScreen />
 
-                {/* Header Section */}
-                <View style={styles.header}>
-                    <Image style={styles.logo} source={require('../../assets/logo_no_background.png')} />
-                    <Text style={styles.headerText}>Where business, unique, and convenience meet</Text>
-                    <Text style={styles.subHeaderText}>
-                        City in a snap: Book rides, relax, arrive. Enjoy effortless journeys with our easy app. Reliable cars, smooth trips, all devices. Try it now!
-                    </Text>
-                </View>
+        // <SafeAreaView style={styles.container}>
+        //     <ScrollView showsVerticalScrollIndicator={false}>
 
-                {/* Team Section */}
-                <View style={styles.teamSection}>
-                    <Text style={styles.sectionHeader}>Meet the team</Text>
-                    <Text style={styles.sectionText}>
-                        We're not just Grab. Our team is dedicated to creating user-centered designs that not only look great but also drive results. We understand that in today's world, user experience is everything.
-                    </Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <View style={styles.cardContainer}>
-                            {profiles.map((profile, index) => (
-                                <View key={index} style={styles.cardItem}>
-                                    <ProfileCard {...profile} />
-                                </View>
-                            ))}
-                        </View>
-                    </ScrollView>
-                </View>
+        //         {/* Header Section */}
+        //         <View style={styles.header}>
+        //             <Image style={styles.logo} source={require('../../assets/logo_no_background.png')} />
+        //             <Text style={styles.headerText}>Where business, unique, and convenience meet</Text>
+        //             <Text style={styles.subHeaderText}>
+        //                 City in a snap: Book rides, relax, arrive. Enjoy effortless journeys with our easy app. Reliable cars, smooth trips, all devices. Try it now!
+        //             </Text>
+        //         </View>
 
-                {/* Statistics Section */}
-                <View style={styles.statisticsSection}>
-                    <Text style={styles.sectionHeader}>Our Statistics</Text>
-                    <View style={styles.statisticsGrid}>
-                        <View style={styles.statisticItem}>
-                            <Text style={styles.statisticNumber}>32</Text>
-                            <Text style={styles.statisticLabel}>Clients</Text>
-                        </View>
-                        <View style={styles.statisticItem}>
-                            <Text style={styles.statisticNumber}>100</Text>
-                            <Text style={styles.statisticLabel}>Partners</Text>
-                        </View>
-                        <View style={styles.statisticItem}>
-                            <Text style={styles.statisticNumber}>25</Text>
-                            <Text style={styles.statisticLabel}>Countries</Text>
-                        </View>
-                    </View>
-                </View>
+        //         {/* Team Section */}
+        //         <View style={styles.teamSection}>
+        //             <Text style={styles.sectionHeader}>Meet the team</Text>
+        //             <Text style={styles.sectionText}>
+        //                 We're not just Grab. Our team is dedicated to creating user-centered designs that not only look great but also drive results. We understand that in today's world, user experience is everything.
+        //             </Text>
+        //             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        //                 <View style={styles.cardContainer}>
+        //                     {profiles.map((profile, index) => (
+        //                         <View key={index} style={styles.cardItem}>
+        //                             <ProfileCard {...profile} />
+        //                         </View>
+        //                     ))}
+        //                 </View>
+        //             </ScrollView>
+        //         </View>
 
-                {/* Terms & Conditions Section */}
-                <View style={styles.termsSection}>
-                    <Text style={styles.sectionHeader}>Terms & Conditions</Text>
-                    <View style={styles.cardContainer}>
-                        <CardButton title="Privacy Policy" link="https://www.app-privacy-policy.com/live.php?token=K98docoE9WLYpQhCzl9tWnm0E51rAmGx" iconName="lock" />
-                        <CardButton title="Regulations" link="https://www.app-privacy-policy.com/live.php?token=SNBrkXTYaOSz6rI6vKniCX2ypy96Nu0r" iconName="legal" />
-                    </View>
-                </View>
+        //         {/* Statistics Section */}
+        //         <View style={styles.statisticsSection}>
+        //             <Text style={styles.sectionHeader}>Our Statistics</Text>
+        //             <View style={styles.statisticsGrid}>
+        //                 <View style={styles.statisticItem}>
+        //                     <Text style={styles.statisticNumber}>32</Text>
+        //                     <Text style={styles.statisticLabel}>Clients</Text>
+        //                 </View>
+        //                 <View style={styles.statisticItem}>
+        //                     <Text style={styles.statisticNumber}>100</Text>
+        //                     <Text style={styles.statisticLabel}>Partners</Text>
+        //                 </View>
+        //                 <View style={styles.statisticItem}>
+        //                     <Text style={styles.statisticNumber}>25</Text>
+        //                     <Text style={styles.statisticLabel}>Countries</Text>
+        //                 </View>
+        //             </View>
+        //         </View>
 
-                {/* Contact info Section */}
-                <View style={styles.contactsSection}>
-                    <Text style={styles.sectionHeader}>Contacts</Text>
-                    <View style={{flexDirection: 'row'}}>
-                        <Text style={{ fontSize: 17, marginTop: 20, fontWeight: 'bold' }}>Email:</Text>
-                        <Text style={{ fontSize: 17, marginTop: 20, fontStyle: 'italic' }}> DriveTime_official@gmail.vn</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 17, marginTop: 10, fontWeight: 'bold' }}>Phone:</Text>
-                        <Text style={{ fontSize: 17, marginTop: 10, fontStyle: 'italic' }}> (+84) 0123 9999 999</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 17, marginTop: 10, fontWeight: 'bold' }}>Address:</Text>
-                        <Text style={{ fontSize: 17, marginTop: 10, fontStyle: 'italic' }}> 123 Quoc Street, Dis.1, HCMC</Text>
-                    </View>
-                </View>
+        //         {/* Terms & Conditions Section */}
+        //         <View style={styles.termsSection}>
+        //             <Text style={styles.sectionHeader}>Terms & Conditions</Text>
+        //             <View style={styles.cardContainer}>
+        //                 <CardButton title="Privacy Policy" link="https://www.app-privacy-policy.com/live.php?token=K98docoE9WLYpQhCzl9tWnm0E51rAmGx" iconName="lock" />
+        //                 <CardButton title="Regulations" link="https://www.app-privacy-policy.com/live.php?token=SNBrkXTYaOSz6rI6vKniCX2ypy96Nu0r" iconName="legal" />
+        //             </View>
+        //         </View>
 
-                <Text style={{alignSelf: 'center', marginTop: 40}}>All Rights Reserved @2024</Text>
-                <Text style={{alignSelf: 'center', marginTop: 20, marginBottom: 20}}>DriveTime Inc. 2023</Text>
-            </ScrollView>
-        </SafeAreaView>
+        //         {/* Contact info Section */}
+        //         <View style={styles.contactsSection}>
+        //             <Text style={styles.sectionHeader}>Contacts</Text>
+        //             <View style={{flexDirection: 'row'}}>
+        //                 <Text style={{ fontSize: 17, marginTop: 20, fontWeight: 'bold' }}>Email:</Text>
+        //                 <Text style={{ fontSize: 17, marginTop: 20, fontStyle: 'italic' }}> DriveTime_official@gmail.vn</Text>
+        //             </View>
+        //             <View style={{ flexDirection: 'row' }}>
+        //                 <Text style={{ fontSize: 17, marginTop: 10, fontWeight: 'bold' }}>Phone:</Text>
+        //                 <Text style={{ fontSize: 17, marginTop: 10, fontStyle: 'italic' }}> (+84) 0123 9999 999</Text>
+        //             </View>
+        //             <View style={{ flexDirection: 'row' }}>
+        //                 <Text style={{ fontSize: 17, marginTop: 10, fontWeight: 'bold' }}>Address:</Text>
+        //                 <Text style={{ fontSize: 17, marginTop: 10, fontStyle: 'italic' }}> 123 Quoc Street, Dis.1, HCMC</Text>
+        //             </View>
+        //         </View>
+
+        //         <Text style={{alignSelf: 'center', marginTop: 40}}>All Rights Reserved @2024</Text>
+        //         <Text style={{alignSelf: 'center', marginTop: 20, marginBottom: 20}}>DriveTime Inc. 2023</Text>
+        //     </ScrollView>
+        // </SafeAreaView>
     );
 }
 
