@@ -74,15 +74,15 @@ export default function App() {
   }
 
   const handleDone = async () => {
-    // if (auth.currentUser) {
-    //   let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
-    //   console.log("role: ", role)
-    //   if (role) {
-    //     router.replace(`/${role.toLowerCase()}/home`)
-    //     return
-    //   }
-    // }
-    router.replace('/(user)/customer/aboutus')
+    if (auth.currentUser) {
+      let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+      console.log("role: ", role)
+      if (role) {
+        router.replace(`/${role.toLowerCase()}/home`)
+        return
+      }
+    }
+    // router.replace('/(user)/customer/aboutus')
   }
 
   const doneButton = ({ ...props }) => {

@@ -19,6 +19,7 @@ import SOSDetailModal from '../components/modal/sos-detail'
 import EditProfileModal from '../components/modal/edit-profile'
 import { SOSScreen } from './SOS_Screen'
 import EditAvatarModal from '../components/modal/edit-avatar'
+import { signOut } from '@/lib/firebase/auth'
 
 export const UserProfileScreen = () => {
   const [isReady, setIsReady] = useState(false)
@@ -92,6 +93,18 @@ export const UserProfileScreen = () => {
     );
   }
 
+  const logout = async () => {
+    try {
+      await signOut()
+    }
+    catch (error) {
+      console.log("~~~~~~~~~ ProfileScreen.tsx line 102", error)
+    }
+    finally {
+      router.replace('/signin')
+    }
+  }
+
   if (!isReady) {
     return null
   }
@@ -125,6 +138,7 @@ export const UserProfileScreen = () => {
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_setting" title="Edit profile" onPress={showEditProfileModal} />
         <ActionList imagePath="ic_about" title="About us" />
+        <ActionList imagePath="ic_signout" title="Sign out" onPress={logout}/>
       </View>
       <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
       <EditProfileModal isVisible={editProfileVisible} onSubmit={hideEditProfileModal} />
