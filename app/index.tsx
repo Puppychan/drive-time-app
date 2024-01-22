@@ -81,8 +81,11 @@ export default function App() {
     //     router.replace(`/${role.toLowerCase()}/home`)
     //     return
     //   }
+    //   else{
+    //     router.replace('/signin')
+    //   }
     // }
-    router.replace('/(user)/customer/aboutus')
+    router.replace('/(user)/customer/home')
   }
 
   const doneButton = ({ ...props }) => {

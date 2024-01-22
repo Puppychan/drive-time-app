@@ -6,7 +6,10 @@ export interface mLocation {
   x: number
   y: number
 }
-
+export interface spot{
+  x: number
+  y: number
+}
 export interface CarRequest {
   pickup: mLocation
   delivery: mLocation

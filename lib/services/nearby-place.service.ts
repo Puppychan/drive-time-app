@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = "https://places.googleapis.com/v1/places:searchNearby";
 
-const API_KEY = "AIzaSyADa2562hFV2teFIzhpf3krc5TJIuW-Pl4";
+const API_KEY = "AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps";
 
 const headers = {
   "Content-Type": "application/json",
@@ -11,7 +11,7 @@ const headers = {
 }
 
 const nearByPlace = () => axios.post(BASE_URL, {
-  "includedTypes": ["convenience_store"],
+  "includedTypes": ["convenience_store","barber_shop","coffee_shop","shopping_mall","bar"],
   "maxResultCount": 20,
   "locationRestriction": {
     "circle": {

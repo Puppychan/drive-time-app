@@ -1,6 +1,18 @@
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import GlobalAPI from '../../../lib/services/nearby-place.service'
+import { getDistanceAndTime } from "../../../lib/services/google.maps.service"
+import { selectCurrentLocation } from '@/src/slices/navSlice'
+import { Provider, useSelector } from 'react-redux'
+import { mLocation, spot } from '@/lib/services/car-matching.service'
+import {store} from '@/store'
+
+interface currentLocation{
+  coords: mLocation
+}
+interface nearbyPlace{
+  location: mLocation
+}
 
 const { height, width } = Dimensions.get('screen')
 const NearByPlaceCard = ({ place }: { place: any }) => {
@@ -15,7 +27,21 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
       '&maxHeightPx=800&maxWidthPx=1200'
     : null
   // console.log(place.formattedAddress)
+  const currentLocation = useSelector(selectCurrentLocation)
+  
+  const fromLocation = currentLocation?.coords
+  ? currentLocation.coords
+  : { id: '', x: 10.785255359834135, y: 106.6932718123096 };
+
+
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ? process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY : ''
+
+  async function getDistanceAndTime(fromLocation: any, toLocation: any, apiKey: any) {
+    const result = await getDistanceAndTime(fromLocation, toLocation, apiKey)
+  }
   return (
+  
+
     <View style={styles.wrapper}>
       <Image
         source={imageUrl ? { uri: imageUrl } : require('../../../assets/car.png')}
@@ -158,6 +184,7 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
         </View>
       </View>
     </View>
+
   )
 }
 
