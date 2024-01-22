@@ -1,4 +1,4 @@
-import { User, deleteUser } from 'firebase/auth'
+import { User, deleteUser, updateProfile } from 'firebase/auth'
 import {
   Query,
   Timestamp,
@@ -24,11 +24,39 @@ import { CollectionName } from '../common/collection-name.enum'
 import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
-import { db } from '../firebase/firebase'
+import { auth, db } from '../firebase/firebase'
+import { uploadImage } from '@/lib/firebase/storage'
+import { AVATAR_REF } from '@/components/Constant'
 import { AccountRole } from '../models/account.model'
 import { TransportType } from '../models/transport.model'
 import { Driver } from '../models/driver.model'
-import { BookingStatus } from '../models/booking.model'
+
+
+
+export async function updateAvatar(userId: string, avatarUri: string) {
+  try {
+    const res = await uploadImage(avatarUri, `${AVATAR_REF}/${userId}.jpg`);
+    if (res.code === ResponseCode.OK) {
+      const {downloadUrl} = res.body
+      await updateDoc(doc(db, CollectionName.ACCOUNTS, userId), {
+        avatar: downloadUrl,
+        updatedDate: Timestamp.fromDate(new Date())
+      });
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          photoURL: downloadUrl
+        })
+      }
+      return new ResponseDto(ResponseCode.OK, "Updated profile picture successfully", downloadUrl);
+    }
+    else throw res
+
+  }
+  catch (e) {
+    throw e
+
+  }
+}
 
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
@@ -230,6 +258,35 @@ export async function getAccountById(accountId: string) {
   }
 }
 
+// Function to get a customer's Stripe ID using the account ID
+export async function getCustomerStripeId(accountId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId);
+    const accountSnapshot = await getDoc(accountRef);
+
+    if (accountSnapshot.exists()) {
+      const accountData = accountSnapshot.data();
+      // return accountData.customerStripeId;
+      return new ResponseDto(ResponseCode.OK, `Get customer stripe ID successfully`, new SuccessResponseDto(accountData.customerStripeId, accountId))
+    } else {
+      throw new NotFoundException(`Account with id ${accountId} does not exist`)
+    }
+  } catch(err) {
+    return handleUserException(err, 'Get Customer Stripe ID')
+  }
+}
+
+// Function to set a customer's Stripe ID using the account ID
+export async function setCustomerStripeId(accountId: string, customerStripeId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId);
+    await setDoc(accountRef, { customerStripeId }, { merge: true });
+    return new ResponseDto(ResponseCode.OK, `Set customer stripe ID successfully`, null)
+  } catch (err) {
+    return handleUserException(err, 'Set Customer Stripe ID')
+  }
+}
+
 export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
   return deleteUser(user)
@@ -329,9 +386,5 @@ const getQuerySnapshotAsCar = async (query: Query) => {
     };
   });
   // return cars;
-  return new ResponseDto(
-    ResponseCode.OK,
-    `Render list of cars successfully`,
-    new SuccessResponseDto(cars, '')
-  )
+  return new ResponseDto(ResponseCode.OK, 'Fetch car list successfully', new SuccessResponseDto(cars, ''))
 };

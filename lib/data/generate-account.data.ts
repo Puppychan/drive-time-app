@@ -1,9 +1,11 @@
 import { faker } from '@faker-js/faker'
-import { Timestamp } from 'firebase/firestore'
+import { Timestamp, collection, getDocs, query, updateDoc, where, doc } from 'firebase/firestore'
 
 import { AccountType } from '../common/model-type'
 import { createUser } from '../firebase/auth'
 import { Account, AccountRole, accountRoleList } from '../models/account.model'
+import { db } from '../firebase/firebase'
+import { CollectionName } from '../common/collection-name.enum'
 
 const generateRandomAccountData = async (type: AccountRole | null) => {
   console.log('Starting create account data')
@@ -49,7 +51,8 @@ const generateRandomAccountData = async (type: AccountRole | null) => {
         ...tempAccount,
         membershipId: '1',
         membershipPoints: 0,
-        description: faker.lorem.paragraphs()
+        description: faker.lorem.paragraphs(),
+        customerStripeId: ''
       }
       break
     case AccountRole.Driver:
@@ -91,5 +94,24 @@ export const generateRandomAccounts = async (
   } catch (error) {
     return `Error adding user ` + error
     // process.exit(1)
+  }
+}
+export async function addCustomerStripeId() {
+  try {
+    const accountsCollection = collection(db, CollectionName.ACCOUNTS);
+  const q = query(accountsCollection, where('role', '==', AccountRole.Customer));
+
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((customerDoc) => {
+    const customerRef = doc(db, CollectionName.ACCOUNTS, customerDoc.id)
+    console.log("Customer ID", customerDoc.id);
+    updateDoc(
+      customerRef,
+      {customerStripeId: ''}
+    );
+  });
+  } catch (err) {
+    console.log("Error updating customer stripe id list", err);
   }
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, ImageStyle, Text, TouchableOpacity } from 'react-native'
 
 import { styles } from './actionList-style'
+import { connect } from 'react-redux'
 
 const basePath = '../../../../../assets/'
 
@@ -17,7 +18,7 @@ const imagePaths: Record<string, any> = {
 export const ActionList = ({ imagePath = 'ic_message', title = 'Messages', onPress = () => {}}) => {
   const selectedImage = imagePaths[imagePath]
   return (
-    <TouchableOpacity style={styles.btnContainer} onPress={onPress}>
+    <TouchableOpacity style={styles.btnContainer} onPress={() => console.log("hehe")}>
       <Image style={styles.btnIcon as ImageStyle} source={selectedImage} />
 
       <Text style={styles.btnText}> {title}</Text>

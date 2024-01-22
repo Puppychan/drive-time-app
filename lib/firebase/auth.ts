@@ -7,7 +7,6 @@ import {
   AuthErrorCodes,
   updateProfile,
   inMemoryPersistence,
-  setPersistence,
   sendPasswordResetEmail,
   getReactNativePersistence
 } from 'firebase/auth'

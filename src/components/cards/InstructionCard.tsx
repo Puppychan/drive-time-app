@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     width: 250, // Take the full width of the card
     elevation: 5, // Shadow for Android
     paddingTop: 3, // Padding inside
-    paddingBottom: 20, // Padding inside
     paddingHorizontal: 5, // Padding inside
     borderRadius: 8 // Rounded corners
   },
@@ -56,8 +55,9 @@ const styles = StyleSheet.create({
     marginTop: 5 // Space between title and paragraph
   },
   actionContainer: {
-    padding: 10, // Padding for touchable area
-    alignItems: 'flex-end' // Align the text to the right
+    alignItems: 'flex-end', // Align the text to the right
+    marginRight: 10, // Margin to the right
+    paddingBottom: 10 // Padding at the bottom
   }
 })
 

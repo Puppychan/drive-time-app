@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: '#111', // A dark background color similar to Uber's style
         justifyContent: 'space-between', // This spreads out the icons evenly
+        paddingHorizontal: 40, // Horizontal padding so the edges of the screen are not occupied
     },
     // If you want to style individual icons, you can do so here
     icon: {

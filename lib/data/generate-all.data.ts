@@ -1,6 +1,6 @@
 import { ToastAndroid } from 'react-native'
 
-import { generateRandomAccounts } from './generate-account.data'
+import { addCustomerStripeId, generateRandomAccounts } from './generate-account.data'
 import { generateRandomBookings } from './generate-booking.data'
 import { generateRandomFavoriteLocations } from './generate-fav-location.data'
 import { generateRandomLocations } from './generate-location.data'
@@ -23,10 +23,10 @@ export function generateData() {
   // })
 
   // generate voucher
-  generateRandomVouchers().then((message) => {
-    ToastAndroid.show(message, ToastAndroid.LONG)
-    console.log('Voucher', message)
-  })
+  // generateRandomVouchers().then((message) => {
+  //   ToastAndroid.show(message, ToastAndroid.LONG)
+  //   console.log('Voucher', message)
+  // })
 
   // generate location
   //   generateRandomLocations(10).then((message) => {
@@ -54,12 +54,22 @@ export function generateData() {
   //   ToastAndroid.show(`Error updating drivers`, ToastAndroid.LONG)
   //   console.log('Error updating drivers', err)
   // })
+
   // update driver status
-  updateAllDriverAccountsToBeTrueRandomly().then((message) => {
-    ToastAndroid.show(`Done updating drivers`, ToastAndroid.LONG)
-    console.log('Done updating drivers', message)
-  }).catch(err => {
-    ToastAndroid.show(`Error updating drivers`, ToastAndroid.LONG)
-    console.log('Error updating drivers', err)
-  })
+  // updateAllDriverAccountsToBeTrueRandomly().then((message) => {
+  //   ToastAndroid.show(`Done updating drivers`, ToastAndroid.LONG)
+  //   console.log('Done updating drivers', message)
+  // }).catch(err => {
+  //   ToastAndroid.show(`Error updating drivers`, ToastAndroid.LONG)
+  //   console.log('Error updating drivers', err)
+  // })
+
+  // update customer stripe id
+  // addCustomerStripeId().then((mess) => {
+  //   ToastAndroid.show(`Done updating customer stripe id`, ToastAndroid.SHORT)
+  //   console.log(`Done updating customer stripe id`);
+  // }) .catch(err => {
+  //   ToastAndroid.show(`Error updating customer stripe id`, ToastAndroid.SHORT)
+  //   console.log(`Error updating customer stripe id`);
+  // })
 }
