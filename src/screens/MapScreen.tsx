@@ -1,10 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dimensions } from 'react-native';
+import { CarRequest, Car, getBestMatchBooking } from '@/lib/services/car-matching.service'
 
 const { height, width } = Dimensions.get('window');
 
@@ -22,6 +23,8 @@ import { getScreenSize } from '../common/helpers/default-device-value.helper'
 
 const { width: screenWidth, height: screenHeight } = getScreenSize()
 const MapScreen = () => {
+
+  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible)
@@ -32,8 +35,27 @@ const MapScreen = () => {
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
+  let carRequest;
+
+  // Generate Request
+  const requests: CarRequest[] = [
+    { pickup: { id: 'P1', x: 10.785255359834135, y: 106.6932718123096 }, delivery: { id: 'D1', x: destination.location.lat, y: destination.location.long } },
+    // { pickup: { id: 'P2', x: 3, y: 3 }, delivery: { id: 'D2', x: 4, y: 4 } },
+    // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
+  ]
+
+  const cars: Car[] = [
+    { id: 'C1', mLocation: { id: 'C1', x: 10.7769, y: 106.7009 } },  // Example coordinates for District 1, Ho Chi Minh City
+    { id: 'C2', mLocation: { id: 'C2', x: 10.7778, y: 106.6974 } },  // Example coordinates for District 1, Ho Chi Minh City
+    { id: 'C3', mLocation: { id: 'C3', x: 10.7755, y: 106.6962 } },  // Example coordinates for District 1, Ho Chi Minh City
+    { id: 'C4', mLocation: { id: 'C4', x: 10.7770, y: 106.6950 } }   // Example coordinates for District 1, Ho Chi Minh City
+  ];
+
   useEffect(() => {
     if (!origin || !destination) return;
+    // const resultResponse = await 
+
+    getBestMatchBooking(cars, requests)
     const getTravelTime = async () => {
       fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${apiKey}`)
         .then((res) => res.json())
@@ -46,7 +68,7 @@ const MapScreen = () => {
   }, [origin, destination, apiKey]);
 
   return (
-    <View style={{height: screenHeight}}>
+    <View style={{ height: screenHeight }}>
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
@@ -128,9 +150,9 @@ const MapScreen = () => {
           identifier="destination"
         />
       </MapView>
-        <View style={{flex: 1,height: 500}}>
-      <RideSelectionCard />
-        </View>
+      <View style={{ flex: 1, height: 700 }}>
+        <RideSelectionCard />
+      </View>
     </View>
   )
 }

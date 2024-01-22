@@ -52,7 +52,7 @@ const RideSelectionCard = () => {
   const [selected, setSelected] = useState<ItemType | null>(null)
 
   return (
-    <View style={{ flex: 1, padding: 16, backgroundColor: 'red',height: 150 }}>
+    <View style={{ flex: 1, padding: 16, backgroundColor: 'red',height: 350 }}>
       <View style={{backgroundColor: 'green'}}>
         <Text style={styles.headerText}>
           Select a Drive -{travelInformation?.distance.text}
