@@ -70,7 +70,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
           <Title style={styles.welcome}>Welcome, {user?.displayName ?? role}</Title>
 
