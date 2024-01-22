@@ -4,6 +4,9 @@ import { Image, StyleSheet, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
+import { Dimensions } from 'react-native';
+
+const { height, width } = Dimensions.get('window');
 
 import {
   selectDestination,
@@ -15,6 +18,9 @@ import {
 
 import LoadingBar from './FindingDriverScreen'
 import RideSelectionCard from '../components/map-screen/RideSelectionCard'
+import { getScreenSize } from '../common/helpers/default-device-value.helper'
+
+const { height: screenHeight } = getScreenSize()
 
 const MapScreen = () => {
   const origin = useSelector(selectOrigin)
@@ -23,34 +29,32 @@ const MapScreen = () => {
   const isLoading = useSelector(selectIsLoading)
   const mapRef = useRef<MapView | null>(null)
   const dispatch = useDispatch()
-  const Stack = createStackNavigator()
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
   useEffect(() => {
-    if (!origin || !destination) return
+    if (!origin || !destination) return;
     const getTravelTime = async () => {
-      fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?
-        units=imperial
-        &origins=${origin.description}
-        &destinations=${destination.description}
-        &key=${apiKey}`)
+      fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${apiKey}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
-        })
+        });
     }
 
-    getTravelTime()
-  }),
-    [origin, destination, apiKey]
+    getTravelTime();
+  }, [origin, destination, apiKey]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ height: screenHeight }}>
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
-        style={{ minHeight: isRideSelectionVisible ? '50%' : '100%', minWidth: '100%' }}
+        style={{
+          height: isRideSelectionVisible ? 0.4 * height : height,
+          width: width,
+          minWidth: width,
+        }}
         initialRegion={{
           latitude: destination.location.lat,
           longitude: destination.location.lng,
@@ -83,6 +87,7 @@ const MapScreen = () => {
               animated: true
             })
           ))}
+
 
         <Marker
           coordinate={{
@@ -124,25 +129,9 @@ const MapScreen = () => {
           identifier="destination"
         />
       </MapView>
-
-      {/* <View style={{ height: isRideSelectionVisible ? '50%' : '0%', width: '100%' }}>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false
-          }}
-        >
-          <Stack.Screen name="RideSelection" component={RideSelectionCard} />
-        </Stack.Navigator>
-      </View> */}
+      <RideSelectionCard />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: 150,
-    height: 150
-  }
-})
 
 export { MapScreen }

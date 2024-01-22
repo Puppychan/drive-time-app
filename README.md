@@ -55,13 +55,14 @@
 - Open terminal in root directory:
   - Run `npm install` to install all dependencies
   - Run one of the following commands
-    `npm run android`: for android
-    `npm run ios`: for ios
-    `npm run web`: for web
-
+    `npm start`: for expo build -> then run `s` -> `a`
+    `npm run dev`: for android development build -> then run `a`
+    If there is error `No development build available` -> run `s` -> run `a`
+    Please wait for at least 30 minutes to allow it to run
+    Please assure your computer is charging when running this
 ### Cautions
 
-- On MacOS:
+- On MacOS and possibly in Windows:
   - If you have error with `npm run android`:
     - Make sure you have installed Android Studio and run device emulator
     - Run:
@@ -93,6 +94,12 @@
 - Sort account list (by name, by created, by updated, by review rate)
 - Update account, update nested entity - transport inside account
 - Delete account
+- More in proposal
+
+## Technologies
+- For database and backend: Firestore, firebase auth, firebase
+- For frontend: React Native Android and Expo
+- Styling: react native paper, unsplash images, google map api, stripe for payment
 
 ## Future Improvement
 
@@ -100,13 +107,13 @@
 
 ### Contributors
 
-| Name                 | Student ID | GitHub Profile                                                  | Contribution (%) |
-| -------------------- | ---------- | --------------------------------------------------------------- | ---------------- |
-| Tran Mai Nhung       | s3879954   | [Puppychan](https://github.com/Puppychan)                       | 20%              |
-| Tran Nguyen Ha Khanh | s3877707   | [hakhanhne](https://github.com/hakhanhne)                       | 20%              |
-| Nguyen Dinh Viet     | s3927291   | [felix101003](https://github.com/felix101003)                   | 20%              |
-| Doan Huu Quoc        | s3927776   | [Mudoker](https://github.com/Mudoker)                           | 20%              |
-| Tran Vu Quang Anh    | s3916566   | [tranvuquanganhRMIT87](https://github.com/tranvuquanganhRMIT87) | 20%              |
+| Name                 | Student ID | GitHub Profile                                                  | Contribution (%) |Work |
+| -------------------- | ---------- | --------------------------------------------------------------- | ---------------- |---------------- |
+| Tran Mai Nhung       | s3879954   | [Puppychan](https://github.com/Puppychan)                       | 20%              |Backend and front end - multi destinations booking           |
+| Tran Nguyen Ha Khanh | s3877707   | [hakhanhne](https://github.com/hakhanhne)                       | 20%              |Backend and front end - sos, authentication              |
+| Nguyen Dinh Viet     | s3927291   | [felix101003](https://github.com/felix101003)                   | 20%              |Backend and frontend - google map              |
+| Doan Huu Quoc        | s3927776   | [Mudoker](https://github.com/Mudoker)                           | 20%              |Backend and front end - algorithms, call              |
+| Tran Vu Quang Anh    | s3916566   | [tranvuquanganhRMIT87](https://github.com/tranvuquanganhRMIT87) | 20%              |Backend and front end -     voucher, payment          |
 
 ### Third-party Attributions
 

@@ -18,7 +18,7 @@ export const ProfileHeader = ({authUser, avatarOnPress}) => {
   return (
     <View style={styles.headerContainer}>
       <View>
-        <Text style={styles.userNameTxt}>{authUser.displayName ?? "User"}</Text>
+        <Text style={styles.userNameTxt}>{ "User"}</Text>
 
         <View style={styles.userRatingContainer}>
           <Image style={styles.ratingImg} source={require('../../../../../assets/ic_star.png')} />

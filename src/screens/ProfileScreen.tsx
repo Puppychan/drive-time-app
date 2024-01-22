@@ -22,7 +22,6 @@ import EditAvatarModal from '../components/modal/edit-avatar'
 export const UserProfileScreen = () => {
   const [isReady, setIsReady] = useState(false)
   const [authUser, setUser] = useState<User | null>()
-  const [role, setRole] = useState<string>(AccountRole.Customer)
   const [sosModalVisible, setSOSModalVisible] = useState(false)
   const [editProfileVisible, setEditProfileVisible] = useState(false)
   const [editAvatarVisible, setEditAvatarVisible] = useState(false)
@@ -48,25 +47,14 @@ export const UserProfileScreen = () => {
     setEditAvatarVisible(false)
   }
 
-
-
-
   useEffect(() => {
     const prepare = async () => {
       if (auth.currentUser) {
         setUser(auth.currentUser)
-        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
-        setRole(role ?? AccountRole.Customer)
-      }
-      else {
-        ToastAndroid.show("Unauthorize. Please login", ToastAndroid.SHORT)
-        router.push('/signin')
-        return
       }
     }
     prepare()
     setIsReady(true)
-
   }, [authUser])
 
   const handleSOS = () => {

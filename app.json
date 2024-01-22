@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["*/"],
     "ios": {
       "supportsTablet": true,
       "bitcode": false
@@ -62,11 +60,6 @@
     ],
     "experiments": {
       "tsconfigPaths": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      }
     }
   }
 }

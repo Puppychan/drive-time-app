@@ -20,15 +20,19 @@ import { Colors, specialColors } from '../../../components/Colors'
 import FontSize from '../../../components/FontSize'
 import Spacing from '../../../components/Spacing'
 import BottomSheet from '@/src/components/modal/bottom-sheet'
+import { auth } from '@/lib/firebase/firebase'
 
-export default function SignIn({promptAsync} : any) {
+export default function SignIn({ promptAsync }: any) {
   const router = useRouter()
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState(false)
   const [userInfo, setUserInfo] = useState(false)
- 
+
+  // TODO: add admin page
+  if (auth.currentUser) router.push(`/(user)/customer/home`)
+
 
   const handleRegister = () => router.push('/signup')
 
@@ -46,6 +50,7 @@ export default function SignIn({promptAsync} : any) {
         const user = res.body
         console.log(user)
         ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT)
+        // TODO: add admin
         router.push(`/(user)/customer/home`)
       } else {
         ToastAndroid.show(`Login failed: ${res.message}`, ToastAndroid.SHORT)

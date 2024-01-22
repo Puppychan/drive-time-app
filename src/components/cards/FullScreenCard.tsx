@@ -13,11 +13,12 @@ type FullScreenCardProps = {
   imageUrl: ImageSourcePropType
   title: string
   subtitle: string
+  className?: string
   onClick: () => void
 }
 
-const FullScreenCard = ({ imageUrl, title, subtitle, onClick }: FullScreenCardProps) => (
-  <TouchableOpacity onPress={onClick} style={styles.actionContainer}>
+const FullScreenCard = ({ imageUrl, title, subtitle, className, onClick }: FullScreenCardProps) => (
+  <TouchableOpacity onPress={onClick} className={className}>
     <Card style={styles.card}>
       <ImageBackground source={imageUrl} style={styles.backgroundImage}>
         {/* Overlay View */}
