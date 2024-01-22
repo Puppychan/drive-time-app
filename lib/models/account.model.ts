@@ -30,6 +30,8 @@ export interface Account {
   // address - can be optional because sometimes user doesn't have address
   locationId?: string // This field is optional as denoted by '?'
   // device token - list of device token - can be optional because sometimes user doesn't have device token
-  deviceTokenList?: string[]
-  sos?: SOS
+  deviceTokenList?: string[],
+  sos?: SOS,
+  gender?: string
+
 }

@@ -85,6 +85,7 @@ export const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+    backgroundColor: 'red'
   },
   selectButton: {
     height: 50,
@@ -99,4 +100,3 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

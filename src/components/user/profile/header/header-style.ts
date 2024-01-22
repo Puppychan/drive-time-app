@@ -5,12 +5,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginTop: 15
   },
   userProfileImage: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     overflow: 'hidden'
   },
   userNameTxt: {

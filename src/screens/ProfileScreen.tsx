@@ -18,20 +18,28 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import SOSDetailModal from '../components/modal/sos-detail'
 import EditProfileModal from '../components/modal/edit-profile'
 import { SOSScreen } from './SOS_Screen'
+import EditAvatarModal from '../components/modal/edit-avatar'
+
 export const UserProfileScreen = () => {
-  const [user, setUser] = useState<User | null>()
-  const [role, setRole] = useState<string>(AccountRole.Customer)
+  const [isReady, setIsReady] = useState(false)
+  const [authUser, setUser] = useState<User | null>()
   const [sosModalVisible, setSOSModalVisible] = useState(false)
   const [editProfileVisible, setEditProfileVisible] = useState(false)
   const [sosScreenVisible, setSosScreenVisible] = useState(false)
+  const [editAvatarVisible, setEditAvatarVisible] = useState(false)
 
   const handleSOSSubmit = () => {
     setSOSModalVisible(false)
   }
 
-  const handlEditProfileSubmit = () => {
+  const showEditProfileModal = () => {
+    setEditProfileVisible(true)
+  }
+
+  const hideEditProfileModal = () => {
     setEditProfileVisible(false)
   }
+
   const handleSOSScreen = () => {
     setSosScreenVisible(false)
   }
@@ -51,6 +59,24 @@ export const UserProfileScreen = () => {
   //   prepare()
   // }, [])
 
+  const showEditAvatarModal = () => {
+    setEditAvatarVisible(true)
+  }
+
+  const hideEditAvatarModal = () => {
+    setEditAvatarVisible(false)
+  }
+
+  useEffect(() => {
+    const prepare = async () => {
+      if (auth.currentUser) {
+        setUser(auth.currentUser)
+      }
+    }
+    prepare()
+    setIsReady(true)
+  }, [authUser])
+
   const handleSOS = () => {
     Alert.alert(
       'Safety Report',
@@ -66,14 +92,14 @@ export const UserProfileScreen = () => {
     );
   }
 
-  const handleEditProfile = () => {
-    setEditProfileVisible(true)
+  if (!isReady) {
+    return null
   }
   
   return (
     <ScrollView>
       <View style={styles.topContainer}>
-        <ProfileHeader authUser={auth.currentUser} />
+        <ProfileHeader authUser={auth.currentUser} avatarOnPress={showEditAvatarModal}/>
 
         <View style={styles.smallBtnContainer}>
           <UtilityButton imagePath="ic_help" title="Help" />
@@ -98,10 +124,12 @@ export const UserProfileScreen = () => {
         <ActionList imagePath="ic_gift" title="Send a gift" />
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_fav" title="Favourites" />
-        <ActionList imagePath="ic_setting" title="Edit profile" onPress={handleEditProfile} />
+        <ActionList imagePath="ic_setting" title="Edit profile" onPress={showEditProfileModal} />
         <ActionList imagePath="ic_about" title="About us" />
       </View>
-      <EditProfileModal isVisible={editProfileVisible} onSubmit={handlEditProfileSubmit} />
+      <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
+      <EditProfileModal isVisible={editProfileVisible} onSubmit={hideEditProfileModal} />
+      <EditAvatarModal isVisible={editAvatarVisible} onSubmit={hideEditAvatarModal} />
 
     </ScrollView>
   )

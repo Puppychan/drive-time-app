@@ -33,27 +33,14 @@ const VoucherScreen = () => {
   }, [vouchers])
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={vouchers}
-        keyExtractor={(item: Voucher) => item.voucherId.toString()}
-        renderItem={({ item }: { item: Voucher }) => (
-          <View style={{ height: 100, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity
-              style={styles.driveItem}
-            >
-              <View style={styles.driveDetails}>
-                {/* Ensure that each voucher has a name property */}
-                <Text style={styles.driveTitle}>{item.name}</Text>
-                <Text>1 day</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+    <FlatList
+      data={vouchers}
+      keyExtractor={(item: Voucher) => item.voucherId.toString()}
+      renderItem={({ item }: { item: Voucher }) => (
+        <Text>{item.name}</Text>
+      )}
+    />
 
-      <Text>{JSON.stringify(vouchers)}</Text>
-    </View>
   );
 };
 
