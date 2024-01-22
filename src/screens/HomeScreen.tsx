@@ -97,11 +97,6 @@ const HomeScreen = () => {
 
           {/* Recent card */}
 
-          {/* <CustomButton
-            title="Register Driver"
-            onPress={() => {
-              router.push('/driver/register')
-            }} */}
 
           <Button
             onPress={async () => {

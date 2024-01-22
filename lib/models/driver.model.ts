@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore'
+import { GeoPoint, Timestamp } from 'firebase/firestore'
 
 import { Account } from './account.model'
 import { Transport } from './transport.model'
@@ -8,6 +8,6 @@ export interface Driver extends Account {
   isBan: boolean
   transport: Transport | null
   banTime?: Timestamp | null
-  ladtitude: number
-  longitude: number
+  location?: GeoPoint
+  isAvailable?: boolean
 }

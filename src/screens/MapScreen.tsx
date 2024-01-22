@@ -1,11 +1,10 @@
-import { createStackNavigator } from '@react-navigation/stack'
 import { useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, ToastAndroid, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Dimensions } from 'react-native';
-import { CarRequest, Car, getBestMatchBooking } from '@/lib/services/car-matching.service'
+import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.service'
 
 const { height, width } = Dimensions.get('window');
 
@@ -20,18 +19,23 @@ import {
 import LoadingBar from './FindingDriverScreen'
 import RideSelectionCard from '../components/map-screen/RideSelectionCard'
 import { getScreenSize } from '../common/helpers/default-device-value.helper'
+import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
+import { TransportType } from '@/lib/models/transport.model'
+import { ResponseCode } from '@/common/response-code.enum'
+import { ResponseDto } from '@/common/response.dto'
 
-const { width: screenWidth, height: screenHeight } = getScreenSize()
+const { height: screenHeight } = getScreenSize()
+
 const MapScreen = () => {
 
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [cars, setCars] = useState([])
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible)
   const isLoading = useSelector(selectIsLoading)
   const mapRef = useRef<MapView | null>(null)
   const dispatch = useDispatch()
-  const Stack = createStackNavigator()
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
@@ -44,18 +48,33 @@ const MapScreen = () => {
     // { pickup: { id: 'P3', x: 1, y: 1 }, delivery: { id: 'D3', x: 4, y: 4 } }
   ]
 
-  const cars: Car[] = [
-    { id: 'C1', mLocation: { id: 'C1', x: 10.7769, y: 106.7009 } },  // Example coordinates for District 1, Ho Chi Minh City
-    { id: 'C2', mLocation: { id: 'C2', x: 10.7778, y: 106.6974 } },  // Example coordinates for District 1, Ho Chi Minh City
-    { id: 'C3', mLocation: { id: 'C3', x: 10.7755, y: 106.6962 } },  // Example coordinates for District 1, Ho Chi Minh City
-    { id: 'C4', mLocation: { id: 'C4', x: 10.7770, y: 106.6950 } }   // Example coordinates for District 1, Ho Chi Minh City
-  ];
+  // const cars: Car[] = [
+  //   { id: 'C1', mLocation: { id: 'C1', x: 10.7769, y: 106.7009 } },  // Example coordinates for District 1, Ho Chi Minh City
+  //   { id: 'C2', mLocation: { id: 'C2', x: 10.7778, y: 106.6974 } },  // Example coordinates for District 1, Ho Chi Minh City
+  //   { id: 'C3', mLocation: { id: 'C3', x: 10.7755, y: 106.6962 } },  // Example coordinates for District 1, Ho Chi Minh City
+  //   { id: 'C4', mLocation: { id: 'C4', x: 10.7770, y: 106.6950 } }   // Example coordinates for District 1, Ho Chi Minh City
+  // ];
 
   useEffect(() => {
     if (!origin || !destination) return;
-    // const resultResponse = await 
+    getDriverListByStatusAndTransport(true, TransportType.Bike, "Car").then((res: ResponseDto) => {
+      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+      console.log("Bikeeee Carrrrrr", res.body.data)
 
-    getBestMatchBooking(cars, requests)
+
+    })
+
+    getDriverListByStatusAndTransport(true, TransportType.Car, "Car").then((res: ResponseDto) => {
+      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+      setCars(res.body.data)
+      console.log("Carrrrrr", res.body.data)
+    })
+
+    getDriverListByStatusAndTransport(true, TransportType.XLCar, "Car").then((res: ResponseDto) => {
+      if (res.code !== ResponseCode.OK) ToastAndroid.show(res.message ?? 'Cannot fetch car list', ToastAndroid.SHORT)
+      console.log("XL Carrrrr", res.body.data)
+    })
+
     const getTravelTime = async () => {
       fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${apiKey}`)
         .then((res) => res.json())
@@ -67,13 +86,20 @@ const MapScreen = () => {
     getTravelTime();
   }, [origin, destination, apiKey]);
 
+  useEffect(() => {
+    console.log("cars in use effect", cars)
+    getBestMatchBooking(cars, requests)
+
+  }, [cars])
+
+
   return (
     <View style={{ height: screenHeight }}>
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
         style={{
-          height: isRideSelectionVisible ? 0.5 * height : height,
+          height: isRideSelectionVisible ? 0.4 * height : height,
           width: width,
           minWidth: width,
         }}
@@ -109,6 +135,7 @@ const MapScreen = () => {
               animated: true
             })
           ))}
+
 
         <Marker
           coordinate={{
@@ -150,9 +177,7 @@ const MapScreen = () => {
           identifier="destination"
         />
       </MapView>
-      <View style={{ flex: 1, height: 700 }}>
-        <RideSelectionCard />
-      </View>
+      <RideSelectionCard />
     </View>
   )
 }

@@ -1,5 +1,6 @@
 import { User, deleteUser } from 'firebase/auth'
 import {
+  Query,
   Timestamp,
   Transaction,
   arrayUnion,
@@ -13,6 +14,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore'
+import { startOfDay, startOfMonth, startOfWeek } from 'date-fns'
 
 import { ResponseCode } from '@/common/response-code.enum'
 import { SuccessResponseDto } from '@/common/response-success.dto'
@@ -23,6 +25,10 @@ import { NotFoundException } from '../common/handle-error.interface'
 import { ADD_MEMBERSHIP_POINT } from '../common/membership.constant'
 import { AccountType } from '../common/model-type'
 import { db } from '../firebase/firebase'
+import { AccountRole } from '../models/account.model'
+import { TransportType } from '../models/transport.model'
+import { Driver } from '../models/driver.model'
+import { BookingStatus } from '../models/booking.model'
 
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
@@ -131,6 +137,99 @@ export const updateAccountDeviceTokenList = async (userId: string, deviceTokenId
   }
 }
 
+export const getAllAccountsByUserRole = async (role: AccountRole) => {
+  try {
+    const accountCollection = collection(db, CollectionName.ACCOUNTS)
+    const q = query(
+      accountCollection,
+      where('role', '==', role),
+    )
+    return getQuerySnapshotData(q)
+  } catch (err) {
+    return handleUserException(err, `Render account list based on user role`)
+  }
+};
+
+export const getDriverListByStatusAndTransport = async (driverStatus: boolean, transportType: TransportType, returnType: 'Car' | 'Default' = 'Car') => {
+  try {
+    const driverCollection = collection(db, CollectionName.ACCOUNTS)
+    const q = query(
+      driverCollection,
+      where('role', '==', AccountRole.Driver),
+      where('isAvailable', '==', driverStatus),
+      where('transport.type', '==', transportType)
+    )
+    if (returnType == 'Car') return getQuerySnapshotAsCar(q)
+    else return getQuerySnapshotData(q)
+  } catch (err) {
+    return handleUserException(err, `Render driver list based on status and transport type`)
+  }
+};
+// export const getDriversTotalIncomeAndDistance = async (timePeriod: 'Today' | 'Week' | 'Month' | 'All', driverStatus: boolean, transportType: TransportType) => {
+//   let startTime;
+
+//   switch (timePeriod) {
+//     case 'Today':
+//       startTime = Timestamp.fromDate(startOfDay(new Date()));
+//       break;
+//     case 'Week':
+//       startTime = Timestamp.fromDate(startOfWeek(new Date()));
+//       break;
+//     case 'Month':
+//       startTime = Timestamp.fromDate(startOfMonth(new Date()));
+//       break;
+//     case 'All':
+//       startTime = Timestamp.fromDate(new Date(0)); // Start of UNIX time
+//       break;
+//   }
+
+  // const driverListResponse = await getDriverListByStatusAndTransport(driverStatus, transportType, 'Default') as ResponseDto
+  // if (driverListResponse.code && driverListResponse)
+
+  // const bookingCollection = collection(db, CollectionName.BOOKINGS);
+
+  // const q = query(
+  //   bookingCollection,
+  //   where('status', '==', BookingStatus.Success),
+  //   where('updatedAt', '>=', startTime)
+  // );
+
+  // const querySnapshot = await getDocs(q);
+
+  // const results = querySnapshot.docs.map((doc) => {
+  //   let totalIncome = 0;
+  //   let totalDistance = 0;
+
+  //   const data = doc.data();
+  //   totalIncome += data.fare;
+  //   totalDistance += data.distance;
+
+  // });
+
+  // return { totalIncome, totalDistance };
+// };
+
+export async function getAccountById(accountId: string) {
+  try {
+    const accountRef = doc(db, CollectionName.ACCOUNTS, accountId)
+    const accountSnapshot = await getDoc(accountRef)
+
+    if (!accountSnapshot.exists()) {
+      throw new NotFoundException('Account not found')
+    }
+
+    const accountDetails = accountSnapshot.data()
+    return new ResponseDto(
+      ResponseCode.OK,
+      `Account found`,
+      new SuccessResponseDto(accountDetails, accountRef.id)
+    )
+  } catch (error) {
+    console.error(`Error retrieving account: ${error}`)
+    return handleUserException(error, 'Get account details')
+  }
+}
+
 export async function handleUserCreationError(user: User, parentError: any): Promise<ResponseDto> {
   // Implement cleanup logic here.
   return deleteUser(user)
@@ -167,13 +266,13 @@ const isUniqueUser = async (userId: string, email: string, username: string) => 
     const qMail = query(userCollection, where("email", "==", email))
     const qUsername = query(userCollection, where('username', "==", username))
 
-    const mailSnap = await getDocs(qMail); 
+    const mailSnap = await getDocs(qMail);
     console.log(mailSnap)
     if (!mailSnap.empty) {
       return new ResponseDto(ResponseCode.OK, "Email already in use", false)
     }
 
-    const usernameSnap = await getDocs(qUsername); 
+    const usernameSnap = await getDocs(qUsername);
     if (!usernameSnap.empty) {
       return new ResponseDto(ResponseCode.OK, "Username already in use", false)
     }
@@ -201,5 +300,38 @@ export async function getUserById(userId: string){
   catch (e) {
     throw e
   }
-  
+
 }
+
+async function getQuerySnapshotData(query: Query) {
+  const querySnapshot = await getDocs(query)
+  const itemList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  return new ResponseDto(
+    ResponseCode.OK,
+    `Render list of accounts successfully`,
+    new SuccessResponseDto(itemList, '')
+  )
+}
+
+const getQuerySnapshotAsCar = async (query: Query) => {
+  const querySnapshot = await getDocs(query);
+  const cars = querySnapshot.docs.map((doc) => {
+    const data = doc.data() as Driver;
+    const id = 'C' + doc.id;
+    const driverCurrentLocation = data.location
+    return {
+      id: id,
+      mLocation: {
+        id: id,
+        x: driverCurrentLocation?.latitude ?? 0,
+        y: driverCurrentLocation?.longitude ?? 0
+      }
+    };
+  });
+  // return cars;
+  return new ResponseDto(
+    ResponseCode.OK,
+    `Render list of cars successfully`,
+    new SuccessResponseDto(cars, '')
+  )
+};
