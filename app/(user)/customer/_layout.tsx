@@ -1,6 +1,16 @@
 import Footer from '@/src/components/footer/Footer'
 import { Stack } from 'expo-router'
-import { View } from 'react-native'
+import { StyleProp, View } from 'react-native'
+
+const headerCustomStyle = {
+  headerStyle: {
+    backgroundColor: 'black',
+
+  },
+  headerTitleStyle: {
+    color: 'white'
+  }
+}
 
 export default function _layout() {
   return (
@@ -11,16 +21,28 @@ export default function _layout() {
         <Stack.Screen
           name="home"
           options={{
-            headerShown: false
+            headerBackVisible: false,
+            headerTitle: "Home Drive Time",
+            ...headerCustomStyle
+          }}
+        />
+        <Stack.Screen
+          name="voucher"
+          options={{
+            headerBackVisible: false,
+            headerTitle: "Voucher List",
+            ...headerCustomStyle
           }}
         />
         <Stack.Screen
           name="profile"
           options={{
-            headerShown: false
+            headerBackVisible: false,
+            headerTitle: "Profile",
+            ...headerCustomStyle
           }}
         />
-        
+
       </Stack>
 
       {/* Your reusable Footer component */}
