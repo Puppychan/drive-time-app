@@ -16,6 +16,8 @@ import { store } from '@/store'
 import { generateData } from '../lib/data/generate-all.data'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
+import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
+import { TransportType } from '@/lib/models/transport.model'
 
 SplashScreen.preventAutoHideAsync()
 // Notifications.setNotificationHandler({

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Linking, Alert } from "react-native";
+import Modal from 'react-native-modal'
 import { Audio } from 'expo-av';
 import Ring from '../components/animation/ring.circle';
-
-export const SOSScreen = () => {
+interface BottomSheetProps {
+    isVisible: boolean
+    onCancel: () => void;
+}
+export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
     const [timer, setTimer] = useState(15);
     const [timerReachedZero, setTimerReachedZero] = useState(false);
     const [sound, setSound] = useState<Audio.Sound | undefined>(undefined);
@@ -16,7 +20,7 @@ export const SOSScreen = () => {
 
         setSound(sound)
         console.log('Playing Sound');
-        await sound.playAsync();
+        // await sound.playAsync();
     }
 
     useEffect(() => {
@@ -61,37 +65,97 @@ export const SOSScreen = () => {
         }
     };
 
+    useEffect(() =>{
+        if (isVisible) {
+            setTimer(15)
+            setTimerReachedZero(false)
+            try {
+                if (!sound) {
+                    playSound();
+                }
+            } catch (e) {
+                console.log(`cannot play the sound file`, e);
+            }
+            const interval = setInterval(() => {
+                setTimer((prevTimer: number) => {
+                    if (prevTimer > 0) {
+                        return prevTimer - 1;
+                    } else {
+                        sound?.unloadAsync();
+                        setTimerReachedZero(true);
+                        clearInterval(interval); // Stop the interval once timer reaches 0
+                        return 0;
+                    }
+                });
+            }, 1000);
+        
+            // Clean up the interval when the component is unmounted
+            return () => clearInterval(interval);
+        }
+    },[isVisible])
+
     const handleCancel = () => {
         sound?.unloadAsync()
-        Alert.alert("Cancel Button Pressed", "Go Back to Profile view");
+
+        Alert.alert(
+            'Safety Report',
+            'Trigger SOS or Edit/Add your SOS Contact',
+            [
+                {
+                    text: 'Ok', // This is the cancel button
+                    onPress: () => {
+                        // Handle cancel action
+                        onCancel();
+                        setTimer(15);
+                    },
+                    style: 'cancel',
+                },
+                {
+                    text: 'Cancel'
+                }
+            ],
+
+        );
+
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.topCentered}>
-                <Text style={{ fontSize: 25 }}>Emergency SOS</Text>
-            </View>
-            <View style={styles.middleContainer}>
-                <View style={styles.circle}>
-                    {/* Render the Ring component for the ringing effect */}
-                    {[...Array(3).keys()].map((_, index) => (
-                        <Ring key={index} index={index} />
-                    ))}
-                    <Text style={styles.timerText}>{timer}</Text>
+        <Modal
+            isVisible={isVisible}
+            onBackdropPress={() => onCancel()} // Clear email state when modal is closed
+            onBackButtonPress={() => onCancel()}
+            style={[styles.modal, { height: 100 }]}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+        >
+            <View style={styles.modalContent}>
+                <View style={styles.topCentered}>
+                    <Text style={{ fontSize: 25 }}>Emergency SOS</Text>
+                </View>
+                <View style={styles.middleContainer}>
+                    <View style={styles.circle}>
+                        {/* Render the Ring component for the ringing effect */}
+                        {[...Array(3).keys()].map((_, index) => (
+                            <Ring key={index} index={index} />
+                        ))}
+                        <Text style={styles.timerText}>{timer}</Text>
+                    </View>
+                </View>
+                <View style={styles.bottomButtonContainer}>
+                    <TouchableOpacity style={styles.bottomButton} onPress={handleCancel}>
+                        <Text style={styles.bottomButtonText}>Cancel</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.bottomButtonContainer}>
-                <TouchableOpacity style={styles.bottomButton} onPress={handleCancel}>
-                    <Text style={styles.bottomButtonText}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+        </Modal>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        // height: 300,
+        backgroundColor: 'green'
     },
     bottomButtonContainer: {
         position: 'absolute',
@@ -132,4 +196,15 @@ const styles = StyleSheet.create({
         fontSize: 45,
         color: "white",
     },
+    modal: {
+        justifyContent: 'flex-end',
+        margin: 0
+    },
+    modalContent: {
+        height: 600,
+        backgroundColor: 'white',
+        padding: 16,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16
+      }
 });

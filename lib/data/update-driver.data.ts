@@ -72,17 +72,17 @@ export const updateAllDriverAccountsTransport = async () => {
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((driverDoc) => {
-        if (!driverDoc.data().transport) {
+        // if (!driverDoc.data().transport) {
             const driverRef = doc(db, CollectionName.ACCOUNTS, driverDoc.id);
             console.log("Driver id", driverRef.id);
-            const driverLocation = generateLocation()
+            // const driverLocation = generateLocation()
             
             updateDoc(driverRef, {
                 transport: generateRandomTransportData(),
-                location: new GeoPoint(driverLocation.latitude, driverLocation.longitude),
+                // location: new GeoPoint(driverLocation.latitude, driverLocation.longitude),
                 updatedAt: Timestamp.now()
             });
-        }
+        // }
     });
     
   } catch(err) {
@@ -99,7 +99,8 @@ export const updateAllDriverAccountsToBeTrueRandomly = async () => {
       console.log("Driver id", driverRef.id);
       
       updateDoc(driverRef, {
-        isAvailable: faker.datatype.boolean(),
+        // isAvailable: faker.datatype.boolean(),
+        isAvailable: true,
         updatedAt: Timestamp.now()
       });
     });

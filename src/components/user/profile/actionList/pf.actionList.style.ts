@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   btnText: {
-    fontSize: 22,
+    fontSize: 15,
     fontWeight: '500'
   }
 })
