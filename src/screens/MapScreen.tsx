@@ -25,7 +25,7 @@ import { PaymentScreen } from './StripePaymentScreen'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface Props {
-  onChat: () => void
+  onChat: (driverId: string) => void
 }
 
 const MapScreen = ({ onChat }: Props) => {
@@ -189,13 +189,17 @@ const MapScreen = ({ onChat }: Props) => {
               </View>
             </View>
 
-            <View className='flex flex-row items-center gap-2'>
+            <View className='flex flex-row items-center'>
               <TouchableOpacity
-                onPress={onChat}
-                className='text-lg text-black bg-white border border-black/30 flex-1 text-center px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}><Text>Chat with driver</Text></TouchableOpacity>
-              <Text className='text-lg text-white border border-black/30 px-4 py-2 rounded-lg' style={{ fontWeight: '900' }}>
+                className='text-lg text-black bg-white border border-black/30 flex items-center justify-center flex-1 w-64 text-center px-4 py-2 rounded-lg'
+                onPress={() => onChat(driverId)}
+              >
+                <Text style={{ fontWeight: '900' }}>Chat with driver</Text>
+              </TouchableOpacity>
+              <View className='flex-1' />
+              <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
                 <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
-              </Text>
+              </TouchableOpacity>
             </View>
 
             <View className='h-0.5 w-full bg-black/10 my-4' />

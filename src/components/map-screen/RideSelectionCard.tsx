@@ -70,7 +70,8 @@ const RideSelectionCard = (props: Props) => {
 
   const handleRideSelected = async (item: ItemType) => {
     const res = await getDriverListByStatusAndTransport(true, item.type, "Car")
-    const driverId = (await getBestMatchBooking(res.body.data, props.requests))?.[0]
+    const driverId = (await getBestMatchBooking(res.body.data, props.requests))?.[0]?.slice(1)
+
     setDriverId(driverId)
     props.onRideSelected({ option: item, driverId })
   }

@@ -37,8 +37,8 @@ export const styles = StyleSheet.create({
     height: 16
   },
   callImage: {
+    backgroundColor: 'transparent',
     width: 25,
     height: 25,
-    marginEnd: 20
   }
 })
