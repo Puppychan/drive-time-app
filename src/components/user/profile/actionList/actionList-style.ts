@@ -9,13 +9,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   btnIcon: {
-    height: 26,
+    height: 18,
     width: 26,
     marginEnd: 25,
     overflow: 'hidden'
   },
   btnText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '500'
   }
 })
