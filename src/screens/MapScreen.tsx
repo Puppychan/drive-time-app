@@ -20,7 +20,8 @@ import LoadingBar from './FindingDriverScreen'
 import RideSelectionCard from '../components/map-screen/RideSelectionCard'
 import { getScreenSize } from '../common/helpers/default-device-value.helper'
 
-const { width: screenWidth, height: screenHeight } = getScreenSize()
+const { height: screenHeight } = getScreenSize()
+
 const MapScreen = () => {
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -28,7 +29,6 @@ const MapScreen = () => {
   const isLoading = useSelector(selectIsLoading)
   const mapRef = useRef<MapView | null>(null)
   const dispatch = useDispatch()
-  const Stack = createStackNavigator()
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
@@ -46,12 +46,12 @@ const MapScreen = () => {
   }, [origin, destination, apiKey]);
 
   return (
-    <View style={{height: screenHeight}}>
+    <View style={{ height: screenHeight }}>
       <MapView
         ref={mapRef}
         mapType="mutedStandard"
         style={{
-          height: isRideSelectionVisible ? 0.5 * height : height,
+          height: isRideSelectionVisible ? 0.4 * height : height,
           width: width,
           minWidth: width,
         }}
@@ -87,6 +87,7 @@ const MapScreen = () => {
               animated: true
             })
           ))}
+
 
         <Marker
           coordinate={{
@@ -128,9 +129,7 @@ const MapScreen = () => {
           identifier="destination"
         />
       </MapView>
-        <View style={{flex: 1,height: 500}}>
       <RideSelectionCard />
-        </View>
     </View>
   )
 }

@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Button, FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { ScrollView, Image, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -53,61 +52,56 @@ const RideSelectionCard = () => {
   const [selected, setSelected] = useState<ItemType | null>(null)
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>
-          Select a Drive -{travelInformation?.distance.text}
+    <View className='bg-black h-full'>
+      <View className='flex justify-between flex-row p-4'>
+        <Text className='text-white text-lg font-semibold'>
+          Select an option
         </Text>
+        <Text className='text-black bg-white px-4 py-0.5 font-bold rounded text-xl'>{travelInformation?.distance.text}</Text>
       </View>
-      <FlatList
-        style={styles.driverItemContainer}
-        data={data}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => setSelected(item)}
-            style={[
-              styles.driveItem,
-              {
-                backgroundColor: selected?.id === item.id ? '#99ccff' : '#ffffff'
-              }
-            ]}
-          >
-            <Image style={styles.driveImage} source={item.image} />
-            <View style={styles.driveDetails}>
-              <Text style={styles.driveTitle}>{item.title}</Text>
-              <Text>{travelInformation?.duration.text}</Text>
-            </View>
-            <Text style={styles.priceText}>90000 VND</Text>
-          </TouchableOpacity>
-        )}
-      />
+      <View className='px-2 overflow-y-auto'>
+        {data
+          .slice(0, 3)
+          .map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => setSelected(item.id === selected?.id ? null : item)}
+              className={`${selected?.id === item.id ? 'bg-white' : 'bg-white/70'
+                } flex flex-row rounded-lg px-4 mb-2`}
+            >
+              <Image style={styles.driveImage} source={item.image} />
+              <View style={styles.driveDetails}>
+                <Text style={styles.driveTitle}>{item.title}</Text>
+                <Text>{travelInformation?.duration.text}</Text>
+              </View>
+              <Text style={styles.priceText}>90,000 VND</Text>
+            </TouchableOpacity>
+          ))}
+      </View>
 
-      <View style={styles.paymentInfo}>
-        <View style={styles.paymentMethod}>
-          <Text style={styles.paymentIcon}>💳</Text>
-          <Text style={styles.paymentText}>ATM 1243</Text>
+      <View className='mt-2 flex flex-row justify-between px-4'>
+        <View className='text-lg flex flex-row gap-2'>
+          <Text>💳</Text>
+          <Text className='font-bold text-blue-200'>9876 **** **** 1243</Text>
         </View>
-        <View style={styles.divider} />
-        <View style={styles.voucherInfo}>
-          <Text style={styles.voucherIcon}>🎁</Text>
-          <Text style={styles.voucherText}>Vouchers</Text>
+        {/* Divider */}
+        <View className='text-lg flex flex-row gap-2'>
+          <Text>🎁</Text>
+          <Text className='font-bold text-red-200'>Vouchers</Text>
         </View>
       </View>
 
-      <Text> Hello world </Text>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.selectButton}
-          onPress={() => {
-            dispatch(toggleRideSelectionVisibility());
-            dispatch(toggleLoading());
-          }}
-        >
-          <Text style={styles.buttonText}>Select {selected?.title}</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        className={`mt-4 bg-white rounded-lg py-2 px-4 text-black mx-4 ${selected ? 'opacity-100' : 'opacity-50'}`}
+        onPress={() => {
+          dispatch(toggleRideSelectionVisibility());
+          dispatch(toggleLoading());
+        }}
+        disabled={!selected}
+      >
+        <Text className={`text-black font-semibold text-center text-xl flex items-center justify-center w-full ${selected ? 'opacity-100' : 'opacity-50'
+          }`}>Book {selected?.title}</Text>
+      </TouchableOpacity>
     </View>
   )
 
