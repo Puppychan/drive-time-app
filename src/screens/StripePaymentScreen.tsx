@@ -10,13 +10,11 @@ import { useEffect } from 'react'
 const STRIPE_PUBLISHABLE_KEY =
   'pk_test_51OZSSiJPx7rQ3VEwkLAPlP8cQGg5wSpSATi3XYmshpbtRECUeW0JAhntQ3jy30fuBAcYH7wl1K1pM2m5LBjteXaU00px9UD5jV'
 
-export const PaymentScreen = () => {
+export const PaymentScreen = ({amount}: {amount: number}) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe()
 
   const handlePaymentPress = async () => {
     try {
-      const amount = 3000 // in pennies
-
       // render customer stripe id using current user ID
       // const userId = auth.currentUser?.uid ?? ''
       // // const customerStripeId = 'cus_POHmXEYB56m3tg'

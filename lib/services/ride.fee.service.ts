@@ -1,6 +1,17 @@
-export const calculateTaxiFare = (distance: number): number => {
+import { TransportType } from "../models/transport.model"
+
+export const calculateTaxiFare = (distance: number, rideType: TransportType): number => {
+
   // Opening price
-  const baseFare = 5000 / 0.3
+  let baseFare = 0
+
+  if (rideType == 'Car4') {
+    baseFare = 5000 / 0.3
+  } else if (rideType == 'Car4 VIP') {
+    baseFare = 7000 / 0.3
+  } else if (rideType == 'Car7') {
+    baseFare = 6500 / 0.3
+  }
 
   const feeFromKm2ToKm2 = 16900
 
@@ -29,6 +40,6 @@ export const calculateTaxiFare = (distance: number): number => {
   return totalFare * exchangeRate
 }
 
-const distance = 5
-const fareInUSD = calculateTaxiFare(distance)
-console.log(`The taxi fare for ${distance} km is ${fareInUSD.toFixed(2)} USD`)
+// const distance = 5
+// const fareInUSD = calculateTaxiFare(distance, 'Car4')
+// console.log(`The taxi fare for ${distance} km is ${fareInUSD.toFixed(2)} USD`)

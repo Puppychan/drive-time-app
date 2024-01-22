@@ -199,7 +199,7 @@ const MapScreen = ({ onChat }: Props) => {
             </View>
 
             <View className='h-0.5 w-full bg-black/10 my-4' />
-            <PaymentScreen />
+            {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
           </View>
           : <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
             <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>

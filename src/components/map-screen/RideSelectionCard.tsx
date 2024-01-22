@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -12,13 +12,15 @@ import { StyleSheet } from 'react-native'
 import { TransportType } from '@/lib/models/transport.model'
 import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.service'
 import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
+import { calculateTaxiFare } from '@/lib/services/ride.fee.service'
 
 export interface ItemType {
   id: string
   title: string
   multiplier: number
   image: any
-  type: TransportType
+  type: TransportType,
+  amount?: number
 }
 
 const data: ItemType[] = [
@@ -34,7 +36,7 @@ const data: ItemType[] = [
     title: 'DriveTime Car4 VIP',
     multiplier: 1.3,
     image: require('../../../assets/normal.png'),
-    type: TransportType.Car
+    type: TransportType.Bike
   },
   {
     id: 'Car-7-seat-1',
@@ -75,6 +77,8 @@ const RideSelectionCard = (props: Props) => {
     props.onRideSelected({ option: item, driverId })
   }
 
+  const distanceInKm = parseFloat(travelInformation?.distance.text) * 1.60934
+
   return (
     <View className='bg-black h-full'>
       <View className='flex justify-between flex-row p-4'>
@@ -95,7 +99,12 @@ const RideSelectionCard = (props: Props) => {
                   setDriverId(null)
                   props.onRideSelected({ option: null, driverId: null })
                 } else {
-                  setOption(o)
+                  setOption({
+                    ...o, amount: calculateTaxiFare(
+                      distanceInKm,
+                      o.type
+                    )
+})
                   setDriverId(null)
                   props.onRideSelected({ option: o, driverId: null })
                 }
@@ -108,7 +117,12 @@ const RideSelectionCard = (props: Props) => {
                 <Text style={styles.driveTitle}>{o.title}</Text>
                 <Text>{travelInformation?.duration.text}</Text>
               </View>
-              <Text style={styles.priceText}>90,000 VND</Text>
+              <Text style={styles.priceText}>{
+                o?.type ? `$${calculateTaxiFare(
+                  distanceInKm,
+                  o.type
+                ).toFixed(2)}` : 'N/A'
+              }</Text>
             </TouchableOpacity>
           ))}
       </View>
@@ -116,7 +130,7 @@ const RideSelectionCard = (props: Props) => {
       <View className='mt-2 flex flex-row justify-between px-4'>
         <View className='text-lg flex flex-row gap-2'>
           <Text>💳</Text>
-          <Text className='font-bold text-blue-200'>9876 **** **** 1243</Text>
+          <Text className='font-bold text-blue-200'>Card Payment</Text>
         </View>
         {/* Divider */}
         <View className='text-lg flex flex-row gap-2'>
