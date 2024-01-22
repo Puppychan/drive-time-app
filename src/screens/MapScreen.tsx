@@ -9,6 +9,7 @@ import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.ser
 const { height, width } = Dimensions.get('window');
 
 import {
+  selectCurrentLocation,
   selectDestination,
   selectIsLoading,
   selectIsRideSelectionVisible,
@@ -28,8 +29,12 @@ const { height: screenHeight } = getScreenSize()
 
 const MapScreen = () => {
 
+  const currentLocation = useSelector(selectCurrentLocation)
+
+
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [cars, setCars] = useState([])
+
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
   const isRideSelectionVisible = useSelector(selectIsRideSelectionVisible)
@@ -82,7 +87,7 @@ const MapScreen = () => {
           dispatch(setTimeTravel(data.rows[0].elements[0]))
         });
     }
-
+    console.log("origin", currentLocation)
     getTravelTime();
   }, [origin, destination, apiKey]);
 
