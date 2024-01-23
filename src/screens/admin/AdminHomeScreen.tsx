@@ -111,16 +111,6 @@ const AdminHomeScreen = () => {
 
           <View className='h-0.5 w-full bg-black/10' />
 
-          {/* <View className='px-4'>
-            <FullScreenCard
-              imageUrl={{ uri: 'https://source.unsplash.com/random?travel' }}
-              title="Explore nearby"
-              subtitle="Find the perfect ride for your next trip"
-              onClick={onClickExploreNearby}
-            />
-          </View> */}
-
-
           <View style={styles.subsection}>
             <Title className='text-2xl px-2'>Account Insights</Title>
           </View>
@@ -152,6 +142,18 @@ const AdminHomeScreen = () => {
               iconImage={require('@/assets/financial_insight.png')}
               title='Finance'
               onClick={onClickInsightFinance}
+            />
+          </View>
+
+          <View style={styles.subsection}>
+            <Title className='text-2xl px-2'>Driver Management</Title>
+          </View>
+
+          <View className='flex flex-row gap-2 px-8'>
+            <ServiceCard
+              iconImage={require('@/assets/driver_management.png')}
+              title='Manage Driver'
+              onClick={onClickInsightService}
             />
           </View>
         </View>

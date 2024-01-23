@@ -6,9 +6,9 @@ const FooterAdmin = () => {
     const router = useRouter()
     return (
         <Appbar style={styles.bottom}>
-            <Appbar.Action icon="home" onPress={() => { router.push('/driver/home') }} />
-            <Appbar.Action icon="star" onPress={() => { router.push('/driver/dashboard') }} />
-            <Appbar.Action icon="account" onPress={() => { router.push('/driver/profile') }} />
+            <Appbar.Action icon="home" onPress={() => { router.push('/admin/home') }} />
+            <Appbar.Action icon={require('@/assets/admin_dashboard.png')} onPress={() => { router.push('/admin/dashboard') }} />
+            <Appbar.Action icon="account" onPress={() => { router.push('/admin/profile') }} />
         </Appbar>
     );
 };
