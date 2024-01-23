@@ -1,10 +1,12 @@
 import { View } from 'react-native'
+import UserInsight from '@/src/screens/admin/UserInsight'
+import { Provider } from 'react-redux'
+import {store } from '@/store'
 
-import { DriverDashBoardScreen } from '@/src/screens/driver/DashBoardScreen'
 export default function Page() {
   return (
-    <View>
-      <DriverDashBoardScreen />
-    </View>
+    <Provider store={store}>
+      <UserInsight />
+    </Provider>
   )
 }

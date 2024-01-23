@@ -30,7 +30,7 @@ import { useDispatch } from 'react-redux'
 import { setCurrentLocation } from '@/src/slices/navSlice'
 // TODO: change to dynamic later
 
-const AdminHomeScreen = () => {
+const AdminDashboard = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
   const [user, setUser] = useState<User | null>()
   const dispatch = useDispatch()
@@ -42,7 +42,7 @@ const AdminHomeScreen = () => {
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.replace(`/admin/dashboard`)
+    router.replace(`/admin/profile`)
   }
 
   const onClickSuggestions = (index: number) => {
@@ -90,25 +90,26 @@ const AdminHomeScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
           <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? "Admin"}</Title>
+          <SearchInput />
 
           <TouchableOpacity className='mx-4 bg-white border border-black/10 px-4 py-1 rounded-lg' onPress={onClickHomeSection}>
             <View className='flex flex-row gap-4 items-center'>
               <CircleIcon
-                name="settings"
+                name="home"
                 size={24}
                 color={colorsTheme.background}
                 backgroundColor={colorsTheme.opposite_bg}
               />
 
               <View style={{ ...verticalLeftView, flexGrow: 1 }}>
-                <Title>Admin Dashboard</Title>
-                <Paragraph>Adminstration</Paragraph>
+                <Title>Home</Title>
+                <Paragraph>123 Main St</Paragraph>
               </View>
               <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
             </View>
           </TouchableOpacity>
 
-          {/* <View className='h-0.5 w-full bg-black/10' /> */}
+          <View className='h-0.5 w-full bg-black/10' />
 
           <View style={styles.subsection}>
             <Title className='text-2xl px-2'>Account Insights</Title>
@@ -206,5 +207,5 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AdminHomeScreen
+export default AdminDashboard
 
