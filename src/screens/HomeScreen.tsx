@@ -47,7 +47,7 @@ const HomeScreen = () => {
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
-    router.replace(`/${role.toLowerCase()}/profile`)
+    router.push(`/(user)/customer/call`)
   }
 
   const onClickSeeMore = (type: 'suggestion' | 'instruction') => { }
@@ -248,4 +248,3 @@ const styles = StyleSheet.create({
 })
 
 export default HomeScreen
-
