@@ -28,16 +28,16 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
 import { auth, db } from '@/lib/firebase/firebase'
-import { collection, getDocs, query, orderBy, limit, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, writeBatch } from "firebase/firestore";
+import { CallScreen } from './CallScreen'
 
 interface Props {
   fallbackOption?: ItemType | null
   fallbackDriver: any | null
   onChat: (driverId: string | null, driver: any, option: any) => void
-  onCall: () => void
 }
 
-const MapScreen = ({ fallbackOption, fallbackDriver, onChat, onCall }: Props) => {
+const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
   const currentLocation = useSelector(selectCurrentLocation)
 
   const [cars, setCars] = useState([])
@@ -139,93 +139,113 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat, onCall }: Props) =>
     }
   }, [driverId]);
 
+  const handleBookingComplete = async () => {
+    const userId = auth.currentUser?.uid ?? '';
+
+    const bookingCollection = collection(db, 'bookings');
+    const q = query(
+      bookingCollection,
+      where("customerIdList", "array-contains", userId),
+      where("status", "==", BookingStatus.InProgress)
+    );
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const batch = writeBatch(db);
+      querySnapshot.docs.forEach((docSnapshot) => {
+        const bookingRef = doc(bookingCollection, docSnapshot.id);
+        batch.update(bookingRef, { status: BookingStatus.Success });
+      });
+      await batch.commit();
+    }
+  }
+
   return (
     <View className='h-screen relative'>
-        {isRideSelectionVisible && <GooglePlacesInput />}
-        <MapView
-          ref={mapRef}
-          style={{
-            height: (origin && destination && isRideSelectionVisible) ? 0.4 * height : height,
-            width: width,
-            minWidth: width,
-          }}
-          initialRegion={{
-            latitude: destination?.location?.lat || 10.7289515,
-            longitude: destination?.location?.lng || 106.6957667,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05
-          }}
-        >
-          {origin && destination && (
-            <MapViewDirections
-              origin={origin?.description}
-              destination={destination?.description}
-              strokeColor="blue"
-              strokeWidth={5}
-              apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
-              onReady={(result) => {
-                const coordinates = result.coordinates;
-                if (coordinates.length > 0) {
-                  mapRef.current?.fitToCoordinates(coordinates, {
-                    edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                    animated: true
-                  });
-                } else {
-                  const randomLatitude = Math.random() * 180 - 90;
-                  const randomLongitude = Math.random() * 360 - 180;
-                  mapRef.current?.animateToRegion({
-                    latitude: randomLatitude,
-                    longitude: randomLongitude,
-                    latitudeDelta: 0.005,
-                    longitudeDelta: 0.005
-                  });
-                }
-              }}
-            />
-          )}
+      {isRideSelectionVisible && <GooglePlacesInput />}
+      <MapView
+        ref={mapRef}
+        style={{
+          height: (origin && destination && isRideSelectionVisible) ? 0.4 * height : height,
+          width: width,
+          minWidth: width,
+        }}
+        initialRegion={{
+          latitude: destination?.location?.lat || 10.7289515,
+          longitude: destination?.location?.lng || 106.6957667,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
+        }}
+      >
+        {origin && destination && (
+          <MapViewDirections
+            origin={origin?.description}
+            destination={destination?.description}
+            strokeColor="blue"
+            strokeWidth={5}
+            apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
+            onReady={(result) => {
+              const coordinates = result.coordinates;
+              if (coordinates.length > 0) {
+                mapRef.current?.fitToCoordinates(coordinates, {
+                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                  animated: true
+                });
+              } else {
+                const randomLatitude = Math.random() * 180 - 90;
+                const randomLongitude = Math.random() * 360 - 180;
+                mapRef.current?.animateToRegion({
+                  latitude: randomLatitude,
+                  longitude: randomLongitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005
+                });
+              }
+            }}
+          />
+        )}
 
-          {origin?.location && (
-            <Marker
-              coordinate={{
-                latitude: origin.location.lat,
-                longitude: origin.location.lng
-              }}
-              title="Origin"
-              description="Origin Location"
-              identifier="origin"
-              style={{ width: 100, height: 100, borderRadius: 50 }}
-            >
-              <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
-                {isLoading && (
-                  <View style={{ width: 50, height: 50 }}>
-                    <LoadingBar />
-                  </View>
-                )}
-                <View style={{ position: 'absolute' }}>
-                  <Image
-                    source={{
-                      uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
-                    }}
-                    style={{ width: 40, height: 40, justifyContent: 'center' }}
-                    resizeMode="contain"
-                  />
+        {origin?.location && (
+          <Marker
+            coordinate={{
+              latitude: origin.location.lat,
+              longitude: origin.location.lng
+            }}
+            title="Origin"
+            description="Origin Location"
+            identifier="origin"
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+          >
+            <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
+              {isLoading && (
+                <View style={{ width: 50, height: 50 }}>
+                  <LoadingBar />
                 </View>
+              )}
+              <View style={{ position: 'absolute' }}>
+                <Image
+                  source={{
+                    uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
+                  }}
+                  style={{ width: 40, height: 40, justifyContent: 'center' }}
+                  resizeMode="contain"
+                />
               </View>
-            </Marker>
-          )}
+            </View>
+          </Marker>
+        )}
 
-          {destination?.location && (
-            <Marker
-              coordinate={{
-                latitude: destination.location.lat,
-                longitude: destination.location.lng
-              }}
-              title="Destination"
-              description="Destination"
-              identifier="destination"
-            />
-          )}
-        </MapView>
+        {destination?.location && (
+          <Marker
+            coordinate={{
+              latitude: destination.location.lat,
+              longitude: destination.location.lng
+            }}
+            title="Destination"
+            description="Destination"
+            identifier="destination"
+          />
+        )}
+      </MapView>
 
       {(driver) ?
         <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
@@ -258,7 +278,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat, onCall }: Props) =>
               <Text style={{ fontWeight: '900' }}>Chat with driver</Text>
             </TouchableOpacity>
             <View className='flex-1' />
-            <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }} onPress={onCall}>
+            <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
               <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
             </TouchableOpacity>
           </View>
@@ -268,7 +288,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat, onCall }: Props) =>
           <View className='flex flex-row items-center'>
             {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
             <View className='w-3' />
-            <TouchableOpacity className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
+            <TouchableOpacity onPress={handleBookingComplete} className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
               <Text className='text-black' style={{ fontWeight: '900' }}>Done</Text>
             </TouchableOpacity>
           </View>
