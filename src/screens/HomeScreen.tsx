@@ -26,6 +26,7 @@ import { Constant } from '@/components/Constant'
 import { signOut } from '@/lib/firebase/auth'
 import { LocationObject } from 'expo-location';
 import * as Location from "expo-location";
+import { useDispatch } from 'react-redux'
 // TODO: change to dynamic later
 
 const HomeScreen = () => {
@@ -84,7 +85,7 @@ const HomeScreen = () => {
           longitude: location.coords.longitude,
         })
       )
-      console.log("abcb",location)
+      console.log("abcb", location)
       setLocation(location);
     })();
   }, []);

@@ -19,7 +19,7 @@ const isSelected = (selectedFilter: SelectedFilter, filter: string, targetValue:
 }
 export default function Page() {
     const router = useRouter();
-    const [vouchers, setVouchers] = useState([]);
+    const [vouchers, setVouchers] = useState<Voucher[] | null>([]);
     const [selectedFilter, setSelectedFilter] = useState<SelectedFilter>({});
 
     useEffect(() => {
@@ -32,6 +32,7 @@ export default function Page() {
                     setVouchers(data.body.data);
                 }
                 else {
+                    setVouchers(null)
                     ToastAndroid.show(data.message ?? 'Could not fetch voucher', ToastAndroid.LONG)
                 }
             } catch (error) {
@@ -47,7 +48,7 @@ export default function Page() {
             if (data.code === ResponseCode.OK) {
                 setVouchers(data.body.data);
             } else {
-                setVouchers([]);
+                setVouchers(null);
                 ToastAndroid.show(data.message ?? 'Could not fetch voucher', ToastAndroid.LONG);
             }
         };

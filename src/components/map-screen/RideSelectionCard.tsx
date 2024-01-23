@@ -13,6 +13,7 @@ import { TransportType } from '@/lib/models/transport.model'
 import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.service'
 import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
 import { calculateTaxiFare } from '@/lib/services/ride.fee.service'
+import VoucherListModal from '../modal/voucher-list-modal'
 
 export interface ItemType {
   id?: string
@@ -60,6 +61,7 @@ const RideSelectionCard = (props: Props) => {
 
   const [option, setOption] = useState<ItemType | null>(null)
   const [driverId, setDriverId] = useState<string | null>(null)
+  const [voucherModal, setVoucherModal] = useState(false)
 
   const handleRideSelected = async (item: ItemType) => {
     const res = await getDriverListByStatusAndTransport(true, item.type, "Car")
@@ -125,10 +127,12 @@ const RideSelectionCard = (props: Props) => {
           <Text className='font-bold text-blue-200'>Card Payment</Text>
         </View>
         {/* Divider */}
-        <View className='text-lg flex flex-row gap-2'>
-          <Text>🎁</Text>
-          <Text className='font-bold text-red-200'>Vouchers</Text>
-        </View>
+        <TouchableOpacity onPress={() => setVoucherModal(true)}>
+          <View className='text-lg flex flex-row gap-2'>
+            <Text>🎁</Text>
+            <Text className='font-bold text-red-200'>Vouchers</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity
@@ -146,6 +150,7 @@ const RideSelectionCard = (props: Props) => {
             option ? "Book now" : "Please select an option"
           }</Text>
       </TouchableOpacity>
+      <VoucherListModal modalVisible={voucherModal} setModalVisible={setVoucherModal} />
     </View>
   )
 
