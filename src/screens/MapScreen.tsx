@@ -29,7 +29,7 @@ import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
 import { auth, db } from '@/lib/firebase/firebase'
 import { collection, getDocs, query, where, doc, writeBatch } from "firebase/firestore";
-import { CallScreen } from './CallScreen'
+import { router } from 'expo-router'
 
 interface Props {
   fallbackOption?: ItemType | null
@@ -157,6 +157,8 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
       });
       await batch.commit();
     }
+
+    router.push("/(user)/customer/review")
   }
 
   return (

@@ -16,16 +16,16 @@ export const PaymentScreen = ({ amount }: { amount: number }) => {
   const handlePaymentPress = async () => {
     try {
       // render customer stripe id using current user ID
-      // const userId = auth.currentUser?.uid ?? ''
-      // // const customerStripeId = 'cus_POHmXEYB56m3tg'
-      // const getStripeIdResponse = await getCustomerStripeId(userId)
-      // // if render unsuccessful
-      // if (getStripeIdResponse.code !== ResponseCode.OK) {
-      //   ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot fetch customer stripe id', ToastAndroid.LONG)
-      //   return;
-      // }
-      // let customerStripeId = getStripeIdResponse.body.data
-      const customerStripeId = 'cus_POHmXEYB56m3tg'
+      const userId = auth.currentUser?.uid ?? ''
+      // const customerStripeId = 'cus_POHmXEYB56m3tg'
+      const getStripeIdResponse = await getCustomerStripeId(userId)
+      // if render unsuccessful
+      if (getStripeIdResponse.code !== ResponseCode.OK) {
+        ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot fetch customer stripe id', ToastAndroid.LONG)
+        return;
+      }
+      let customerStripeId = getStripeIdResponse.body.data
+      // const customerStripeId = 'cus_POHmXEYB56m3tg'
       const paymentMethodList = StripeUserPaymentMethod({ customerStripeId })
 
       const { paymentIntent, ephemeralKey, customer } = await StripePaymentIntent({
@@ -35,14 +35,14 @@ export const PaymentScreen = ({ amount }: { amount: number }) => {
       })
 
       // compare customerStripeID == customer => nothing: update
-      // if (customerStripeId != customer) {
-      //   customerStripeId = customer
-      //   const updateStripeIdResponse = await setCustomerStripeId(userId, customer)
-      //   if (updateStripeIdResponse.code !== ResponseCode.OK) {
-      //     ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot update customer stripe id', ToastAndroid.LONG)
-      //     return;
-      //   }
-      // }
+      if (customerStripeId != customer) {
+        customerStripeId = customer
+        const updateStripeIdResponse = await setCustomerStripeId(userId, customer)
+        if (updateStripeIdResponse.code !== ResponseCode.OK) {
+          ToastAndroid.show(getStripeIdResponse.message ?? 'Cannot update customer stripe id', ToastAndroid.LONG)
+          return;
+        }
+      }
 
       if (!paymentIntent) {
         Alert.alert('Payment Error', 'Please try again after a few seconds')

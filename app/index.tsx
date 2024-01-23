@@ -84,10 +84,6 @@ export default function App() {
     else {
       router.replace(`/signin`)
     }
-    // router.replace('/(user)/customer/profile')
-    router.replace(`/customer/home`)
-
-    // router.replace('/(public)/signin')
   }
 
   const doneButton = ({ ...props }) => {
