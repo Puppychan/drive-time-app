@@ -12,7 +12,7 @@ import PaymentInfo from '../components/review/ReviewCard/PaymentInfo'
 import ReviewCard from '../components/review/ReviewCard/ReviewCard'
 import RouteInfo from '../components/review/ReviewCard/RouteInfo'
 import TripInsurance from '../components/review/ReviewCard/TripInsurance'
-import { AppButton } from '../components/button/Buttons'
+import { CustomButton } from '../components/button/Buttons'
 
 const ReviewScreen = () => {
   const screenWidth = Dimensions.get('window').width
@@ -37,6 +37,7 @@ const ReviewScreen = () => {
       })
 
       console.log('Review added with ID: ', docRef.id)
+      router.replace(`/(user)/customer/home`)
     } catch (error) {
       console.error('Error adding review:', error)
       Alert.alert('Error', 'Failed to add review. Please try again.')
@@ -44,8 +45,7 @@ const ReviewScreen = () => {
   }
 
   const goBack = () => {
-    router.back()
-    // console.log('Go back');
+    // router.replace(`/(user)/customer/home`)
   }
 
   return (
@@ -55,7 +55,7 @@ const ReviewScreen = () => {
       <RouteInfo />
       <TripInsurance />
       <PaymentInfo />
-      <AppButton title="Arrive" style={styles.customButtonStyle} onPress={addReview} />
+      <CustomButton title="Arrive" style={styles.customButtonStyle} onPress={addReview} />
       <Text>{rating}</Text>
       <TouchableOpacity onPress={goBack}>
         <Text>Go Backkkkkk</Text>
@@ -73,5 +73,4 @@ const styles = StyleSheet.create({
     height: 60
   }
 })
-
 export default ReviewScreen

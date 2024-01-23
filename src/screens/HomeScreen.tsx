@@ -50,7 +50,9 @@ const HomeScreen = () => {
     router.push(`/(user)/customer/call`)
   }
 
-  const onClickSeeMore = (type: 'suggestion' | 'instruction') => { }
+  const onClickSeeMore = () =>{
+    // router.push(`/(user)/customer/review`)
+  }
 
   const onClickExploreNearby = () => {
     router.push('/(user)/customer/nearby_place')
@@ -159,7 +161,7 @@ const HomeScreen = () => {
               <Button
                 // title="See More"
                 onPress={() => {
-                  onClickSeeMore('instruction')
+                  onClickSeeMore()
                 }}
               >
                 See More

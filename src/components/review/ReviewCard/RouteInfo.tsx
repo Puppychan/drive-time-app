@@ -62,8 +62,8 @@ const RouteInfo = () => {
               />
             </View>
             <View>
-              <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>Vin Home grand Park</Text>
-              <Text style={{ marginLeft: 10 }}>123 Nguyen Luong Bang, Da Nang</Text>
+              <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>Rmit University</Text>
+              <Text style={{ marginLeft: 10 }}>702 Nguyen Van Linh</Text>
             </View>
           </View>
 
@@ -79,8 +79,8 @@ const RouteInfo = () => {
               />
             </View>
             <View>
-              <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>Vin Home grand Park</Text>
-              <Text style={{ marginLeft: 10 }}>123 Nguyen Luong Bang, Da Nang</Text>
+              <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>Cresent Mall</Text>
+              <Text style={{ marginLeft: 10 }}>101 Ton Dat Tien</Text>
             </View>
           </View>
         </View>

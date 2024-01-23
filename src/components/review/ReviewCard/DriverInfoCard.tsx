@@ -28,7 +28,7 @@ const DriverInfoCard = () => {
             />
           </View>
           <View style={{ paddingLeft: 15, width: 150 }}>
-            <Text style={{ fontWeight: 'bold' }}>Nguyen Dinh Viet</Text>
+            <Text style={{ fontWeight: 'bold' }}>Khanh Tran</Text>
             <View
               style={{
                 height: 30,

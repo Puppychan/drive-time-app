@@ -84,10 +84,6 @@ export default function App() {
     else {
       router.replace(`/signin`)
     }
-    // router.replace('/(user)/customer/profile')
-    router.replace(`/customer/home`)
-
-    // router.replace('/(public)/signin')
   }
 
   const doneButton = ({ ...props }) => {
@@ -101,7 +97,7 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button>
+        {/* <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button> */}
         <View
           style={styles.container}
           onLayout={onLayoutRootView}

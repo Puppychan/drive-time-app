@@ -55,11 +55,11 @@ const PaymentInfo = () => {
               }}
             />
             <View style={{ marginTop: 5, marginLeft: 10 }}>
-              <Text style={{ fontSize: 15 }}> Momo</Text>
+              <Text style={{ fontSize: 15 }}> Master Card</Text>
             </View>
           </View>
           <View style={{ marginTop: 8 }}>
-            <Text>29k</Text>
+            <Text>$2.66</Text>
           </View>
         </View>
       </View>
