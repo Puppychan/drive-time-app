@@ -39,6 +39,8 @@ interface Props {
 const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
   const currentLocation = useSelector(selectCurrentLocation)
 
+  const [cars, setCars] = useState([])
+
   const [option, setOption] = useState<ItemType | null>(fallbackOption || null)
   const [driverId, setDriverId] = useState<string | null>(fallbackDriver?.id || null)
   const [driver, setDriver] = useState<any | null>(fallbackDriver || null)
@@ -51,6 +53,11 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
   const dispatch = useDispatch()
 
   const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
+  const latitude = currentLocation?.coords.latitude ? currentLocation?.coords.latitude : 10.785255359834135;
+  const longitude = currentLocation?.coords.longitude ? currentLocation?.coords.longitude : 106.6932718123096;
+  let carRequest;
+
+  // Generate Request
 
   const requests: CarRequest[] = [
     {

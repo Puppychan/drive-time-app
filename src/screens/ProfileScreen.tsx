@@ -120,7 +120,7 @@ export const UserProfileScreen = () => {
       </View>
 
       <View style={styles.bottomContainer}>
-        <ActionList imagePath="ic_message" title="Messages" onPress={() => router.push('/(user)/customer/sos')} />
+        <ActionList imagePath="ic_message" title="Messages" />
         <ActionList imagePath="ic_gift" title="Send a gift" />
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_setting" title="Edit profile" onPress={showEditProfileModal} />

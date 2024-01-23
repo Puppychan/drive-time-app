@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
     height: 100
   },
   selectedImageButton: {
-    borderColor: 'blue'
+    borderColor: 'black'
   },
   ImageButtonContainer: {
     flexDirection: 'column',
@@ -61,26 +61,31 @@ export const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginBottom: 5,
-
+    backgroundColor: '#e9e9e9',
+    borderRadius: 40,
     alignItems: 'center', // Center the content horizontally
     justifyContent: 'center'
   },
   image: {
-    width: 60, // Adjust the size as needed
-    height: 60 // Adjust the size as needed
+    width: 40, // Adjust the size as needed
+    height: 40 // Adjust the size as needed
   },
   selectedImage: {
-    borderColor: 'blue',
+    borderColor: 'black',
+    backgroundColor: '#e9e9e9',
     borderWidth: 2,
     borderRadius: 40,
     width: 80, // Adjust the size as needed
     height: 80, // Adjust the size as needed
     marginBottom: 5,
     alignItems: 'center', // Center the content horizontally
-    justifyContent: 'center',
-    
+    justifyContent: 'center'
   },
   imageButtonText: {
     textAlign: 'center'
+  },
+  selectedImageButtonText: {
+    textAlign: 'center',
+    fontWeight: 'bold'
   }
 })
