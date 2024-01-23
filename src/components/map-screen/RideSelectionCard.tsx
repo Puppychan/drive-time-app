@@ -1,55 +1,84 @@
-import { useState } from 'react'
-import { ScrollView, Image, Text, TouchableOpacity, View } from 'react-native'
+import { useState, useEffect } from 'react'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
   selectTimeTravel,
-  selectIsRideSelectionVisible,
   toggleRideSelectionVisibility,
   toggleLoading
 } from '@/src/slices/navSlice'
 
-// import { styles } from './ride-selection-card.style'
 import { StyleSheet } from 'react-native'
+import { TransportType } from '@/lib/models/transport.model'
+import { CarRequest, getBestMatchBooking } from '@/lib/services/car-matching.service'
+import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
+import { calculateTaxiFare } from '@/lib/services/ride.fee.service'
 
-const data = [
+export interface ItemType {
+  id: string
+  title: string
+  multiplier: number
+  image: any
+  type: TransportType,
+  amount?: number
+}
+
+const data: ItemType[] = [
   {
     id: 'Car-4-seat-1',
     title: 'DriveTime Car4',
     multiplier: 1,
-    image: require('../../../assets/normal.png')
+    image: require('../../../assets/normal.png'),
+    type: TransportType.Car
   },
   {
     id: 'Car-4-seat-2',
     title: 'DriveTime Car4 VIP',
     multiplier: 1.3,
-    image: require('../../../assets/normal.png')
+    image: require('../../../assets/normal.png'),
+    type: TransportType.Bike
   },
   {
     id: 'Car-7-seat-1',
     title: 'DriveTime Car7',
     multiplier: 1.5,
-    image: require('../../../assets/car7.png')
+    image: require('../../../assets/car7.png'),
+    type: TransportType.XLCar
   },
   {
     id: 'Car-7-seat-2',
     title: 'DriveTime Car7 VIP',
     multiplier: 1.8,
-    image: require('../../../assets/car7.png')
+    image: require('../../../assets/car7.png'),
+    type: TransportType.XLCar
   }
 ]
 
-interface ItemType {
-  id: string
-  title: string
-  multiplier: number
-  image: any
+
+
+interface Props {
+  requests: CarRequest[]
+  onRideSelected: (
+    { option, driverId }: { option: ItemType | null, driverId: string | null },
+  ) => void
 }
 
-const RideSelectionCard = () => {
+const RideSelectionCard = (props: Props) => {
   const travelInformation = useSelector(selectTimeTravel)
   const dispatch = useDispatch()
-  const [selected, setSelected] = useState<ItemType | null>(null)
+
+  const [option, setOption] = useState<ItemType | null>(null)
+  const [driverId, setDriverId] = useState<string | null>(null)
+
+  const handleRideSelected = async (item: ItemType) => {
+    const res = await getDriverListByStatusAndTransport(true, item.type, "Car")
+    const driverId = (await getBestMatchBooking(res.body.data, props.requests))?.[0]?.slice(1)
+
+    setDriverId(driverId)
+    props.onRideSelected({ option: item, driverId })
+  }
+
+  const distanceInKm = parseFloat(travelInformation?.distance.text) * 1.60934
 
   return (
     <View className='bg-black h-full'>
@@ -62,19 +91,39 @@ const RideSelectionCard = () => {
       <View className='px-2 overflow-y-auto'>
         {data
           .slice(0, 3)
-          .map((item) => (
+          .map((o) => (
             <TouchableOpacity
-              key={item.id}
-              onPress={() => setSelected(item.id === selected?.id ? null : item)}
-              className={`${selected?.id === item.id ? 'bg-white' : 'bg-white/70'
+              key={o.id}
+              onPress={() => {
+                if (o.id === option?.id) {
+                  setOption(null)
+                  setDriverId(null)
+                  props.onRideSelected({ option: null, driverId: null })
+                } else {
+                  setOption({
+                    ...o, amount: calculateTaxiFare(
+                      distanceInKm,
+                      o.type
+                    )
+})
+                  setDriverId(null)
+                  props.onRideSelected({ option: o, driverId: null })
+                }
+              }}
+              className={`${option?.id === o.id ? 'bg-white' : 'bg-white/70'
                 } flex flex-row rounded-lg px-4 mb-2`}
             >
-              <Image style={styles.driveImage} source={item.image} />
+              <Image style={styles.driveImage} source={o.image} />
               <View style={styles.driveDetails}>
-                <Text style={styles.driveTitle}>{item.title}</Text>
+                <Text style={styles.driveTitle}>{o.title}</Text>
                 <Text>{travelInformation?.duration.text}</Text>
               </View>
-              <Text style={styles.priceText}>90,000 VND</Text>
+              <Text style={styles.priceText}>{
+                o?.type ? `$${calculateTaxiFare(
+                  distanceInKm,
+                  o.type
+                ).toFixed(2)}` : 'N/A'
+              }</Text>
             </TouchableOpacity>
           ))}
       </View>
@@ -82,7 +131,7 @@ const RideSelectionCard = () => {
       <View className='mt-2 flex flex-row justify-between px-4'>
         <View className='text-lg flex flex-row gap-2'>
           <Text>💳</Text>
-          <Text className='font-bold text-blue-200'>9876 **** **** 1243</Text>
+          <Text className='font-bold text-blue-200'>Card Payment</Text>
         </View>
         {/* Divider */}
         <View className='text-lg flex flex-row gap-2'>
@@ -92,62 +141,25 @@ const RideSelectionCard = () => {
       </View>
 
       <TouchableOpacity
-        className={`mt-4 bg-white rounded-lg py-2 px-4 text-black mx-4 ${selected ? 'opacity-100' : 'opacity-50'}`}
+        className={`mt-4 bg-white rounded-lg py-2 px-4 text-black mx-4 ${(option) ? 'opacity-100' : 'opacity-50'}`}
         onPress={() => {
+          if (!(option)) return
           dispatch(toggleRideSelectionVisibility());
           dispatch(toggleLoading());
+          handleRideSelected(option)
         }}
-        disabled={!selected}
+        disabled={!(option)}
       >
-        <Text className={`text-black font-semibold text-center text-xl flex items-center justify-center w-full ${selected ? 'opacity-100' : 'opacity-50'
-          }`}>Book {selected?.title}</Text>
+        <Text className={`text-black font-semibold text-center text-xl flex items-center justify-center w-full ${(option) ? 'opacity-100' : 'opacity-50'
+          }`}>{
+            option ? "Book now" : "Please select an option"
+          }</Text>
       </TouchableOpacity>
     </View>
   )
 
 }
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    height: 150,
-    paddingHorizontal: 16,
-    paddingTop: 36,
-    paddingBottom: 150,
-    backgroundColor: 'black',
-    borderTopLeftRadius: 20, // Set top left border radius
-    borderTopRightRadius: 20, // Set top right border radius
-    overflow: 'hidden', // This ensures that children don't overlap the rounded corners
-  },
-  headerContainer: {
-    backgroundColor: 'transparent'
-  },
-  headerText: {
-    textAlign: 'center',
-    fontSize: 23,
-    marginBottom: 17,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  driverItemContainer: {
-    paddingHorizontal: 10,
-    marginVertical: 20,
-    // minHeight: 200,
-  },
-  driveItem: {
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginBottom: 8,
-    paddingVertical: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-  },
   driveImage: {
     paddingLeft: 10,
     width: 65,

@@ -16,8 +16,6 @@ import { store } from '@/store'
 import { generateData } from '../lib/data/generate-all.data'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
-import { getDriverListByStatusAndTransport } from '@/lib/services/account.service'
-import { TransportType } from '@/lib/models/transport.model'
 
 SplashScreen.preventAutoHideAsync()
 // Notifications.setNotificationHandler({
@@ -74,6 +72,7 @@ export default function App() {
   }
 
   const handleDone = async () => {
+<<<<<<< HEAD
     if (auth.currentUser) {
       let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
       console.log("role: ", role)
@@ -87,6 +86,18 @@ export default function App() {
       router.replace(`/signin`)
     }
     // router.replace('/(user)/customer/aboutus')
+=======
+    // if (auth.currentUser) {
+    //   let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+    //   console.log("role: ", role)
+    //   if (role) {
+    //     router.replace(`/${role.toLowerCase()}/home`)
+    //     return
+    //   }
+    // }
+    // router.replace('/(user)/customer/home')
+    router.replace('/(public)/signin')
+>>>>>>> ff9b4497f427d03f8f396c5baf1e3cc84f668594
   }
 
   const doneButton = ({ ...props }) => {
