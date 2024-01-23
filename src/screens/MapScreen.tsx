@@ -28,7 +28,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
 import { auth, db } from '@/lib/firebase/firebase'
-import { collection, getDocs, query, orderBy, limit, where } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit, where, doc, setDoc, writeBatch } from "firebase/firestore";
 
 interface Props {
   fallbackOption?: ItemType | null
@@ -136,6 +136,26 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
       fetchDriver();
     }
   }, [driverId]);
+
+  const handleBookingComplete = async () => {
+    const userId = auth.currentUser?.uid ?? '';
+
+    const bookingCollection = collection(db, 'bookings');
+    const q = query(
+      bookingCollection,
+      where("customerIdList", "array-contains", userId),
+      where("status", "==", BookingStatus.InProgress)
+    );
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const batch = writeBatch(db);
+      querySnapshot.docs.forEach((docSnapshot) => {
+        const bookingRef = doc(bookingCollection, docSnapshot.id);
+        batch.update(bookingRef, { status: BookingStatus.Success });
+      });
+      await batch.commit();
+    }
+  }
 
   return (
     <View className='h-screen relative'>
@@ -264,7 +284,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
           <View className='flex flex-row items-center'>
             {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
             <View className='w-3' />
-            <TouchableOpacity className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
+            <TouchableOpacity onPress={handleBookingComplete} className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
               <Text className='text-black' style={{ fontWeight: '900' }}>Done</Text>
             </TouchableOpacity>
           </View>
