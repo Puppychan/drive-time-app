@@ -81,6 +81,7 @@ export default function App() {
         return
       }
       router.replace(`/customer/home`)
+      // router.replace(`/admin/membership`)
     }
     else {
       router.replace(`/signin`)
@@ -99,7 +100,7 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PageProvider>
-        <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button>
+        {/* <Button style={{ padding: 50 }} onPress={generateSampleClick}>Generate</Button> */}
         <View
           style={styles.container}
           onLayout={onLayoutRootView}
@@ -176,4 +177,4 @@ const styles = StyleSheet.create({
     // borderTopLeftRadius: '100%',
     // borderBottomLeftRadius: '100%',
   }
-})
+});

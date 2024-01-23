@@ -1,4 +1,5 @@
 import {
+  OrderByDirection,
   Timestamp,
   Transaction,
   collection,
@@ -36,6 +37,7 @@ function handleMembershipException(error: any, type: string) {
 
 export async function addMembership(membershipData: Membership): Promise<ResponseDto> {
   try {
+    let id = '';
     await runTransaction(db, async () => {
       // add created at and updated at
       const date = new Date()
@@ -46,13 +48,14 @@ export async function addMembership(membershipData: Membership): Promise<Respons
       const membershipRef = doc(db, CollectionName.MEMBERSHIPS, membershipData.membershipId)
       // Set the data for the document with the custom ID
       await setDoc(membershipRef, membershipData)
+      id = membershipRef.id
     })
 
     // Return success response
     return new ResponseDto(
       ResponseCode.OK,
       'Membership added successfully with custom ID',
-      new SuccessResponseDto(membershipData, membershipRef.id)
+      new SuccessResponseDto(membershipData, id)
     )
   } catch (error) {
     console.error('Error adding membership with custom ID:', error)
@@ -174,5 +177,20 @@ export async function deleteMembership(membershipId: string) {
   } catch (error) {
     console.error('Error deleting membership:', error)
     return handleMembershipException(error, 'Deleting')
+  }
+}
+
+export async function getAllMemberships(sortBy: 'updatedDate' | 'minPoints' = 'minPoints', sortOrder: OrderByDirection = 'asc') {
+  try {
+    const membershipQuery = query(
+      collection(db, CollectionName.MEMBERSHIPS),
+      orderBy(sortBy, sortOrder)
+    );
+    const membershipSnapshot = await getDocs(membershipQuery);
+    const memberships = membershipSnapshot.docs.map((doc) => doc.data());
+    return new ResponseDto(ResponseCode.OK, 'Memberships fetched successfully', memberships);
+  } catch (error) {
+    console.error('Error fetching memberships:', error);
+    return handleMembershipException(error, 'Fetching');
   }
 }

@@ -16,21 +16,21 @@ export const generateRandomVoucherData = () => {
   const voucherList = VOUCHERS_LIST.map((voucher) => {
     const voucherId = faker.string.uuid()
     const startDate = faker.date.recent()
-    const expireDate = new Date(startDate.getDate() + randomDaysDifference)
+    // const expireDate = new Date(startDate.getDate() + randomDaysDifference)
+    const expireDate = faker.date.future()
     const currentDate = new Date()
 
     const tempVoucher: Voucher = {
       voucherId,
       name: voucher.name,
       discountPercent: voucher.discountPercent,
-      startDate,
-      expireDate,
+      startDate: Timestamp.fromDate(startDate),
+      expireDate: Timestamp.fromDate(expireDate),
       code: voucher.code,
       applyType: AddtionalApplyType.ALL,
       generatedByAdmin: adminIdList[faker.number.int({ min: 0, max: adminIdList.length - 1 })],
       createdAt: Timestamp.fromDate(currentDate),
       updatedAt: Timestamp.fromDate(currentDate),
-      customerUsed: []
     }
     return tempVoucher
   })

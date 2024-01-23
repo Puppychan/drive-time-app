@@ -23,10 +23,10 @@ export function generateData() {
   // })
 
   // generate voucher
-  // generateRandomVouchers().then((message) => {
-  //   ToastAndroid.show(message, ToastAndroid.LONG)
-  //   console.log('Voucher', message)
-  // })
+  generateRandomVouchers().then((message) => {
+    ToastAndroid.show(message, ToastAndroid.LONG)
+    console.log('Voucher', message)
+  })
 
   // generate location
   //   generateRandomLocations(10).then((message) => {

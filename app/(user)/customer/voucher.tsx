@@ -43,6 +43,7 @@ export default function Page() {
     }, []);
     useEffect(() => {
         const selectedFilterValue = { ...selectedFilter }
+        console.log("Seleccted filter", selectedFilterValue);
         const fetchData = async () => {
             const data = await fetchVouchersInActiveState(selectedFilterValue);
             if (data.code === ResponseCode.OK) {
@@ -66,7 +67,7 @@ export default function Page() {
     }
 
     const renderItem = ({ item, index }: { item: Voucher, index: number }) => (
-        <TouchableOpacity>
+        <TouchableOpacity key={index}>
             <View className={`${colors[index % colors.length]} mx-5 my-2 p-5 rounded-lg shadow-lg overflow-hidden`}>
                 <Text className={`text-lg font-bold mb-2`}>{item.name}</Text>
                 <Text className={`text-gray-700`}>Code: {item.code}</Text>
