@@ -50,7 +50,7 @@ const HomeScreen = () => {
     router.push(`/(user)/customer/call`)
   }
 
-  const onClickSeeMore = () =>{
+  const onClickSeeMore = () => {
     // router.push(`/(user)/customer/review`)
   }
 
@@ -97,15 +97,15 @@ const HomeScreen = () => {
           <TouchableOpacity className='mx-4 bg-white border border-black/10 px-4 py-1 rounded-lg' onPress={onClickHomeSection}>
             <View className='flex flex-row gap-4 items-center'>
               <CircleIcon
-                name="home"
+                name="add-call"
                 size={24}
                 color={colorsTheme.background}
                 backgroundColor={colorsTheme.opposite_bg}
               />
 
               <View style={{ ...verticalLeftView, flexGrow: 1 }}>
-                <Title>Home</Title>
-                <Paragraph>123 Main St</Paragraph>
+                <Title>Call Driver</Title>
+                <Paragraph>Click here to call driver</Paragraph>
               </View>
               <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
             </View>

@@ -16,8 +16,8 @@ const BanDriverModal = ({ isVisible, onSubmit }: ModalProps) => {
   const [reason, setReason] = useState<string>('')
   const handleSave = async () => {
     try {
-        onSubmit()
-        // ToastAndroid.show("Saved SOS Conatact successfully", ToastAndroid.SHORT)
+      onSubmit()
+      ToastAndroid.show("Ban driver successfully", ToastAndroid.SHORT)
     }
     catch (e) {
       console.log(e)
@@ -29,7 +29,7 @@ const BanDriverModal = ({ isVisible, onSubmit }: ModalProps) => {
   return (
     <Modal
       isVisible={isVisible}
-      onBackdropPress={() => {onSubmit()}}
+      onBackdropPress={() => { onSubmit() }}
       onBackButtonPress={() => onSubmit()}
       style={[styles.modal, { height: 100 }]}
       animationIn="slideInUp"
@@ -42,7 +42,7 @@ const BanDriverModal = ({ isVisible, onSubmit }: ModalProps) => {
           </View>
           <View>
             <Text style={{ fontSize: 16, color: 'gray' }}>
-              Enter the driver email to ban that driver 
+              Enter the driver email to ban that driver
             </Text>
           </View>
         </View>
