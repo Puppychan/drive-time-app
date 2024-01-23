@@ -11,7 +11,7 @@ import {
 const apiKey = 'zz984t9cyrwj'
 const userId_1 = 'Quoc_123'
 // const userId_2 = 'mudoker'
-const callId = 'default_953a380b-1159-4277-bbf7-013ecdd825a3'
+const callId = 'default_98c5fbc7-9de4-4911-868f-10319ed0db10'
 
 // JWT
 const token_1 =
@@ -35,14 +35,31 @@ const user_1 = {
 
 
 import React, { useEffect } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { PermissionsAndroid, Platform, StyleSheet, Text, View } from 'react-native'
 
 type Props = { goToHomeScreen: () => void }
 const client = new StreamVideoClient({ apiKey, user: user_1, token: token_1 })
 
 export const CallScreen = ({ goToHomeScreen }: Props) => {
   const [call, setCall] = React.useState<Call | null>(null);
+  const [isPermission, setPermission] = React.useState(false)
+  useEffect(() => {
+    const run = async () => {
+      if (Platform.OS === 'android') {
+        const permissionsResult = await PermissionsAndroid.requestMultiple([
+          'android.permission.POST_NOTIFICATIONS',
+          'android.permission.BLUETOOTH_CONNECT',
+          'android.permission.CAMERA',
+          'android.permission.RECORD_AUDIO'
+        ])
 
+        setPermission(true)
+        console.log('Permissions Result:', permissionsResult)
+      }
+    }
+
+    run()
+  }, [])
 
   useEffect(() => {
     const call = client.call('default', callId);
@@ -70,7 +87,7 @@ export const CallScreen = ({ goToHomeScreen }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   text: {
     fontSize: 20,

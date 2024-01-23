@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   topContainer: {
-    marginTop: 70
+    marginTop: 20
   },
   bottomContainer: {
     marginTop: 10

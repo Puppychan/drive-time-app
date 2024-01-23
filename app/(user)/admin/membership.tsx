@@ -12,6 +12,7 @@ export default function Page() {
 
     useEffect(() => {
         getAllMemberships().then(res => {
+            console.log("Res membership", res.code, res.body);
             if (res.code !== ResponseCode.OK) {
                 ToastAndroid.show(res.message ?? 'Cannot get list memberships', ToastAndroid.SHORT)
                 setMemberships(null)

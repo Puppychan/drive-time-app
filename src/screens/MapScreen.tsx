@@ -28,23 +28,24 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
 import { auth, db } from '@/lib/firebase/firebase'
-import { collection, getDocs, query, orderBy, limit, where } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, writeBatch } from "firebase/firestore";
+import { CallScreen } from './CallScreen'
 
 interface Props {
-  onChat: (driverId: string, driver: any) => void
+  fallbackOption?: ItemType | null
+  fallbackDriver: any | null
+  onChat: (driverId: string | null, driver: any, option: any) => void
 }
 
-const MapScreen = ({ onChat }: Props) => {
+const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
   const currentLocation = useSelector(selectCurrentLocation)
 
   const [cars, setCars] = useState([])
-  // const [driverId, setDriverId] = useState(second)
 
-
-  const [option, setOption] = useState<ItemType | null>(null)
-  const [driverId, setDriverId] = useState<string | null>(null)
-  const [driver, setDriver] = useState<any | null>(null)
-
+  const [option, setOption] = useState<ItemType | null>(fallbackOption || null)
+  const [driverId, setDriverId] = useState<string | null>(fallbackDriver?.id || null)
+  const [driver, setDriver] = useState<any | null>(fallbackDriver || null)
+  const [isCall, setCall] = useState(false)
 
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -138,10 +139,29 @@ const MapScreen = ({ onChat }: Props) => {
     }
   }, [driverId]);
 
+  const handleBookingComplete = async () => {
+    const userId = auth.currentUser?.uid ?? '';
+
+    const bookingCollection = collection(db, 'bookings');
+    const q = query(
+      bookingCollection,
+      where("customerIdList", "array-contains", userId),
+      where("status", "==", BookingStatus.InProgress)
+    );
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const batch = writeBatch(db);
+      querySnapshot.docs.forEach((docSnapshot) => {
+        const bookingRef = doc(bookingCollection, docSnapshot.id);
+        batch.update(bookingRef, { status: BookingStatus.Success });
+      });
+      await batch.commit();
+    }
+  }
+
   return (
     <View className='h-screen relative'>
-      {isRideSelectionVisible ? <GooglePlacesInput /> : null}
-
+      {isRideSelectionVisible && <GooglePlacesInput />}
       <MapView
         ref={mapRef}
         style={{
@@ -156,128 +176,129 @@ const MapScreen = ({ onChat }: Props) => {
           longitudeDelta: 0.05
         }}
       >
-        {origin && destination && <MapViewDirections
-          origin={origin?.description}
-          destination={destination?.description}
-          strokeColor="blue"
-          strokeWidth={5}
-          apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
-          onReady={(result) => {
-            // Get the coordinates of the direction
-            const coordinates = result.coordinates;
-            if (coordinates.length > 0) {
-              mapRef.current?.fitToCoordinates(coordinates, {
-                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                animated: true
-              });
-            } else {
-              // Set random position as the center of the map
-              const randomLatitude = Math.random() * 180 - 90;
-              const randomLongitude = Math.random() * 360 - 180;
-              mapRef.current?.animateToRegion({
-                latitude: randomLatitude,
-                longitude: randomLongitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005
-              });
-            }
-          }}
-        />}
+        {origin && destination && (
+          <MapViewDirections
+            origin={origin?.description}
+            destination={destination?.description}
+            strokeColor="blue"
+            strokeWidth={5}
+            apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
+            onReady={(result) => {
+              const coordinates = result.coordinates;
+              if (coordinates.length > 0) {
+                mapRef.current?.fitToCoordinates(coordinates, {
+                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                  animated: true
+                });
+              } else {
+                const randomLatitude = Math.random() * 180 - 90;
+                const randomLongitude = Math.random() * 360 - 180;
+                mapRef.current?.animateToRegion({
+                  latitude: randomLatitude,
+                  longitude: randomLongitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005
+                });
+              }
+            }}
+          />
+        )}
 
-        {origin?.location ? <Marker
-          coordinate={{
-            latitude: origin.location.lat,
-            longitude: origin.location.lng
-          }}
-          title="Origin"
-          description="Origin Location"
-          identifier="origin"
-          style={{ width: 100, height: 100, borderRadius: 50 }}
-        >
-          <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
-
-            {isLoading && (
-              <View style={{ width: 50, height: 50, }}>
-                <LoadingBar />
+        {origin?.location && (
+          <Marker
+            coordinate={{
+              latitude: origin.location.lat,
+              longitude: origin.location.lng
+            }}
+            title="Origin"
+            description="Origin Location"
+            identifier="origin"
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+          >
+            <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
+              {isLoading && (
+                <View style={{ width: 50, height: 50 }}>
+                  <LoadingBar />
+                </View>
+              )}
+              <View style={{ position: 'absolute' }}>
+                <Image
+                  source={{
+                    uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
+                  }}
+                  style={{ width: 40, height: 40, justifyContent: 'center' }}
+                  resizeMode="contain"
+                />
               </View>
-            )}
-            <View style={{ position: 'absolute' }}>
-              <Image
-                source={{
-                  uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
-                }}
-                style={{ width: 40, height: 40, justifyContent: 'center' }} // Adjust the size of the image inside the marker
-                resizeMode="contain"
-              />
             </View>
-          </View>
-        </Marker> : null}
+          </Marker>
+        )}
 
-        {destination?.location ? <Marker
-          coordinate={{
-            latitude: destination.location.lat,
-            longitude: destination.location.lng
-          }}
-          title="Destination"
-          description="Destination"
-          identifier="destination"
-        /> : null}
+        {destination?.location && (
+          <Marker
+            coordinate={{
+              latitude: destination.location.lat,
+              longitude: destination.location.lng
+            }}
+            title="Destination"
+            description="Destination"
+            identifier="destination"
+          />
+        )}
       </MapView>
 
-      {(origin && destination) ? isRideSelectionVisible ?
-        <RideSelectionCard requests={requests} onRideSelected={({ option, driverId }) => { setOption(option); setDriverId(driverId); }} /> :
-        (driverId && driver) ?
-          <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
-            <Text className='text-2xl' style={{ fontWeight: '700' }}>Meet up at the pick-up point</Text>
-            <Text className='w-full bg-black/10 text-black p-4 rounded-lg mt-2' style={{ fontWeight: '700' }}>{origin.description}</Text>
+      {(driver) ?
+        <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
+          <Text className='text-2xl' style={{ fontWeight: '700' }}>Meet up at the pick-up point</Text>
+          <Text className='w-full bg-black/10 text-black p-4 rounded-lg mt-2' style={{ fontWeight: '700' }}>{origin.description}</Text>
 
-            <View className='h-0.5 w-full bg-black/10 my-4' />
+          <View className='h-0.5 w-full bg-black/10 my-4' />
 
-            <Text className='text-2xl mb-2' style={{ fontWeight: '700' }}>Your driver</Text>
-            <View className='p-2 mb-4 border border-black/30 rounded-lg'>
-              <View className='flex flex-row gap-2 justify-between'>
-                <View>
-                  <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>{driver?.firstName} {driver?.lastName}</Text>
-                  <Text className='text-lg mb-2 text-black' style={{ fontWeight: '900' }}>{driver?.transport?.name || 'Biege Toyota Camry'}{driver?.transport?.color ? ` • ${driver?.transport?.color}` : null}</Text>
-                </View>
-                <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>5.0★</Text>
+          <Text className='text-2xl mb-2' style={{ fontWeight: '700' }}>Your driver</Text>
+          <View className='p-2 mb-4 border border-black/30 rounded-lg'>
+            <View className='flex flex-row gap-2 justify-between'>
+              <View>
+                <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>{driver?.firstName} {driver?.lastName}</Text>
+                <Text className='text-lg mb-2 text-black' style={{ fontWeight: '900' }}>{driver?.transport?.name || 'Biege Toyota Camry'}{driver?.transport?.color ? ` • ${driver?.transport?.color}` : null}</Text>
               </View>
-              <View className='mt-2 flex flex-row gap-2 items-center'>
-                <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Top-rated</Text>
-                <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Professional</Text>
-                <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Careful</Text>
-              </View>
+              <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>5.0★</Text>
             </View>
-
-            <View className='flex flex-row items-center'>
-              <TouchableOpacity
-                className='text-lg text-black bg-white border border-black/30 flex items-center justify-center flex-1 w-64 text-center px-4 py-2 rounded-lg'
-                onPress={() => onChat(driverId, driver)}
-              >
-                <Text style={{ fontWeight: '900' }}>Chat with driver</Text>
-              </TouchableOpacity>
-              <View className='flex-1' />
-              <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
-                <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
-              </TouchableOpacity>
-            </View>
-
-            <View className='h-0.5 w-full bg-black/10 my-4' />
-
-            <View className='flex flex-row items-center'>
-              {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
-              <View className='w-3' />
-              <TouchableOpacity className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
-                <Text className='text-black' style={{ fontWeight: '900' }}>Done</Text>
-              </TouchableOpacity>
+            <View className='mt-2 flex flex-row gap-2 items-center'>
+              <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Top-rated</Text>
+              <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Professional</Text>
+              <Text className='text-sm text-white bg-black px-4 py-2 rounded-full' style={{ fontWeight: '900' }}>Careful</Text>
             </View>
           </View>
+
+          <View className='flex flex-row items-center'>
+            <TouchableOpacity
+              className='text-lg text-black bg-white border border-black/30 flex items-center justify-center flex-1 w-64 text-center px-4 py-2 rounded-lg'
+              onPress={() => onChat(driverId, driver, option)}
+            >
+              <Text style={{ fontWeight: '900' }}>Chat with driver</Text>
+            </TouchableOpacity>
+            <View className='flex-1' />
+            <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
+              <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
+            </TouchableOpacity>
+          </View>
+
+          <View className='h-0.5 w-full bg-black/10 my-4' />
+
+          <View className='flex flex-row items-center'>
+            {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
+            <View className='w-3' />
+            <TouchableOpacity onPress={handleBookingComplete} className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
+              <Text className='text-black' style={{ fontWeight: '900' }}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View> : (origin && destination) ? isRideSelectionVisible ?
+          <RideSelectionCard requests={requests} onRideSelected={({ option, driverId }) => { setOption(option); setDriverId(driverId); }} />
           : <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
             <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>
           </View>
-        : null}
-    </View>
-  )
+          : null}
+    </View>)
 }
 
 export { MapScreen }

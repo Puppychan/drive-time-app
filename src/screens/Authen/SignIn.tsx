@@ -80,8 +80,8 @@ export default function SignIn({ promptAsync }: any) {
       <View style={styles.container}>
         <View>
           <Image
-            style={{ width: 100, height: 100, resizeMode: 'cover' }}
-            source={require('../../../assets/ic_uber.png')}
+            style={{ width: 100, height: 100, resizeMode: 'cover', marginVertical: 10 }}
+            source={require('../../../assets/logo_no_background.png')}
           />
           <Text
             style={{
@@ -175,7 +175,7 @@ export default function SignIn({ promptAsync }: any) {
         </TouchableOpacity>
 
         <TouchableOpacity style={{ alignItems: 'center' }} onPress={handleHelpPress}>
-          <Text style={{ fontSize: 16, marginTop: 8, textDecorationLine: 'underline' }}>
+          <Text style={{ fontSize: 16, marginTop: 4, textDecorationLine: 'underline' }}>
             Need Help?
           </Text>
         </TouchableOpacity>

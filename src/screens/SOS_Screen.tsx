@@ -8,13 +8,13 @@ interface BottomSheetProps {
     onCancel: () => void;
 }
 export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
-    const [timer, setTimer] = useState(15);
+    const [timer, setTimer] = useState(150);
     const [timerReachedZero, setTimerReachedZero] = useState(false);
     const [sound, setSound] = useState<Audio.Sound | undefined>(undefined);
 
     async function playSound() {
         console.log('Loading Sound');
-        const { sound } = await Audio.Sound.createAsync(require('../../assets/sos_morsecode.mp3'),
+        const { sound } = await Audio.Sound.createAsync(require('../../assets/tuchoihieu.mp3'),
             { shouldPlay: true, isLooping: true }
         );
 
@@ -69,7 +69,7 @@ export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
 
     useEffect(() =>{
         if (isVisible) {
-            setTimer(15)
+            setTimer(150)
             setTimerReachedZero(false)
             try {
                 if (!sound) {
@@ -108,7 +108,7 @@ export const SOSScreen = ({ isVisible, onCancel }: BottomSheetProps) => {
                     onPress: () => {
                         // Handle cancel action
                         onCancel();
-                        setTimer(15);
+                        setTimer(150);
                     },
                     style: 'cancel',
                 },
