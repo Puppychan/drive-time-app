@@ -7,7 +7,7 @@ export enum AddtionalApplyType {
 export type VoucherApplyType = AddtionalApplyType | TransportType
 
 export const voucherFilterMap = {
-  'applyType': [AddtionalApplyType.ALL, TransportType.]
+  'applyType': [AddtionalApplyType.ALL, TransportType.Car4_VIP, TransportType.Car4, TransportType.Car7],
 }
 
 export interface Voucher {

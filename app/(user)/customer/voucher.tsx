@@ -4,14 +4,23 @@ import { ToastAndroid, TouchableOpacity, View } from 'react-native'
 import { Text } from "react-native-paper";
 import { fetchVouchersInActiveState } from "@/lib/services/voucher.service";
 import { ResponseCode } from "@/common/response-code.enum";
-import { Voucher } from "@/lib/models/voucher.model";
+import { Voucher, voucherFilterMap } from "@/lib/models/voucher.model";
 import { FlatList } from "react-native-gesture-handler";
 import { formatTimestampToReadableTime } from "@/common/time.helper";
+import { capitalizeAndSeparate } from "@/common/text.helper";
+import Icon from 'react-native-vector-icons/Entypo';
 
 const colors = ['bg-cyan-100', 'bg-indigo-100', 'bg-rose-100'];
+type SelectedFilter = {
+    [key: string]: string | null;
+};
+const isSelected = (selectedFilter: SelectedFilter, filter: string, targetValue: string) => {
+    return selectedFilter[filter] === targetValue
+}
 export default function Page() {
     const router = useRouter();
     const [vouchers, setVouchers] = useState([]);
+    const [selectedFilter, setSelectedFilter] = useState<SelectedFilter>({});
 
     useEffect(() => {
         const loadVouchers = async () => {
@@ -31,15 +40,27 @@ export default function Page() {
         };
         loadVouchers();
     }, []);
+    useEffect(() => {
+        const selectedFilterValue = { ...selectedFilter }
+        const fetchData = async () => {
+            const data = await fetchVouchersInActiveState(selectedFilterValue);
+            if (data.code === ResponseCode.OK) {
+                setVouchers(data.body.data);
+            } else {
+                setVouchers([]);
+                ToastAndroid.show(data.message ?? 'Could not fetch voucher', ToastAndroid.LONG);
+            }
+        };
 
+        fetchData();
+    }, [selectedFilter])
+
+    const handleFilterClick = async (filter: string, value: string | null) => {
+        setSelectedFilter({ [filter]: value });
+    };
     if (!vouchers) {
         return <View className="bg-white w-full pt-20 min-h-screen flex justify-center items-center">
             <Text className={`text-lg text-neutral-500 font-bold mb-2`}>Loading....</Text>
-        </View>
-    }
-    if (vouchers.length == 0) {
-        return <View className="bg-white w-full pt-20 min-h-screen flex justify-center items-center">
-            <Text className={`text-lg text-neutral-500 font-bold mb-2`}>There is no voucher</Text>
         </View>
     }
 
@@ -57,19 +78,44 @@ export default function Page() {
     );
 
     return (
-        <View className="bg-white w-full pt-20 min-h-screen">
+        <View className="bg-white w-full pt-12 min-h-screen flex flex-col items-center gap-y-4">
 
-            {filterOptions.map((filter, index) => (
-                <TouchableOpacity key={index} onPress={() => handleFilterClick(filter)}>
-                    <Text style={{ backgroundColor: colors[index % colors.length] }}>{filter}</Text>
-                </TouchableOpacity>
+            {/* Render the filter options */}
+            {Object.entries(voucherFilterMap).map(([filter, values], index) => (
+                <FlatList
+                    className="mx-5"
+                    data={values}
+                    style={{ minHeight: 35, maxHeight: 35 }}
+                    horizontal
+                    keyExtractor={(item, index) => index.toString()}
+                    ListHeaderComponent={() => (
+                        <Text className="font-bold text-lg pr-5">{capitalizeAndSeparate(filter)}</Text>
+                    )}
+                    renderItem={({ item: value }) => (
+                        <TouchableOpacity
+                            onPress={() => handleFilterClick(filter, value)}
+                            className={`${isSelected(selectedFilter, filter, value) ? `bg-emerald-200` : `bg-neutral-300`} px-6 py-2 rounded-full h-fit mx-2`}
+                        >
+                            <Text className={`${isSelected(selectedFilter, filter, value) ? 'font-bold' : 'font-regular'}`}>{value}</Text>
+                        </TouchableOpacity>
+                    )}
+                    ListFooterComponent={() => (
+                        selectedFilter[filter] && (
+                            <TouchableOpacity onPress={() => handleFilterClick(filter, null)}
+                                className={`bg-rose-300 px-6 py-2 rounded-full`}>
+                                <Icon name="trash" size={15} color="#900" />
+                            </TouchableOpacity>
+                        )
+                    )}
+                />
             ))}
-            <FlatList
+
+            {vouchers.length != 0 ? <FlatList
                 data={vouchers}
                 keyExtractor={(item: Voucher) => item.voucherId.toString()}
                 renderItem={renderItem}
                 className="flex flex-col gap-y-10"
-            />
+            /> : <Text className={`justify-self-center text-lg text-neutral-500 font-bold mb-2`}>There is no voucher</Text>}
         </View>
     );
 }

@@ -1,9 +1,9 @@
 import { Timestamp } from 'firebase/firestore'
 
 export enum TransportType {
-  Car = 'Car4',
-  Car4 = 'Car4 VIP',
-  XLCar = 'Car7'
+  Car4 = 'Car4',
+  Car4_VIP = 'Car4 VIP',
+  Car7 = 'Car7'
 }
 
 export enum TransportColor {
@@ -16,7 +16,7 @@ export enum TransportColor {
   Violet = 'Violet'
 }
 
-export const transportTypeList = [TransportType.Car, TransportType.Car4, TransportType.XLCar]
+export const transportTypeList = [TransportType.Car4, TransportType.Car4_VIP, TransportType.Car7]
 export const transportColorList = [
   TransportColor.Red,
   TransportColor.Orange,
