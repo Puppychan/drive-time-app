@@ -13,11 +13,13 @@ import { User } from 'firebase/auth'
 import * as Location from "expo-location";
 import { useDispatch } from 'react-redux'
 import { setCurrentLocation } from '@/src/slices/navSlice'
+import BanDriverModal from '@/src/components/modal/ban-driver'
 // TODO: change to dynamic later
 
 const AdminDashboard = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
   const [user, setUser] = useState<User | null>()
+  const [banDriverModalVisible, setBanDriverModalVisible] = useState(false)
   const dispatch = useDispatch()
   useEffect(() => {
     if (auth.currentUser) {
@@ -26,9 +28,12 @@ const AdminDashboard = () => {
   }, [user])
 
   const onClickBanDriver = () => {
-    router.push('/admin/insight-user')
+    setBanDriverModalVisible(true)
   }
   
+  const hideBanDriverModal = () => {
+    setBanDriverModalVisible(false)
+  }
   const onClickInsightUser = () => {
     router.push('/admin/insight-user')
   }
@@ -114,7 +119,10 @@ const AdminDashboard = () => {
               onClick={onClickInsightFinance}
             />
           </View>
+          
         </View>
+      <BanDriverModal isVisible={banDriverModalVisible} onSubmit={hideBanDriverModal} />
+
       </ScrollView>
     </View>
   )
