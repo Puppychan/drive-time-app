@@ -7,9 +7,10 @@ import { View } from "react-native";
 import { Provider } from "react-redux";
 import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore'
 import { faker } from "@faker-js/faker";
+import { CallScreen } from "@/src/screens/CallScreen";
 
 export default function Page() {
-    const [mode, setMode] = useState<'map' | 'chat'>('map');
+    const [mode, setMode] = useState<'map' | 'chat' | 'call'>('map');
 
     const [chat, setChat] = useState<Chat | null>(null);
     const [driverId, setDriverId] = useState<string | null>(null);
@@ -46,19 +47,33 @@ export default function Page() {
     return (
         <View>
             <Provider store={store}>
-                {(chat && driver && mode === 'chat') ?
-                    <ChatScreen chat={chat}
+                {chat && driver && mode === 'chat' ? (
+                    <ChatScreen
+                        chat={chat}
                         recipient={driver}
                         onBack={() => {
                             setMode('map');
-                        }} />
-                    : <MapScreen fallbackOption={option} fallbackDriver={driver} onChat={(driverId, driver, option) => {
-                        setMode('chat');
-                        setDriverId(driverId);
-                        setDriver(driver)
-                        setOption(option)
-                    }} />
-                }
+                        }}
+                    />
+                ) : (
+                    mode === 'map' ? (
+                        <MapScreen
+                            fallbackOption={option}
+                            fallbackDriver={driver}
+                            onChat={(driverId, driver, option) => {
+                                setMode('chat');
+                                setDriverId(driverId);
+                                setDriver(driver);
+                                setOption(option);
+                            }}
+                            onCall={()=>{
+                                setMode('call');
+                            }}
+                        />
+                    ) : (
+                        <CallScreen goToHomeScreen={() => setMode('map')} />
+                    )
+                )}
             </Provider>
         </View>
     )
