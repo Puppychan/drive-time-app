@@ -9,9 +9,13 @@ import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore
 import { faker } from "@faker-js/faker";
 
 export default function Page() {
+    const [mode, setMode] = useState<'map' | 'chat'>('map');
+
     const [chat, setChat] = useState<Chat | null>(null);
     const [driverId, setDriverId] = useState<string | null>(null);
     const [driver, setDriver] = useState<any>(null);
+    const [option, setOption] = useState<any>(null);
+
     const customerId = auth.currentUser?.uid;
 
     useEffect(() => {
@@ -42,13 +46,17 @@ export default function Page() {
     return (
         <View>
             <Provider store={store}>
-                {(driverId && chat) ?
-                    <ChatScreen chat={chat} onBack={() => {
-                        setChat(null);
-                    }} />
-                    : <MapScreen onChat={(driverId, driver) => {
+                {(chat && driver && mode === 'chat') ?
+                    <ChatScreen chat={chat}
+                        recipient={driver}
+                        onBack={() => {
+                            setMode('map');
+                        }} />
+                    : <MapScreen fallbackOption={option} fallbackDriver={driver} onChat={(driverId, driver, option) => {
+                        setMode('chat');
                         setDriverId(driverId);
                         setDriver(driver)
+                        setOption(option)
                     }} />
                 }
             </Provider>
