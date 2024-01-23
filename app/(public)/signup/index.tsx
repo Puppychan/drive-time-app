@@ -33,7 +33,7 @@ const Signup = () => {
       ToastAndroid.show('Email is required', ToastAndroid.SHORT)
       return
     }
-    
+
     if (password.trim() === '') {
       ToastAndroid.show('Password is required', ToastAndroid.SHORT)
       return
@@ -43,7 +43,7 @@ const Signup = () => {
       ToastAndroid.show('Please ensure you agree our Terms and Condition', ToastAndroid.SHORT)
       return
     }
-    
+
     createAuthAccount(email, password)
     .then((res) => {
       if (res.code === ResponseCode.OK) {
@@ -55,40 +55,18 @@ const Signup = () => {
       console.log(error)
       let message = error.message ?? ""
       ToastAndroid.show(`Register failed. ${message}`, ToastAndroid.SHORT)
-      
+
     })
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white,  paddingHorizontal: 20,  paddingVertical: 60, }}>
-      {/* <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Register {role !== AccountRole.Customer ?  role : ""}</Text>
-        <View style={styles.form}>
-          <Input
-            label="Email"
-            placeHolder="Email"
-            required={true}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <Input
-            label="Password"
-            placeHolder="Password"
-            secureTextEntry={true}
-            required={true}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <CustomButton title="Continue" onPress={handleNext} disabled={btnDisable} />
-          <CustomButton type={ButtonType.outlined} title="Already have an account? LOGIN" onPress={handleCancel} />
-        </View>
-      </View> */}
-
-
-
-
       <View style={{flexDirection: 'column', gap: 20}}>
         <View >
+          <Image
+            style={{ width: 100, height: 100, resizeMode: 'cover', marginBottom: 5 }}
+            source={require('../../../assets/logo_no_background.png')}
+          />
           <Text
             style={{
               fontSize: 32,
@@ -149,53 +127,6 @@ const Signup = () => {
             </View>
           </View>
 
-          {/* <View style={{ marginBottom: 12 }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '400',
-                marginVertical: 8
-              }}
-            >
-              Mobile Number *
-            </Text>
-
-            <View
-              style={{
-                width: '100%',
-                height: 55,
-                borderColor: COLORS.black,
-                borderWidth: 1,
-                borderRadius: 8,
-                alignItems: 'center',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingLeft: 20
-              }}
-            >
-              <TextInput
-                placeholder="+84"
-                placeholderTextColor={COLORS.black}
-                keyboardType="numeric"
-                editable={false}
-                style={{
-                  width: '12%',
-                  borderRightWidth: 1,
-                  borderLeftColor: COLORS.grey,
-                }}
-              />
-
-              <TextInput
-                placeholder="Enter your phone number"
-                placeholderTextColor={COLORS.black}
-                keyboardType="numeric"
-                style={{
-                  width: '80%'
-                }}
-              />
-            </View>
-          </View> */}
-
           <View style={{ marginBottom: 12 }}>
             <Text
               style={{
@@ -246,7 +177,6 @@ const Signup = () => {
             </View>
           </View>
         </View>
-        
 
         <View
           style={{
@@ -273,7 +203,7 @@ const Signup = () => {
           <Text style={{fontSize: 16, marginTop: 3}}>
             {' *'}
           </Text>
-          
+
         </View>
 
         <TouchableOpacity

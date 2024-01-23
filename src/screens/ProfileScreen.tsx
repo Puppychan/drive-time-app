@@ -43,6 +43,7 @@ export const UserProfileScreen = () => {
   const handleSOSScreen = () => {
     setSosScreenVisible(false)
   }
+  
   // useEffect(() => {
   //   const prepare = async () => {
   //     if (auth.currentUser) {
@@ -115,16 +116,16 @@ export const UserProfileScreen = () => {
         <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
         <SOSScreen isVisible={sosScreenVisible} onCancel={handleSOSScreen}/>
       </View>
-      <View style={{ marginTop: 10 }}>
-        <HorizontalDivider height={7} />
+      <View style={{ marginTop: 15 }}>
+        <HorizontalDivider height={4} />
       </View>
 
       <View style={styles.bottomContainer}>
-        <ActionList imagePath="ic_message" title="Messages" onPress={() => router.push('/(user)/customer/sos')} />
+        <ActionList imagePath="ic_message" title="Messages" />
         <ActionList imagePath="ic_gift" title="Send a gift" />
         <ActionList imagePath="ic_voucher" title="Vouchers" />
         <ActionList imagePath="ic_setting" title="Edit profile" onPress={showEditProfileModal} />
-        <ActionList imagePath="ic_about" title="About us" />
+        <ActionList imagePath="ic_about" title="About us" onPress={() => router.push('/(public)/aboutus')} />
       </View>
       <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
       <EditProfileModal isVisible={editProfileVisible} onSubmit={hideEditProfileModal} />

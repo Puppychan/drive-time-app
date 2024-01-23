@@ -18,7 +18,7 @@ export default function _layout() {
       <Stack.Screen
         name="aboutus"
         options={{
-          headerShown: false
+          headerShown: true
         }}
       />
     </Stack>
