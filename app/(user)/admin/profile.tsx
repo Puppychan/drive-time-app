@@ -1,6 +1,5 @@
-import { useRouter } from 'expo-router'
-import { UserProfileScreen } from '@/src/screens/ProfileScreen';
-import { SOSScreen } from '@/src/screens/SOS_Screen';
+
+import { AdminProfileScreen } from '@/src/screens/admin/ProfileScreen';
 export default function Page() {
-    return <UserProfileScreen />;
+    return <AdminProfileScreen />;
 }
