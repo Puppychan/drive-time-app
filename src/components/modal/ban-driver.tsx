@@ -17,7 +17,7 @@ const BanDriverModal = ({ isVisible, onSubmit }: ModalProps) => {
   const handleSave = async () => {
     try {
         onSubmit()
-        // ToastAndroid.show("Saved SOS Conatact successfully", ToastAndroid.SHORT)
+        ToastAndroid.show("Ban driver successfully", ToastAndroid.SHORT)
     }
     catch (e) {
       console.log(e)
