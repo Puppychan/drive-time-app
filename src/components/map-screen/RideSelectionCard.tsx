@@ -19,7 +19,7 @@ export interface ItemType {
   title?: string
   multiplier?: number
   image?: any
-  type?: TransportType,
+  type: TransportType,
   amount?: number
 }
 
@@ -29,32 +29,23 @@ const data: ItemType[] = [
     title: 'DriveTime Car4',
     multiplier: 1,
     image: require('../../../assets/normal.png'),
-    type: TransportType.Car
+    type: TransportType.Car4
   },
   {
     id: 'Car-4-seat-2',
     title: 'DriveTime Car4 VIP',
     multiplier: 1.3,
     image: require('../../../assets/normal.png'),
-    type: TransportType.Bike
+    type: TransportType.Car4_VIP
   },
   {
     id: 'Car-7-seat-1',
     title: 'DriveTime Car7',
     multiplier: 1.5,
     image: require('../../../assets/car7.png'),
-    type: TransportType.XLCar
+    type: TransportType.Car7
   },
-  {
-    id: 'Car-7-seat-2',
-    title: 'DriveTime Car7 VIP',
-    multiplier: 1.8,
-    image: require('../../../assets/car7.png'),
-    type: TransportType.XLCar
-  }
 ]
-
-
 
 interface Props {
   requests: CarRequest[]
@@ -91,9 +82,9 @@ const RideSelectionCard = (props: Props) => {
       <View className='px-2 overflow-y-auto'>
         {data
           .slice(0, 3)
-          .map((o) => (
-            <TouchableOpacity
-              key={o.id}
+          .map((o, i) => (
+            o?.type ? <TouchableOpacity
+              key={i}
               onPress={() => {
                 if (o.id === option?.id) {
                   setOption(null)
@@ -124,7 +115,7 @@ const RideSelectionCard = (props: Props) => {
                   o.type
                 ).toFixed(2)}` : 'N/A'
               }</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> : <></>
           ))}
       </View>
 

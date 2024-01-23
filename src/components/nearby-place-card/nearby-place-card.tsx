@@ -1,6 +1,19 @@
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import GlobalAPI from '../../../lib/services/nearby-place.service'
+import { getDistanceAndTime, getDistanceAndTimeNearby } from "../../../lib/services/google.maps.service"
+import { selectCurrentLocation } from '@/src/slices/navSlice'
+import { Provider, useSelector } from 'react-redux'
+import { mLocation, spot } from '@/lib/services/car-matching.service'
+import { store } from '@/store'
+import { LocationObject, LocationObjectCoords } from 'expo-location'
+
+interface currentLocation {
+  coords: mLocation
+}
+interface nearbyPlace {
+  location: mLocation
+}
 
 const { height, width } = Dimensions.get('screen')
 const NearByPlaceCard = ({ place }: { place: any }) => {
@@ -9,12 +22,40 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
   // Check if place and place.photos are defined before accessing properties
   const imageUrl = place?.photos?.[0]?.name
     ? PLACE_IMAGE +
-      place.photos[0].name +
-      '/media?key=' +
-      GlobalAPI.API_KEY +
-      '&maxHeightPx=800&maxWidthPx=1200'
+    place.photos[0].name +
+    '/media?key=' +
+    GlobalAPI.API_KEY +
+    '&maxHeightPx=800&maxWidthPx=1200'
     : null
   // console.log(place.formattedAddress)
+  const currentLocation = useSelector(selectCurrentLocation)
+
+  const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ? process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY : ''
+  const [distance, setDistance] = useState<number | null>(null);
+  const [duration, setDuration] = useState<number | null>(null);
+  // console.log("hehe",place.location)
+  // console.log("hoho",currentLocation)
+  const fromGo = currentLocation ? currentLocation.coords : { latitude: 10.7496882, longitude: 106.5596077, accuracy: 0, altitude: 0, altitudeAccuracy: 0, heading: 0, speed: 0 }
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (currentLocation) {
+  //         const result = await getDistanceAndTimeNearby(fromGo, place.location, apiKey);
+  //         console.log('Current Location:', currentLocation);
+  //         console.log('Distance:', result.distance);
+  //         console.log('Duration:', result.duration);
+  //         setDistance(parseFloat(result.distance));
+  //         setDuration(parseFloat(result.duration));
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching distance and time:', error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, [currentLocation]);  // Only include currentLocation if it's expected to change
+  
   return (
     <View style={styles.wrapper}>
       <Image
@@ -62,7 +103,7 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
           </View>
         </View>
 
-        <Text style={{ color: 'gray', maxWidth: 250, fontSize: 13}} numberOfLines={1} ellipsizeMode="tail">
+        <Text style={{ color: 'gray', maxWidth: 250, fontSize: 13 }} numberOfLines={1} ellipsizeMode="tail">
           {place.formattedAddress}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5, marginTop: 5 }}>
@@ -85,7 +126,7 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
               marginRight: 3
             }}
           />
-          <Text style={{fontSize: 12}}>2.3 km</Text>
+          <Text style={{ fontSize: 12 }}>2.3 km</Text>
           <View
             style={{
               height: 3,
@@ -96,7 +137,7 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
               marginRight: 5
             }}
           ></View>
-          <Text  style={{fontSize: 12}}>20 mins</Text>
+          <Text style={{ fontSize: 12 }}>20 mins</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <View
@@ -148,7 +189,7 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
               }}
             />
             <Text
-              style={{ fontWeight: 'bold', fontSize: 12,  color: 'black', maxWidth: 80 }}
+              style={{ fontWeight: 'bold', fontSize: 12, color: 'black', maxWidth: 80 }}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -158,6 +199,7 @@ const NearByPlaceCard = ({ place }: { place: any }) => {
         </View>
       </View>
     </View>
+
   )
 }
 

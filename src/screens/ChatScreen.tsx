@@ -25,10 +25,11 @@ export type Message = {
 
 interface Props {
   chat: Chat | null
+  recipient: any
   onBack: () => void
 }
 
-export const ChatScreen = ({ chat, onBack }: Props) => {
+export const ChatScreen = ({ chat, recipient, onBack }: Props) => {
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<Message[]>([])
 
@@ -65,7 +66,7 @@ export const ChatScreen = ({ chat, onBack }: Props) => {
 
   return (
     <View style={{ height: '100%' }}>
-      <ChatHeader onBack={onBack} />
+      <ChatHeader user={recipient} onBack={onBack} />
       <View style={{ marginTop: 10 }}>
         <HorizontalDivider height={2} />
       </View>
