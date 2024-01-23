@@ -65,7 +65,7 @@ export const ChatScreen = ({ chat, onBack }: Props) => {
 
   return (
     <View style={{ height: '100%' }}>
-      <ChatHeader />
+      <ChatHeader onBack={onBack} />
       <View style={{ marginTop: 10 }}>
         <HorizontalDivider height={2} />
       </View>

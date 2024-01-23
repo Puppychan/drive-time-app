@@ -11,6 +11,7 @@ import { faker } from "@faker-js/faker";
 export default function Page() {
     const [chat, setChat] = useState<Chat | null>(null);
     const [driverId, setDriverId] = useState<string | null>(null);
+    const [driver, setDriver] = useState<any>(null);
     const customerId = auth.currentUser?.uid;
 
     useEffect(() => {
@@ -44,10 +45,10 @@ export default function Page() {
                 {(driverId && chat) ?
                     <ChatScreen chat={chat} onBack={() => {
                         setChat(null);
-                        setDriverId(null);
                     }} />
-                    : <MapScreen onChat={(driverId) => {
+                    : <MapScreen onChat={(driverId, driver) => {
                         setDriverId(driverId);
+                        setDriver(driver)
                     }} />
                 }
             </Provider>

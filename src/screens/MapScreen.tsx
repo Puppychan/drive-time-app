@@ -27,10 +27,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
-import { auth } from '@/lib/firebase/firebase'
+import { auth, db } from '@/lib/firebase/firebase'
+import { collection, getDocs, query, orderBy, limit, where } from "firebase/firestore";
 
 interface Props {
-  onChat: (driverId: string) => void
+  onChat: (driverId: string, driver: any) => void
 }
 
 const MapScreen = ({ onChat }: Props) => {
@@ -38,6 +39,7 @@ const MapScreen = ({ onChat }: Props) => {
 
   const [option, setOption] = useState<ItemType | null>(null)
   const [driverId, setDriverId] = useState<string | null>(null)
+  const [driver, setDriver] = useState<any | null>(null)
 
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -63,13 +65,6 @@ const MapScreen = ({ onChat }: Props) => {
     },
   ]
 
-  // const cars: Car[] = [
-  //   { id: 'C1', mLocation: { id: 'C1', x: 10.7769, y: 106.7009 } },  // Example coordinates for District 1, Ho Chi Minh City
-  //   { id: 'C2', mLocation: { id: 'C2', x: 10.7778, y: 106.6974 } },  // Example coordinates for District 1, Ho Chi Minh City
-  //   { id: 'C3', mLocation: { id: 'C3', x: 10.7755, y: 106.6962 } },  // Example coordinates for District 1, Ho Chi Minh City
-  //   { id: 'C4', mLocation: { id: 'C4', x: 10.7770, y: 106.6950 } }   // Example coordinates for District 1, Ho Chi Minh City
-  // ];
-
   useEffect(() => {
     if (!origin || !destination) return;
 
@@ -86,26 +81,59 @@ const MapScreen = ({ onChat }: Props) => {
 
   useEffect(() => {
     if (driverId) {
-      const newBooking: Booking = {
-        bookingId: faker.string.uuid(),
-        customerIdList: [auth.currentUser?.uid ? auth.currentUser?.uid : ''],
-        driverId: driverId,
-        preScheduleTime: null,
-        price: option?.amount ? (parseFloat(option?.amount.toFixed(2)) * 100) : 0,
-        discountPrice: 0,
-        voucherId: null,
-        departure: origin?.description,
-        destinationList: [destination?.description],
-        status: BookingStatus.InProgress,
+      const checkInProgressBooking = async () => {
+        const userId = auth.currentUser?.uid ?? '';
+
+        const bookingCollection = collection(db, 'bookings');
+        const q = query(
+          bookingCollection,
+          where("customerIdList", "array-contains", userId),
+          where("status", "==", BookingStatus.InProgress)
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          const newBooking: Booking = {
+            bookingId: faker.string.uuid(),
+            customerIdList: [auth.currentUser?.uid ? auth.currentUser?.uid : ''],
+            driverId: driverId,
+            preScheduleTime: null,
+            price: option?.amount ? (parseFloat(option?.amount.toFixed(2)) * 100) : 0,
+            discountPrice: 0,
+            voucherId: null,
+            departure: origin?.description,
+            destinationList: [destination?.description],
+            status: BookingStatus.InProgress,
+          };
+
+          addBooking(newBooking);
+        }
       };
-      
-      addBooking(newBooking)
+
+      const fetchDriver = async () => {
+        const driverCollection = collection(db, 'accounts');
+        const q = query(
+          driverCollection,
+          where("userId", "==", driverId),
+        );
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const driver = querySnapshot.docs[0].data();
+          console.log("driver", driver)
+          setDriver(driver);
+        }
+      };
+
+      checkInProgressBooking();
+      fetchDriver();
     }
-  }, [driverId])
+  }, [driverId]);
+
+
 
   return (
     <View className='h-screen relative'>
       {isRideSelectionVisible ? <GooglePlacesInput /> : null}
+
       <MapView
         ref={mapRef}
         style={{
@@ -190,7 +218,7 @@ const MapScreen = ({ onChat }: Props) => {
 
       {(origin && destination) ? isRideSelectionVisible ?
         <RideSelectionCard requests={requests} onRideSelected={({ option, driverId }) => { setOption(option); setDriverId(driverId); }} /> :
-        driverId ?
+        (driverId && driver) ?
           <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
             <Text className='text-2xl' style={{ fontWeight: '700' }}>Meet up at the pick-up point</Text>
             <Text className='w-full bg-black/10 text-black p-4 rounded-lg mt-2' style={{ fontWeight: '700' }}>{origin.description}</Text>
@@ -201,8 +229,8 @@ const MapScreen = ({ onChat }: Props) => {
             <View className='p-2 mb-4 border border-black/30 rounded-lg'>
               <View className='flex flex-row gap-2 justify-between'>
                 <View>
-                  <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>Võ Hoàng Phúc</Text>
-                  <Text className='text-lg mb-2 text-black' style={{ fontWeight: '900' }}>Biege Toyota Camry</Text>
+                  <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>{driver?.firstName} {driver?.lastName}</Text>
+                  <Text className='text-lg mb-2 text-black' style={{ fontWeight: '900' }}>{driver?.transport?.name || 'Biege Toyota Camry'}{driver?.transport?.color ? ` • ${driver?.transport?.color}` : null}</Text>
                 </View>
                 <Text className='text-2xl text-black' style={{ fontWeight: '900' }}>5.0★</Text>
               </View>
@@ -216,7 +244,7 @@ const MapScreen = ({ onChat }: Props) => {
             <View className='flex flex-row items-center'>
               <TouchableOpacity
                 className='text-lg text-black bg-white border border-black/30 flex items-center justify-center flex-1 w-64 text-center px-4 py-2 rounded-lg'
-                onPress={() => onChat(driverId)}
+                onPress={() => onChat(driverId, driver)}
               >
                 <Text style={{ fontWeight: '900' }}>Chat with driver</Text>
               </TouchableOpacity>
@@ -227,7 +255,14 @@ const MapScreen = ({ onChat }: Props) => {
             </View>
 
             <View className='h-0.5 w-full bg-black/10 my-4' />
-            {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
+
+            <View className='flex flex-row items-center'>
+              {option?.amount && <PaymentScreen amount={(parseFloat(option?.amount.toFixed(2)) * 100)} />}
+              <View className='w-3' />
+              <TouchableOpacity className='text-lg w-20 flex items-center justify-center border bg-black/10 border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
+                <Text className='text-black' style={{ fontWeight: '900' }}>Done</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           : <View className='absolute p-6 bottom-32 inset-x-2 bg-white border border-black/10 rounded-xl'>
             <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>
