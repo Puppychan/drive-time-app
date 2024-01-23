@@ -11,7 +11,7 @@ type ServiceCardProps = {
 
 const ServiceCard = ({ title, iconImage, onClick }: ServiceCardProps) => {
   return (
-    <TouchableOpacity onPress={onClick} className='w-1/2 mr-4'>
+    <TouchableOpacity onPress={onClick} className='w-1/2 mr-4 mf-4'>
       <Card className='h-32 flex flex-row justify-center items-center'>
         <Card.Content style={styles.cardContent}>
           <Image source={iconImage} style={styles.icon} resizeMode="contain" />

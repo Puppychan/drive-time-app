@@ -1,7 +1,14 @@
-import { Text } from "react-native";
+import { useRouter } from 'expo-router'
 
+import HomeScreen from '@/src/screens/HomeScreen'
+import { View } from 'react-native'
+import { Provider } from 'react-redux'
+import {store } from '@/store'
+import AdminHomeScreen from '@/src/screens/admin/AdminHomeScreen'
 export default function Page() {
-    return (
-        <Text>This is Home</Text>
-    )
+  return (
+    <Provider store={store}>
+      <AdminHomeScreen />
+    </Provider>
+  )
 }

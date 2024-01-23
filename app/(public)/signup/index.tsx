@@ -23,10 +23,6 @@ const Signup = () => {
   const {role} = useLocalSearchParams<{ role?: string }>();
   const [isPasswordShown, setIsPasswordShown] = useState(true)
   const [isChecked, setIsChecked] = useState(false)
-  const handleCancel = async () => {
-    router.push(`/signin`);
-    return
-  }
 
   const handleNext = async () => {
     if (email.trim() === '') {
@@ -168,7 +164,7 @@ const Signup = () => {
                   right: 12
                 }}
               >
-                {isPasswordShown ? (
+                {!isPasswordShown ? (
                   <Ionicons name="eye-off" size={24} color={COLORS.black} />
                 ) : (
                   <Ionicons name="eye" size={24} color={COLORS.black} />
@@ -224,53 +220,6 @@ const Signup = () => {
         >
           <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold'}}>Continue</Text>
         </TouchableOpacity>
-
-        {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-          <View
-            style={{
-              flex: 1,
-              height: 1,
-              backgroundColor: COLORS.grey,
-              marginHorizontal: 10
-            }}
-          />
-          <Text style={{ fontSize: 14 }}>Or</Text>
-          <View
-            style={{
-              flex: 1,
-              height: 1,
-              backgroundColor: COLORS.grey,
-              marginHorizontal: 10
-            }}
-          />
-        </View>
-
-        <TouchableOpacity
-          onPress={() => console.log('Pressed')}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'row',
-            height: 55,
-            borderWidth: 1,
-            borderColor: COLORS.grey,
-            marginRight: 4,
-            borderRadius: 15
-          }}
-        >
-          <Image
-            source={require('@/assets/ic_google.png')}
-            style={{
-              height: 36,
-              width: 36,
-              marginRight: 8
-            }}
-            resizeMode="contain"
-          />
-
-          <Text style={{ fontSize: 18 }}>Sign in with Google</Text>
-        </TouchableOpacity> */}
-
         <View
           style={{
             flexDirection: 'row',
@@ -285,7 +234,8 @@ const Signup = () => {
                 fontSize: 18,
                 color: COLORS.primary,
                 fontWeight: 'bold',
-                marginLeft: 6
+                marginLeft: 6,
+                textDecorationLine: 'underline'
               }}
             >
               Login

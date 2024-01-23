@@ -81,6 +81,35 @@ export default function _layout() {
             ...headerCustomStyle
           }}
         />
+        <Stack.Screen
+          name="insight-user"
+          options={{
+            title: 'Insight User',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="insight-financial"
+          options={{
+            title: 'Insight Finance',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="insight-service"
+          options={{
+            title: 'Insight Services',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="dashboard"
+          options={{
+            title: 'Dashboard',
+            headerShown: true
+          }}
+        />
+        
       </Stack>
       <AdminFooter />
     </View >

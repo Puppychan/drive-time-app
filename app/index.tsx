@@ -79,11 +79,8 @@ export default function App() {
         router.replace(`/${role.toLowerCase()}/home`)
         return
       }
-      router.replace(`/customer/home`)
     }
-    else {
-      router.replace(`/signin`)
-    }
+    router.replace('/signin')
   }
 
   const doneButton = ({ ...props }) => {

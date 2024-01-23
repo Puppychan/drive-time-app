@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 
 import { ResponseCode } from '@/common/response-code.enum'
-import { signIn } from '@/lib/firebase/auth'
+import { signIn, signOut } from '@/lib/firebase/auth'
 import CheckBox from '@/src/components/input/Checkbox'
 
 import { Colors, specialColors } from '../../../components/Colors'
@@ -21,6 +21,11 @@ import FontSize from '../../../components/FontSize'
 import Spacing from '../../../components/Spacing'
 import BottomSheet from '@/src/components/modal/bottom-sheet'
 import { auth } from '@/lib/firebase/firebase'
+import { AccountRole } from '@/lib/models/account.model'
+import { getUserById } from '@/lib/services/account.service'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant'
+
 
 export default function SignIn({ promptAsync }: any) {
   const router = useRouter()
@@ -35,6 +40,7 @@ export default function SignIn({ promptAsync }: any) {
 
 
   const handleRegister = () => router.push('/signup')
+  const handleRegisterDriver = () => router.push({pathname: '/signup', params: {role: AccountRole.Driver}})
 
   const handleLogin = async () => {
     if (email.trim() === '') {
@@ -45,15 +51,25 @@ export default function SignIn({ promptAsync }: any) {
       return
     }
 
-    signIn(email, password, rememberMe).then((res) => {
+    signIn(email, password, rememberMe).then(async (res) => {
       if (res.code === ResponseCode.OK) {
         const user = res.body
         console.log(user)
-        ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT)
-        // TODO: add admin
-        router.push(`/(user)/customer/home`)
+        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+        if (role) {
+          console.log("Logged in as: ", role)
+          ToastAndroid.show(`Login successfully`, ToastAndroid.SHORT)
+          router.replace(`/${role.toLowerCase()}/home`)
+          return
+        }
+
+        ToastAndroid.show(`Cannot recognise user role. Please try again`, ToastAndroid.SHORT)
+        await signOut()
+        return
       } else {
         ToastAndroid.show(`Login failed: ${res.message}`, ToastAndroid.SHORT)
+        await signOut()
+        return
       }
     })
   }
@@ -125,7 +141,7 @@ export default function SignIn({ promptAsync }: any) {
               style={styles.input}
               placeholder="******"
               value={password}
-              secureTextEntry={showPassword}
+              secureTextEntry={!showPassword}
               onChangeText={(text) => setPassword(text)}
             />
             <TouchableOpacity
@@ -134,7 +150,7 @@ export default function SignIn({ promptAsync }: any) {
               }}
               style={styles.showHideButton}
             >
-              <Text>{!showPassword ? 'Hide' : 'Show'}</Text>
+              <Text>{showPassword ? 'Hide' : 'Show'}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -179,6 +195,22 @@ export default function SignIn({ promptAsync }: any) {
             Need Help?
           </Text>
         </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <Text style={{ fontSize: 18, marginTop: 8 }}>Be our driver?</Text>
+          <TouchableOpacity onPress={handleRegisterDriver}>
+            <Text
+              style={{
+                fontSize: 18,
+                marginTop: 8,
+                marginLeft: 10,
+                color: 'green',
+                textDecorationLine: 'underline'
+              }}
+            >
+              Register Driver Account
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   )
@@ -187,7 +219,7 @@ export default function SignIn({ promptAsync }: any) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing * 2,
-    paddingVertical: Spacing * 4,
+    paddingTop: 100,
     flexDirection: 'column',
     gap: Spacing * 3
   },

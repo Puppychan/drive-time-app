@@ -2,26 +2,23 @@ import { View, ScrollView, ToastAndroid, Alert } from 'react-native'
 
 import { HorizontalDivider } from '@/src/components/divider/HorizontalDivider'
 
-import { ActionList } from '../components/user/profile/actionList/ActionList'
-import { ProfileHeader } from '../components/user/profile/header/ProfileHeader'
-import { styles } from '../components/user/profile/profile.style'
-import { SafetyReportButton } from '../components/user/profile/safetyReport/SafetyReportButton'
-import { UtilityButton } from '../components/user/profile/utilBtn/UtilityButton'
+import { ActionList } from '@/src/components/user/profile/actionList/ActionList'
+import { ProfileHeader } from '@/src/components/user/profile/header/ProfileHeader'
+import { styles } from '@/src/components/user/profile/profile.style'
+import { SafetyReportButton } from '@/src/components/user/profile/safetyReport/SafetyReportButton'
+import { UtilityButton } from '@/src/components/user/profile/utilBtn/UtilityButton'
 import { useEffect, useState } from 'react'
 import { User } from 'firebase/auth'
-import { AccountRole } from '@/lib/models/account.model'
 import { auth } from '@/lib/firebase/firebase'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Constant } from '@/components/Constant'
 import { router } from 'expo-router'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import SOSDetailModal from '../components/modal/sos-detail'
-import EditProfileModal from '../components/modal/edit-profile'
-import { SOSScreen } from './SOS_Screen'
-import EditAvatarModal from '../components/modal/edit-avatar'
+import SOSDetailModal from '@/src/components/modal/sos-detail'
+import EditProfileModal from '@/src/components/modal/edit-profile'
+import { SOSScreen } from '../SOS_Screen'
+import EditAvatarModal from '@/src/components/modal/edit-avatar'
 import { signOut } from '@/lib/firebase/auth'
 
-export const UserProfileScreen = () => {
+export const AdminProfileScreen = () => {
   const [isReady, setIsReady] = useState(false)
   const [authUser, setUser] = useState<User | null>()
   const [sosModalVisible, setSOSModalVisible] = useState(false)
@@ -68,12 +65,12 @@ export const UserProfileScreen = () => {
       'Safety Report',
       'Trigger SOS or Edit/Add yoir SOS Contact',
       [
-        { text: 'Trigger SOS', onPress: () => { setSosScreenVisible(true) } },
-        { text: 'Edit/Add SOS', onPress: () => { setSOSModalVisible(true) } },
+        { text: 'Trigger SOS', onPress: () => {setSosScreenVisible(true)}},
+        { text: 'Edit/Add SOS', onPress: () => {setSOSModalVisible(true)}},
       ],
       {
         cancelable: true,
-        onDismiss: () => { setSOSModalVisible(false) }
+        onDismiss: () => {setSOSModalVisible(false)}
       }
     );
   }
@@ -97,13 +94,7 @@ export const UserProfileScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
-        <ProfileHeader avatarOnPress={showEditAvatarModal} />
-
-        <View style={styles.smallBtnContainer}>
-          <UtilityButton imagePath="ic_help" title="Help" />
-          <UtilityButton imagePath="ic_wallet" title="Wallet" />
-          <UtilityButton imagePath="ic_trip" title="Trip" />
-        </View>
+        <ProfileHeader avatarOnPress={showEditAvatarModal}/>
 
         <TouchableOpacity
           onPress={handleSOS}
@@ -111,19 +102,16 @@ export const UserProfileScreen = () => {
           <SafetyReportButton />
         </TouchableOpacity>
         <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
-        <SOSScreen isVisible={sosScreenVisible} onCancel={handleSOSScreen} />
+        <SOSScreen isVisible={sosScreenVisible} onCancel={handleSOSScreen}/>
       </View>
-      <View style={{ marginTop: 15 }}>
-        <HorizontalDivider height={4} />
+      <View style={{ marginTop: 10 }}>
+        <HorizontalDivider height={7} />
       </View>
 
       <View style={styles.bottomContainer}>
-        <ActionList imagePath="ic_message" title="Messages" />
-        {/* <ActionList imagePath="ic_gift" title="Send a gift" /> */}
-        <ActionList imagePath="ic_voucher" title="Vouchers" />
+        <ActionList imagePath="ic_message" title="Messages" onPress={() => router.push('/customer/sos')} />
         <ActionList imagePath="ic_setting" title="Edit profile" onPress={showEditProfileModal} />
-        <ActionList imagePath="ic_about" title="About us" onPress={() => router.replace('/aboutus')} />
-        <ActionList imagePath="ic_signout" title="Sign out" onPress={logout} />
+        <ActionList imagePath="ic_signout" title="Sign out" onPress={logout}/>
       </View>
       <SOSDetailModal isVisible={sosModalVisible} onSubmit={handleSOSSubmit} />
       <EditProfileModal isVisible={editProfileVisible} onSubmit={hideEditProfileModal} />
