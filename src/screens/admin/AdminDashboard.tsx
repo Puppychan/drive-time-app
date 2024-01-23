@@ -40,30 +40,10 @@ const AdminDashboard = () => {
     }
   }, [user])
 
-  const onClickHomeSection = () => {
-    // navigation.navigate('Profile')
-    router.replace(`/admin/profile`)
-  }
-
-  const onClickSuggestions = (index: number) => {
-    router.push('/(user)/customer/map')
-  }
-
-  const onClickInsightUser = () => {
+  const onClickBanDriver = () => {
     router.push('/admin/insight-user')
   }
   
-  const onClickInsightDriver = () => {
-    router.push('/admin/insight-user')
-  }
-
-  const onClickInsightFinance = () => {
-    router.push('/admin/insight-user')
-  }
-
-  const onClickInsightService = () => {
-    router.push('/admin/insight-user')
-  }
 
   useEffect(() => {
     (async () => {
@@ -89,61 +69,12 @@ const AdminDashboard = () => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
-          <Title className='text-3xl p-4 pb-0 font-semibold'>Welcome, {user?.displayName ?? "Admin"}</Title>
+          <Title className='text-3xl p-4 pb-0 font-semibold'>Admin Dashboard</Title>
           <SearchInput />
 
-          <TouchableOpacity className='mx-4 bg-white border border-black/10 px-4 py-1 rounded-lg' onPress={onClickHomeSection}>
-            <View className='flex flex-row gap-4 items-center'>
-              <CircleIcon
-                name="home"
-                size={24}
-                color={colorsTheme.background}
-                backgroundColor={colorsTheme.opposite_bg}
-              />
 
-              <View style={{ ...verticalLeftView, flexGrow: 1 }}>
-                <Title>Home</Title>
-                <Paragraph>123 Main St</Paragraph>
-              </View>
-              <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
-            </View>
-          </TouchableOpacity>
 
           <View className='h-0.5 w-full bg-black/10' />
-
-          <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Account Insights</Title>
-          </View>
-
-          <View className='flex flex-row gap-2 px-8'>
-            <ServiceCard
-              iconImage={require('@/assets/user_insight.png')}
-              title='Users'
-              onClick={onClickInsightUser}
-            />
-            <ServiceCard
-              iconImage={require('@/assets/driver_insight.png')}
-              title='Drivers'
-              onClick={onClickInsightDriver}
-            />
-          </View>
-
-          <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Performance Insights</Title>
-          </View>
-
-          <View className='flex flex-row gap-2 px-8'>
-            <ServiceCard
-              iconImage={require('@/assets/service_insight.png')}
-              title='Services'
-              onClick={onClickInsightService}
-            />
-            <ServiceCard
-              iconImage={require('@/assets/financial_insight.png')}
-              title='Finance'
-              onClick={onClickInsightFinance}
-            />
-          </View>
 
           <View style={styles.subsection}>
             <Title className='text-2xl px-2'>Driver Management</Title>
@@ -151,9 +82,9 @@ const AdminDashboard = () => {
 
           <View className='flex flex-row gap-2 px-8'>
             <ServiceCard
-              iconImage={require('@/assets/driver_management.png')}
-              title='Manage Driver'
-              onClick={onClickInsightService}
+              iconImage={require('@/assets/ban_driver.png')}
+              title='Ban Driver'
+              onClick={onClickBanDriver}
             />
           </View>
         </View>

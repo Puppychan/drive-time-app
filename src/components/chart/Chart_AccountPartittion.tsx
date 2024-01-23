@@ -24,7 +24,7 @@ const Chart_AccountPartittion = () => {
         <Title className='text-xl px-2'>Account Partition</Title>
       </View>
 
-      <View style={{}}>
+      <View style={{alignItems:'center'}}>
         <PieChart
           data={rolePartitionData.chartData}
           showText
@@ -35,7 +35,7 @@ const Chart_AccountPartittion = () => {
           showValuesAsLabels
         />
 
-        <View style={{flexDirection:'row', gap:10}}>
+        <View style={{flexDirection:'row', gap:15}}>
           <>
             {rolePartitionData.legends.map((legend, index) => {
               return (
@@ -55,7 +55,9 @@ const Chart_AccountPartittion = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems:'center'
+    alignItems:'center',
+    flexDirection: 'column',
+    gap: 10
   },
 })
 

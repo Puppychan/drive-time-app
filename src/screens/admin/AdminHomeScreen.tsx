@@ -38,7 +38,7 @@ const AdminHomeScreen = () => {
     if (auth.currentUser) {
       setUser(auth.currentUser)
     }
-  }, [user])
+  }, [])
 
   const onClickHomeSection = () => {
     // navigation.navigate('Profile')
@@ -53,18 +53,18 @@ const AdminHomeScreen = () => {
     router.push('/admin/insight-user')
   }
   
-  const onClickInsightDriver = () => {
-    router.push('/admin/insight-user')
-  }
 
   const onClickInsightFinance = () => {
-    router.push('/admin/insight-user')
+    router.push('/admin/insight-finace')
   }
 
   const onClickInsightService = () => {
-    router.push('/admin/insight-user')
+    router.push('/admin/insight-service')
   }
 
+  const onClickManageDriver = () => {
+    router.push('/admin/dashboard')
+  }
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -102,7 +102,7 @@ const AdminHomeScreen = () => {
 
               <View style={{ ...verticalLeftView, flexGrow: 1 }}>
                 <Title>Admin Dashboard</Title>
-                <Paragraph>Adminstration</Paragraph>
+                <Paragraph>Administrative management </Paragraph>
               </View>
               <CircleIcon name="arrow-right" size={35} color={colorsTheme.opposite_bg} />
             </View>
@@ -111,24 +111,19 @@ const AdminHomeScreen = () => {
           {/* <View className='h-0.5 w-full bg-black/10' /> */}
 
           <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Account Insights</Title>
+            <Title className='text-2xl px-2'>Users and Account Insights</Title>
           </View>
 
           <View className='flex flex-row gap-2 px-8'>
             <ServiceCard
               iconImage={require('@/assets/user_insight.png')}
-              title='Users'
+              title='Users and Account'
               onClick={onClickInsightUser}
-            />
-            <ServiceCard
-              iconImage={require('@/assets/driver_insight.png')}
-              title='Drivers'
-              onClick={onClickInsightDriver}
             />
           </View>
 
           <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Performance Insights</Title>
+            <Title className='text-2xl px-2'>Business Performance Insights</Title>
           </View>
 
           <View className='flex flex-row gap-2 px-8'>
@@ -152,7 +147,7 @@ const AdminHomeScreen = () => {
             <ServiceCard
               iconImage={require('@/assets/driver_management.png')}
               title='Manage Driver'
-              onClick={onClickInsightService}
+              onClick={onClickManageDriver}
             />
           </View>
         </View>

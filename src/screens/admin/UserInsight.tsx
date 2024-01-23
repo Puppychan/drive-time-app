@@ -30,6 +30,7 @@ import { insightRolePartition } from '@/lib/services/insight.service'
 import { PieChart } from "react-native-gifted-charts";
 import { Legend } from '@/src/components/chart/legend'
 import Chart_AccountPartittion from '@/src/components/chart/Chart_AccountPartittion'
+import Chart_NewCustomerRegistration from '@/src/components/chart/Chart_NewCustomerRegistration'
 
 const UserInsight = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
@@ -41,9 +42,8 @@ const UserInsight = () => {
     (async () => {
       const dataRolePartition = await insightRolePartition()
       setRolePartitionData(dataRolePartition)
-      console.log(dataRolePartition)
     })();
-  }, [rolePartitionData]);
+  }, []);
 
   if (!rolePartitionData) return null
   
@@ -52,6 +52,7 @@ const UserInsight = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
           <Chart_AccountPartittion/>
+          <Chart_NewCustomerRegistration/>
         </View>
       </ScrollView>
     </View>
@@ -64,21 +65,7 @@ const styles = StyleSheet.create({
     paddingVertical: 35
   },
   insideContainer: {
-    gap: 15,
-    marginTop: 20,
-    marginBottom: 50
-  },
-  welcome: {
-    fontSize: 30,
-    paddingBottom: 10
-  },
-  pickupCard: {
-    margin: 10
-  },
-  cardContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    gap: 35,
   },
   subsection: {
     flexDirection: 'row',
