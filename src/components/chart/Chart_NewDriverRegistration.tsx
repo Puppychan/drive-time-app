@@ -4,11 +4,11 @@ import { Button, Paragraph, Title } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 import { BarChart } from "react-native-gifted-charts";
 
-const Chart_NewCustomerRegistration = () => {
+const Chart_NewDriverRegistration = () => {
   const [data, setData] = useState<any>()
   const static_data = [
-    {value: 7, label: '2023'},
-    {value: 20, label: '2024', frontColor: '#177AD5'}
+    {value: 4, label: '2023'},
+    {value: 8, label: '2024', frontColor: '#177AD5'}
   ]
 
   // useEffect(() => {
@@ -23,7 +23,7 @@ const Chart_NewCustomerRegistration = () => {
   return (
     <View style={styles.container}>
       <View>
-        <Title className='text-xl px-2'>New Customer Registration 2023 vs 2024</Title>
+        <Title className='text-xl px-2'>New Driver Registration 2023 vs 2024</Title>
       </View>
 
       <View style={{}}>
@@ -51,5 +51,5 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Chart_NewCustomerRegistration
+export default Chart_NewDriverRegistration
 

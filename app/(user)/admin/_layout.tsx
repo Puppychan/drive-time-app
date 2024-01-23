@@ -15,15 +15,31 @@ export default function _layout() {
           }}
         />
         <Stack.Screen
-          name="profile"
+          name="insight-user"
           options={{
-            headerShown: false
+            title: 'Insight User',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="insight-finacial"
+          options={{
+            title: 'Insight Finance',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen
+          name="insight-service"
+          options={{
+            title: 'Insight Services',
+            headerShown: true
           }}
         />
         <Stack.Screen
           name="dashboard"
           options={{
-            headerShown: false
+            title: 'Dashboard',
+            headerShown: true
           }}
         />
         

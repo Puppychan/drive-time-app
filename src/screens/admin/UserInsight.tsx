@@ -31,12 +31,11 @@ import { PieChart } from "react-native-gifted-charts";
 import { Legend } from '@/src/components/chart/legend'
 import Chart_AccountPartittion from '@/src/components/chart/Chart_AccountPartittion'
 import Chart_NewCustomerRegistration from '@/src/components/chart/Chart_NewCustomerRegistration'
+import Chart_NewDriverRegistration from '@/src/components/chart/Chart_NewDriverRegistration'
 
 const UserInsight = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
   const [rolePartitionData, setRolePartitionData] = useState<any>()
-  const dispatch = useDispatch()
-
   
   useEffect(() => {
     (async () => {
@@ -51,8 +50,9 @@ const UserInsight = () => {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.insideContainer}>
-          <Chart_AccountPartittion/>
           <Chart_NewCustomerRegistration/>
+          <Chart_NewDriverRegistration/>
+          <Chart_AccountPartittion/>
         </View>
       </ScrollView>
     </View>
@@ -62,10 +62,11 @@ const UserInsight = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 35
+    paddingVertical: 35,
+    paddingBottom: 100
   },
   insideContainer: {
-    gap: 35,
+    gap: 50,
   },
   subsection: {
     flexDirection: 'row',
