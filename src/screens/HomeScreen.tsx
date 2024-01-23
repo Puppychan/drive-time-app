@@ -57,7 +57,7 @@ const HomeScreen = () => {
   }
 
   const onClickSuggestions = (index: number) => {
-    router.push('/(user)/customer/map')
+    router.push('/(user)/customer/book_driver')
   }
 
   const onClickInstruction = () => {

@@ -29,23 +29,20 @@ import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
 import { auth, db } from '@/lib/firebase/firebase'
 import { collection, getDocs, query, where, doc, writeBatch } from "firebase/firestore";
-import { CallScreen } from './CallScreen'
 
 interface Props {
   fallbackOption?: ItemType | null
   fallbackDriver: any | null
   onChat: (driverId: string | null, driver: any, option: any) => void
+  onCall: () => void
 }
 
-const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
+const MapScreen = ({ fallbackOption, fallbackDriver, onChat, onCall }: Props) => {
   const currentLocation = useSelector(selectCurrentLocation)
-
-  const [cars, setCars] = useState([])
 
   const [option, setOption] = useState<ItemType | null>(fallbackOption || null)
   const [driverId, setDriverId] = useState<string | null>(fallbackDriver?.id || null)
   const [driver, setDriver] = useState<any | null>(fallbackDriver || null)
-  const [isCall, setCall] = useState(false)
 
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -159,7 +156,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
     }
   }
 
-  return !isCall ? (
+  return (
     <View className='h-screen relative'>
       {isRideSelectionVisible && <GooglePlacesInput />}
       <MapView
@@ -278,7 +275,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
               <Text style={{ fontWeight: '900' }}>Chat with driver</Text>
             </TouchableOpacity>
             <View className='flex-1' />
-            <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }}>
+            <TouchableOpacity className='text-lg w-20 flex items-center justify-center text-white border border-black/30 px-4 py-3 rounded-lg' style={{ fontWeight: '900' }} onPress={onCall}>
               <Image source={require('../../assets/ic_call.png')} style={{ width: 20, height: 20 }} />
             </TouchableOpacity>
           </View>
@@ -298,9 +295,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
             <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>
           </View>
           : null}
-    </View>) : (
-    <CallScreen goToHomeScreen={() => setCall(false)} />
-  )
+    </View>)
 }
 
 export { MapScreen }
