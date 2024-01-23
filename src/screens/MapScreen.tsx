@@ -159,7 +159,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
     }
   }
 
-  return !isCall ? (
+  return (
     <View className='h-screen relative'>
       {isRideSelectionVisible && <GooglePlacesInput />}
       <MapView
@@ -298,9 +298,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
             <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>
           </View>
           : null}
-    </View>) : (
-    <CallScreen goToHomeScreen={() => setCall(false)} />
-  )
+    </View>)
 }
 
 export { MapScreen }
