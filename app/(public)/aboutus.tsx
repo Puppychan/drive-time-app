@@ -2,6 +2,12 @@ import React from 'react';
 import { View, Image, StatusBar, SafeAreaView, Text, StyleSheet, ScrollView, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { CallControllerScreen } from '@/src/screens/CallControllerScreen'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { useRouter } from 'expo-router'
+import { auth } from '@/lib/firebase/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Constant } from '@/components/Constant';
+
 
 interface Profile {
     name: string;
@@ -47,6 +53,7 @@ const ProfileCard: React.FC<Profile> = ({ name, title, phone, email, image }) =>
 };
 
 export default function Page() {
+    const router = useRouter()
     const profiles: Profile[] = [
         { name: 'Quoc Doan', title: 'Software Engineer', phone: '(+84) 838756241', email: 'huuquoc7603', image: require('../../assets/ic_quoc.jpg') },
         { name: 'N.D. Viet', title: 'Software Engineer', phone: '(+84) 838756241', email: 'vietngu123', image: require('../../assets/ic_viet.jpg') },
@@ -58,7 +65,17 @@ export default function Page() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-
+                <Icon name="home" className="px-4" size={30} color="#000" onPress={async () => {
+                    if (auth.currentUser) {
+                        let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+                        console.log("role: ", role)
+                        if (role) {
+                            router.replace(`/${role.toLowerCase()}/home`)
+                            return
+                        }
+                    }
+                    router.replace('/signin')
+                }} />
                 {/* Header Section */}
                 <View style={styles.header}>
                     <Image style={styles.logo} source={require('../../assets/logo_no_background.png')} />

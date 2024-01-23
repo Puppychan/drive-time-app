@@ -1,5 +1,14 @@
 import { Stack } from 'expo-router'
 
+const headerCustomStyle = {
+  headerStyle: {
+    backgroundColor: 'black',
+  },
+  headerTitleStyle: {
+    color: 'white'
+  },
+  headerTintColor: 'white' // This will change the color of the back button
+}
 export default function _layout() {
   return (
     <Stack>
@@ -18,7 +27,10 @@ export default function _layout() {
       <Stack.Screen
         name="aboutus"
         options={{
-          headerShown: true
+          headerShown: true,
+          headerTitle: "About Us",
+          headerBackVisible: true,
+          ...headerCustomStyle
         }}
       />
     </Stack>
