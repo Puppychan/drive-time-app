@@ -10,8 +10,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center'
   },
   btnIcon: {
-    height: 20,
-    width: 20,
+    height: 18,
+    width: 18,
     resizeMode: 'cover',
     marginBottom: 5
   }

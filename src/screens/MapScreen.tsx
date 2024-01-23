@@ -28,7 +28,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { addBooking } from '@/lib/services/booking.service'
 import { Booking, BookingStatus } from '@/lib/models/booking.model'
 import { auth, db } from '@/lib/firebase/firebase'
-import { collection, getDocs, query, orderBy, limit, where, doc, setDoc, writeBatch } from "firebase/firestore";
+import { collection, getDocs, query, where, doc, writeBatch } from "firebase/firestore";
+import { CallScreen } from './CallScreen'
 
 interface Props {
   fallbackOption?: ItemType | null
@@ -44,6 +45,7 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
   const [option, setOption] = useState<ItemType | null>(fallbackOption || null)
   const [driverId, setDriverId] = useState<string | null>(fallbackDriver?.id || null)
   const [driver, setDriver] = useState<any | null>(fallbackDriver || null)
+  const [isCall, setCall] = useState(false)
 
   const origin = useSelector(selectOrigin)
   const destination = useSelector(selectDestination)
@@ -157,10 +159,9 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
     }
   }
 
-  return (
+  return !isCall ? (
     <View className='h-screen relative'>
-      {isRideSelectionVisible ? <GooglePlacesInput /> : null}
-
+      {isRideSelectionVisible && <GooglePlacesInput />}
       <MapView
         ref={mapRef}
         style={{
@@ -175,72 +176,75 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
           longitudeDelta: 0.05
         }}
       >
-        {origin && destination && <MapViewDirections
-          origin={origin?.description}
-          destination={destination?.description}
-          strokeColor="blue"
-          strokeWidth={5}
-          apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
-          onReady={(result) => {
-            // Get the coordinates of the direction
-            const coordinates = result.coordinates;
-            if (coordinates.length > 0) {
-              mapRef.current?.fitToCoordinates(coordinates, {
-                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                animated: true
-              });
-            } else {
-              // Set random position as the center of the map
-              const randomLatitude = Math.random() * 180 - 90;
-              const randomLongitude = Math.random() * 360 - 180;
-              mapRef.current?.animateToRegion({
-                latitude: randomLatitude,
-                longitude: randomLongitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005
-              });
-            }
-          }}
-        />}
+        {origin && destination && (
+          <MapViewDirections
+            origin={origin?.description}
+            destination={destination?.description}
+            strokeColor="blue"
+            strokeWidth={5}
+            apikey="AIzaSyCTsnUfX8EMXFzQmMPXJ-fBkqbzFOSFNps"
+            onReady={(result) => {
+              const coordinates = result.coordinates;
+              if (coordinates.length > 0) {
+                mapRef.current?.fitToCoordinates(coordinates, {
+                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                  animated: true
+                });
+              } else {
+                const randomLatitude = Math.random() * 180 - 90;
+                const randomLongitude = Math.random() * 360 - 180;
+                mapRef.current?.animateToRegion({
+                  latitude: randomLatitude,
+                  longitude: randomLongitude,
+                  latitudeDelta: 0.005,
+                  longitudeDelta: 0.005
+                });
+              }
+            }}
+          />
+        )}
 
-        {origin?.location ? <Marker
-          coordinate={{
-            latitude: origin.location.lat,
-            longitude: origin.location.lng
-          }}
-          title="Origin"
-          description="Origin Location"
-          identifier="origin"
-          style={{ width: 100, height: 100, borderRadius: 50 }}
-        >
-          <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
-
-            {isLoading && (
-              <View style={{ width: 50, height: 50, }}>
-                <LoadingBar />
+        {origin?.location && (
+          <Marker
+            coordinate={{
+              latitude: origin.location.lat,
+              longitude: origin.location.lng
+            }}
+            title="Origin"
+            description="Origin Location"
+            identifier="origin"
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+          >
+            <View style={{ width: 100, alignItems: 'center', marginTop: 45, position: 'absolute' }}>
+              {isLoading && (
+                <View style={{ width: 50, height: 50 }}>
+                  <LoadingBar />
+                </View>
+              )}
+              <View style={{ position: 'absolute' }}>
+                <Image
+                  source={{
+                    uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
+                  }}
+                  style={{ width: 40, height: 40, justifyContent: 'center' }}
+                  resizeMode="contain"
+                />
               </View>
-            )}
-            <View style={{ position: 'absolute' }}>
-              <Image
-                source={{
-                  uri: 'https://creazilla-store.fra1.digitaloceanspaces.com/icons/3433523/marker-icon-md.png'
-                }}
-                style={{ width: 40, height: 40, justifyContent: 'center' }} // Adjust the size of the image inside the marker
-                resizeMode="contain"
-              />
             </View>
-          </View>
-        </Marker> : null}
+          </Marker>
+        )}
 
-        {destination?.location ? <Marker
-          coordinate={{
-            latitude: destination.location.lat,
-            longitude: destination.location.lng
-          }}
-          title="Destination"
-          description="Destination"
-          identifier="destination"
-        /> : null}
+        {destination?.location && (
+          <Marker
+            coordinate={{
+              latitude: destination.location.lat,
+              longitude: destination.location.lng
+            }}
+            title="Destination"
+            description="Destination"
+            identifier="destination"
+          />
+        )}
       </MapView>
 
       {(driver) ?
@@ -294,7 +298,8 @@ const MapScreen = ({ fallbackOption, fallbackDriver, onChat }: Props) => {
             <Text className='text-lg text-center' style={{ fontWeight: '700' }}>Searching for the best driver...</Text>
           </View>
           : null}
-    </View>
+    </View>) : (
+    <CallScreen goToHomeScreen={() => setCall(false)} />
   )
 }
 

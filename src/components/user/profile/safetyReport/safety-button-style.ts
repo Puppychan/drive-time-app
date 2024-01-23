@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     marginRight: 16 // Adjust spacing between text and icon
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 5
   },
