@@ -62,7 +62,7 @@ const BanDriverModal = ({ isVisible, onSubmit }: ModalProps) => {
             placeHolder="The reason to ban this driver"
           />
         </View>
-        <CustomButton title="Ban" onPress={handleSave} style={{ height: 55, borderRadius: 8, marginBottom: 10 }} />
+        <CustomButton title="Ban Driver" onPress={handleSave} style={{ height: 55, borderRadius: 8, marginBottom: 10 }} />
       </View>
     </Modal>
   )
