@@ -16,7 +16,6 @@ import { AVATAR_REF } from '@/components/Constant'
 import { ResponseCode } from '@/common/response-code.enum'
 import { AccountType } from '@/lib/common/model-type'
 import FontSize from '@/components/FontSize'
-
 // const genderList = [
 //   { label: 'Female', value: 'Female' },
 //   { label: 'Male', value: 'Male' },
@@ -46,10 +45,10 @@ export default function Page() {
         ToastAndroid.show(`Unauthorized`, ToastAndroid.SHORT);
         return
       }
-  
+
       // check if all required input fields are filled
       if (!checkRequire()) return;
-  
+
       // create account
       const account: Account = {
         userId: authUser.uid,
@@ -64,7 +63,7 @@ export default function Page() {
         createdDate: Timestamp.fromDate(new Date()),
         gender: gender
       }
-  
+
       let roleAccount : AccountType
       switch (accountRole) {
         case AccountRole.Driver: //driver
@@ -76,14 +75,14 @@ export default function Page() {
             transport: null
           }
           break;
-  
+
         case AccountRole.Admin: //admin
           roleAccount = {
             ...account,
             workStartDate: Timestamp.fromDate(new Date())
           }
           break;
-  
+
         default: //customer
           roleAccount = {
             ...account,
@@ -117,7 +116,7 @@ export default function Page() {
     ToastAndroid.show(`Register has been cancelled`, ToastAndroid.SHORT);
     router.push(`/signin`);
   }
-  
+
   const checkRequire = () => {
     let field = null;
     if (firstName.trim() === '') {
@@ -135,14 +134,14 @@ export default function Page() {
   }
 
   const chooseImage = () => {}
-  
+
   return (
     <View style={styles.formContainer}>
       <Text style={styles.formTitle}>Profile Information</Text>
       <View style={styles.form}>
         <View style={styles.inline}>
           <View style={styles.elementSameRow}>
-            <Input label="First Name" placeHolder="First Name" required={true} onChangeText={setFirstName}/>  
+            <Input label="First Name" placeHolder="First Name" required={true} onChangeText={setFirstName}/>
           </View>
           <View style={styles.elementSameRow}>
             <Input label="Last Name" placeHolder="Last Name" required={true} onChangeText={setLastName} />

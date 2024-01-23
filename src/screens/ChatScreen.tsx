@@ -23,23 +23,21 @@ export type Message = {
   createdAt: number
 }
 
-export const ChatScreen = () => {
-  const testChatId = 'test-chat-id'
+interface Props {
+  chat: Chat | null
+  onBack: () => void
+}
 
+export const ChatScreen = ({ chat, onBack }: Props) => {
   const [loading, setLoading] = useState(true)
-  const [chat, setChat] = useState<Chat | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
 
   useEffect(() => {
-    const fetchChatAndMessages = async () => {
-      // Fetch chat
-      const chatDoc = doc(db, 'chats', testChatId)
-      const chatSnapshot = await getDoc(chatDoc)
-      const chatData = chatSnapshot.data() as Chat
-      setChat(chatData)
+    if (!chat) return
 
+    const fetchChatAndMessages = async () => {
       // Fetch messages filtered by chat
-      const messagesQuery = query(collection(db, 'messages'), where('chatId', '==', testChatId))
+      const messagesQuery = query(collection(db, 'messages'), where('chatId', '==', chat?.id))
       const messagesSnapshot = await getDocs(messagesQuery)
       const fetchedMessages = messagesSnapshot.docs.map((doc) => doc.data())
       setMessages(fetchedMessages.reverse() as Message[])
@@ -67,7 +65,7 @@ export const ChatScreen = () => {
 
   return (
     <View style={{ height: '100%' }}>
-      <ChatHeader />
+      <ChatHeader onBack={onBack} />
       <View style={{ marginTop: 10 }}>
         <HorizontalDivider height={2} />
       </View>

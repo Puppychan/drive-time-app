@@ -2,111 +2,69 @@
 import {
   Call,
   StreamCall,
-  useStreamVideoClient,
   CallContent,
-  useCalls,
-  CallingState,
-  IncomingCall,
-  OutgoingCall
+  StreamVideoClient,
+  StreamVideo
 } from '@stream-io/video-react-native-sdk'
-import React, { useEffect, useState } from 'react'
+
+
+const apiKey = 'zz984t9cyrwj'
+const userId_1 = 'Quoc_123'
+// const userId_2 = 'mudoker'
+const callId = 'default_953a380b-1159-4277-bbf7-013ecdd825a3'
+
+// JWT
+const token_1 =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiUXVvY18xMjMifQ.1CF0krC8Ap-Ge0Sq1NY_Yf2_P7bDE0Rbv2FrLZKgfzA'
+
+
+const user_1 = {
+  id: userId_1,
+  name: 'Quoc Doan',
+  image: `https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D`
+}
+
+// const user_2 = {
+//   id: userId_2,
+//   name: 'Quoc Huu',
+//   image: `https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D`
+// }
+
+// 4. Create StreamVideoClient instances
+// const client_2 = new StreamVideoClient({ apiKey, user: user_2, token: token_2 })
+
+
+import React, { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-type Props = { goToHomeScreen: () => void; callId: string }
-const filterCalls = (calls: Call[], createdByMe: boolean, callingState: CallingState) =>
-  calls.filter(
-    (call) => call.isCreatedByMe === createdByMe && call.state.callingState === callingState
-  )
+type Props = { goToHomeScreen: () => void }
+const client = new StreamVideoClient({ apiKey, user: user_1, token: token_1 })
 
-export const CallScreen = ({ goToHomeScreen, callId }: Props) => {
-  const [call, setCall] = React.useState<Call | null>(null)
-  const [callAccepted, setCallAccepted] = useState(false)
+export const CallScreen = ({ goToHomeScreen }: Props) => {
+  const [call, setCall] = React.useState<Call | null>(null);
 
-  const client = useStreamVideoClient()
-
-  const calls = useCalls()
 
   useEffect(() => {
-    if (client) {
-      // Create call object directly for clarity
-      const call = client.call('default', callId)
-
-      try {
-        call
-          .getOrCreate({
-            ring: true,
-            data: { members: [{ user_id: 'mudoker' }, { user_id: 'Quoc_123' }] }
-          })
-          .then(() => {
-            setCall(call)
-          })
-          .catch((error) => {
-            console.error('Error creating the call:', error)
-          })
-      } catch (error) {
-        console.error('Error creating the call:', error)
-      }
-    }
-  }, [callId, client])
+    const call = client.call('default', callId);
+    call.join({ create: true })
+      .then(() => setCall(call));
+  }, [client]);
 
   if (!call) {
-    return (
-      <View style={joinStyles.container}>
-        <Text style={styles.text}>Joining call...</Text>
-      </View>
-    )
+    return <Text>Joining call...</Text>;
   }
 
-  // handle incoming ring calls
-  const incomingCalls = filterCalls(calls, false, CallingState.RINGING)
-  const [incomingCall] = incomingCalls
-
-  if (incomingCall) {
-    return (
-      <StreamCall call={incomingCall}>
+  return (
+    <StreamVideo client={client}>
+      <StreamCall call={call}>
         <View style={styles.container}>
-          {callAccepted === false ? (
-            <IncomingCall
-              onRejectCallHandler={goToHomeScreen}
-              onAcceptCallHandler={() => setCallAccepted(true)}
-            />
-          ) : (
-            <CallContent onHangupCallHandler={goToHomeScreen} />
-          )}
-        </View>
-      </StreamCall>
-    )
-  }
-
-  // handle outgoing ring calls
-  const outgoingCalls = filterCalls(calls, true, CallingState.RINGING)
-  const [outgoingCall] = outgoingCalls
-
-  if (outgoingCall) {
-    return (
-      <StreamCall call={outgoingCall}>
-        <View style={styles.container}>
-          <OutgoingCall
-            onHangupCallHandler={async () => {
-              try {
-                if (outgoingCall.state.callingState !== CallingState.LEFT) {
-                  await outgoingCall.endCall()
-                } else {
-                  console.warn('The call has already been left.')
-                }
-              } catch (error) {
-                console.error('Error hanging up the call:', error)
-              }
-            }}
+          <CallContent
+            onHangupCallHandler={goToHomeScreen}
           />
         </View>
       </StreamCall>
-    )
-  }
-
-  goToHomeScreen()
-
-  return null
+    </StreamVideo>
+  )
 }
 
 const styles = StyleSheet.create({

@@ -2,7 +2,11 @@ import { Text, View, Image, TouchableOpacity } from 'react-native'
 
 import { styles } from './chat-header-style'
 
-export const ChatHeader = () => {
+interface Props {
+  onBack: () => void
+}
+
+export const ChatHeader = ({ onBack }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.driverInfoContainer}>
@@ -19,9 +23,8 @@ export const ChatHeader = () => {
         </View>
       </View>
 
-      {/* Call Button */}
-      <TouchableOpacity>
-        <Image style={styles.callImage} source={require('../../../../assets/ic_call.png')} />
+      <TouchableOpacity onPress={onBack}>
+        <Text style={styles.driverStar}>Back to map</Text>
       </TouchableOpacity>
     </View>
   )

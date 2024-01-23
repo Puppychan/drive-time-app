@@ -208,7 +208,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 35
+    paddingVertical: 25
   },
   insideContainer: {
     gap: 15,
