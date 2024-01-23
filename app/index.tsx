@@ -72,6 +72,7 @@ export default function App() {
   }
 
   const handleDone = async () => {
+
     if (auth.currentUser) {
       let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
       console.log("role: ", role)
@@ -84,6 +85,7 @@ export default function App() {
     else {
       router.replace(`/signin`)
     }
+
   }
 
   const doneButton = ({ ...props }) => {
