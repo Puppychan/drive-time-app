@@ -65,7 +65,7 @@ export default function Page() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <Icon name="home" className="px-4" size={30} color="#000" onPress={async () => {
+                <Icon name="home" className="p-5" size={30} color="#000" onPress={async () => {
                     if (auth.currentUser) {
                         let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
                         console.log("role: ", role)
