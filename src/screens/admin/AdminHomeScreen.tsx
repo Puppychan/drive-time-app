@@ -4,27 +4,13 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { Button, Paragraph, Title } from 'react-native-paper'
 
 import { useThemeColors } from '@/components/Colors'
-import { AccountRole } from '@/lib/models/account.model'
 import { DEFAULT_THEME } from '@/src/common/constants/default-value.constant'
-import {
-  INSTRUCTION_LIST,
-  SHORT_INSTRUCTION_LIST
-} from '@/src/common/constants/instruction-list.constant'
-import { SUGGESTION_LIST } from '@/src/common/constants/suggestion-list.constant'
 import { verticalLeftView } from '@/src/common/utils/custom-view.style'
-import FullScreenCard from '@/src/components/cards/FullScreenCard'
-import InstructionCard from '@/src/components/cards/InstructionCard'
 import ServiceCard from '@/src/components/cards/ServiceCard'
 import CircleIcon from '@/src/components/image/CircleIcon'
-import SearchInput from '@/src/components/input/SearchInput'
 import { useEffect, useState } from 'react'
 import { auth } from '@/lib/firebase/firebase'
 import { User } from 'firebase/auth'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Constant } from '@/components/Constant'
-
-import { signOut } from '@/lib/firebase/auth'
-import { LocationObject } from 'expo-location';
 import * as Location from "expo-location";
 import { useDispatch } from 'react-redux'
 import { setCurrentLocation } from '@/src/slices/navSlice'
@@ -55,7 +41,7 @@ const AdminHomeScreen = () => {
   
 
   const onClickInsightFinance = () => {
-    router.push('/admin/insight-finace')
+    router.push('/admin/insight-financial')
   }
 
   const onClickInsightService = () => {

@@ -1,12 +1,11 @@
-import { View } from 'react-native'
-import UserInsight from '@/src/screens/admin/UserInsight'
 import { Provider } from 'react-redux'
 import {store } from '@/store'
+import FinancialInsight from '@/src/screens/admin/FinancialInsight'
 
 export default function Page() {
   return (
     <Provider store={store}>
-      <UserInsight />
+      <FinancialInsight />
     </Provider>
   )
 }

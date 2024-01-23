@@ -22,7 +22,7 @@ export default function _layout() {
           }}
         />
         <Stack.Screen
-          name="insight-finacial"
+          name="insight-financial"
           options={{
             title: 'Insight Finance',
             headerShown: true
