@@ -10,7 +10,7 @@ import { useEffect } from 'react'
 const STRIPE_PUBLISHABLE_KEY =
   'pk_test_51OZSSiJPx7rQ3VEwkLAPlP8cQGg5wSpSATi3XYmshpbtRECUeW0JAhntQ3jy30fuBAcYH7wl1K1pM2m5LBjteXaU00px9UD5jV'
 
-export const PaymentScreen = ({amount}: {amount: number}) => {
+export const PaymentScreen = ({ amount }: { amount: number }) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe()
 
   const handlePaymentPress = async () => {
@@ -84,7 +84,7 @@ export const PaymentScreen = ({amount}: {amount: number}) => {
   return (
     <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
       <View style={styles.container}>
-        <TouchableOpacity className='bg-black flex-1 px-4 w-full py-2 rounded-lg' onPress={handlePaymentPress}>
+        <TouchableOpacity className='bg-black flex-1 px-4 w-full py-2 flex items-center justify-center text-center rounded-lg' onPress={handlePaymentPress}>
           <Text className='text-lg text-white text-center w-full' style={{ fontWeight: '900' }}>Make payment</Text>
         </TouchableOpacity>
       </View>
@@ -98,9 +98,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold'
-  }
 })

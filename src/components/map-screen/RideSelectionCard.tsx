@@ -15,11 +15,11 @@ import { getDriverListByStatusAndTransport } from '@/lib/services/account.servic
 import { calculateTaxiFare } from '@/lib/services/ride.fee.service'
 
 export interface ItemType {
-  id: string
-  title: string
-  multiplier: number
-  image: any
-  type: TransportType,
+  id?: string
+  title?: string
+  multiplier?: number
+  image?: any
+  type?: TransportType,
   amount?: number
 }
 
@@ -105,7 +105,7 @@ const RideSelectionCard = (props: Props) => {
                       distanceInKm,
                       o.type
                     )
-})
+                  })
                   setDriverId(null)
                   props.onRideSelected({ option: o, driverId: null })
                 }

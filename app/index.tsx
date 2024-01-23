@@ -72,6 +72,21 @@ export default function App() {
   }
 
   const handleDone = async () => {
+<<<<<<< HEAD
+    if (auth.currentUser) {
+      let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
+      console.log("role: ", role)
+      if (role) {
+        router.replace(`/${role.toLowerCase()}/home`)
+        return
+      }
+      router.replace(`/customer/home`)
+    }
+    else {
+      router.replace(`/signin`)
+    }
+    // router.replace('/(user)/customer/aboutus')
+=======
     // if (auth.currentUser) {
     //   let role = await AsyncStorage.getItem(Constant.USER_ROLE_KEY)
     //   console.log("role: ", role)
@@ -80,8 +95,9 @@ export default function App() {
     //     return
     //   }
     // }
-    router.replace('/(user)/customer/home')
-    // router.replace('/(user)/customer/profile')
+    // router.replace('/(user)/customer/home')
+    router.replace('/(public)/signin')
+>>>>>>> ff9b4497f427d03f8f396c5baf1e3cc84f668594
   }
 
   const doneButton = ({ ...props }) => {
