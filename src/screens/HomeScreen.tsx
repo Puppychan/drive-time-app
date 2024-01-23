@@ -10,7 +10,6 @@ import {
   INSTRUCTION_LIST,
   SHORT_INSTRUCTION_LIST
 } from '@/src/common/constants/instruction-list.constant'
-import { SUGGESTION_LIST } from '@/src/common/constants/suggestion-list.constant'
 import { verticalLeftView } from '@/src/common/utils/custom-view.style'
 import FullScreenCard from '@/src/components/cards/FullScreenCard'
 import InstructionCard from '@/src/components/cards/InstructionCard'
@@ -22,11 +21,9 @@ import { auth } from '@/lib/firebase/firebase'
 import { User } from 'firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Constant } from '@/components/Constant'
-
-import { signOut } from '@/lib/firebase/auth'
 import { LocationObject } from 'expo-location';
 import * as Location from "expo-location";
-// TODO: change to dynamic later
+import { useDispatch } from 'react-redux'
 
 const HomeScreen = () => {
   const colorsTheme = useThemeColors(DEFAULT_THEME)
@@ -84,7 +81,7 @@ const HomeScreen = () => {
           longitude: location.coords.longitude,
         })
       )
-      console.log("abcb",location)
+      console.log("abcb", location)
       setLocation(location);
     })();
   }, []);
