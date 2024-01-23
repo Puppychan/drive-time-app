@@ -111,36 +111,7 @@ const AdminHomeScreen = () => {
           {/* <View className='h-0.5 w-full bg-black/10' /> */}
 
           <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Users and Account Insights</Title>
-          </View>
-
-          <View className='flex flex-row gap-2 px-8'>
-            <ServiceCard
-              iconImage={require('@/assets/user_insight.png')}
-              title='Users and Account'
-              onClick={onClickInsightUser}
-            />
-          </View>
-
-          <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Business Performance Insights</Title>
-          </View>
-
-          <View className='flex flex-row gap-2 px-8'>
-            <ServiceCard
-              iconImage={require('@/assets/service_insight.png')}
-              title='Services'
-              onClick={onClickInsightService}
-            />
-            <ServiceCard
-              iconImage={require('@/assets/financial_insight.png')}
-              title='Finance'
-              onClick={onClickInsightFinance}
-            />
-          </View>
-
-          <View style={styles.subsection}>
-            <Title className='text-2xl px-2'>Driver Management</Title>
+            <Title className='text-2xl px-2'>Quick Access</Title>
           </View>
 
           <View className='flex flex-row gap-2 px-8'>
@@ -148,6 +119,24 @@ const AdminHomeScreen = () => {
               iconImage={require('@/assets/driver_management.png')}
               title='Manage Driver'
               onClick={onClickManageDriver}
+            />
+            <ServiceCard
+              iconImage={require('@/assets/financial_insight.png')}
+              title='Financial Insights'
+              onClick={onClickInsightFinance}
+            />
+          </View>
+
+          <View className='flex flex-row gap-2 px-8'>
+            <ServiceCard
+              iconImage={require('@/assets/user_insight.png')}
+              title='Users & Account Reports'
+              onClick={onClickInsightUser}
+            />
+            <ServiceCard
+              iconImage={require('@/assets/service_insight.png')}
+              title='Services Reports'
+              onClick={onClickInsightService}
             />
           </View>
         </View>

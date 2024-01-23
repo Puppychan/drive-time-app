@@ -44,6 +44,22 @@ const AdminDashboard = () => {
     router.push('/admin/insight-user')
   }
   
+  const onClickInsightUser = () => {
+    router.push('/admin/insight-user')
+  }
+  
+
+  const onClickInsightFinance = () => {
+    router.push('/admin/insight-finace')
+  }
+
+  const onClickInsightService = () => {
+    router.push('/admin/insight-service')
+  }
+
+  const onClickManageDriver = () => {
+    router.push('/admin/dashboard')
+  }
 
   useEffect(() => {
     (async () => {
@@ -85,6 +101,35 @@ const AdminDashboard = () => {
               iconImage={require('@/assets/ban_driver.png')}
               title='Ban Driver'
               onClick={onClickBanDriver}
+            />
+          </View>
+
+          <View style={styles.subsection}>
+            <Title className='text-2xl px-2'>Users and Account Insights</Title>
+          </View>
+
+          <View className='flex flex-row gap-2 px-8'>
+            <ServiceCard
+              iconImage={require('@/assets/user_insight.png')}
+              title='Users and Account'
+              onClick={onClickInsightUser}
+            />
+          </View>
+
+          <View style={styles.subsection}>
+            <Title className='text-2xl px-2'>Business Performance Insights</Title>
+          </View>
+
+          <View className='flex flex-row gap-2 px-8'>
+            <ServiceCard
+              iconImage={require('@/assets/service_insight.png')}
+              title='Services'
+              onClick={onClickInsightService}
+            />
+            <ServiceCard
+              iconImage={require('@/assets/financial_insight.png')}
+              title='Finance'
+              onClick={onClickInsightFinance}
             />
           </View>
         </View>
