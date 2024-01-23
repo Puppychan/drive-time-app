@@ -81,54 +81,22 @@ const MapScreen = ({ onChat }: Props) => {
 
   useEffect(() => {
     if (driverId) {
-      const checkInProgressBooking = async () => {
-        const userId = auth.currentUser?.uid ?? '';
-
-        const bookingCollection = collection(db, 'bookings');
-        const q = query(
-          bookingCollection,
-          where("customerIdList", "array-contains", userId),
-          where("status", "==", BookingStatus.InProgress)
-        );
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.empty) {
-          const newBooking: Booking = {
-            bookingId: faker.string.uuid(),
-            customerIdList: [auth.currentUser?.uid ? auth.currentUser?.uid : ''],
-            driverId: driverId,
-            preScheduleTime: null,
-            price: option?.amount ? (parseFloat(option?.amount.toFixed(2)) * 100) : 0,
-            discountPrice: 0,
-            voucherId: null,
-            departure: origin?.description,
-            destinationList: [destination?.description],
-            status: BookingStatus.InProgress,
-          };
-
-          addBooking(newBooking);
-        }
+      const newBooking: Booking = {
+        bookingId: faker.string.uuid(),
+        customerIdList: [auth.currentUser?.uid ? auth.currentUser?.uid : ''],
+        driverId: driverId,
+        preScheduleTime: null,
+        price: option?.amount ? (parseFloat(option?.amount.toFixed(2)) * 100) : 0,
+        discountPrice: 0,
+        voucherId: null,
+        departure: origin?.description,
+        destinationList: [destination?.description],
+        status: BookingStatus.InProgress,
       };
 
-      const fetchDriver = async () => {
-        const driverCollection = collection(db, 'accounts');
-        const q = query(
-          driverCollection,
-          where("userId", "==", driverId),
-        );
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          const driver = querySnapshot.docs[0].data();
-          console.log("driver", driver)
-          setDriver(driver);
-        }
-      };
-
-      checkInProgressBooking();
-      fetchDriver();
+      addBooking(newBooking)
     }
-  }, [driverId]);
-
-
+  }, [driverId])
 
   return (
     <View className='h-screen relative'>

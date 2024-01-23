@@ -8,7 +8,9 @@ import {
   setDoc,
   getDoc,
   query,
-  where
+  where,
+  orderBy,
+  OrderByDirection
 } from 'firebase/firestore'
 
 import { ResponseCode } from '@/common/response-code.enum'
@@ -85,9 +87,9 @@ export function isAppliedVoucherValid(transportType: TransportType, voucher: Vou
     return false
 
   // validate voucher expire or started
-  const expirationDate = new Date(voucher.expireDate)
-  const startDate = new Date(voucher.startDate)
-  const currentDate = new Date()
+  const expirationDate = voucher.expireDate.toDate();
+  const startDate = voucher.startDate.toDate();
+  const currentDate = new Date();
   if (currentDate >= expirationDate || currentDate <= startDate) return false
 
   return true
@@ -111,32 +113,55 @@ export function revertDiscountPrice(discountedPrice: number, currentVoucher: Vou
   return discountedPrice / ((100 - currentVoucher.discountPercent) / 100)
 }
 
-export const fetchVouchers = async () => {
+export const fetchVouchers = async (filter = {}, sortField = 'updatedAt', sortOrder: OrderByDirection = 'asc') => {
   try {
-    const vouchersCollection = collection(db, CollectionName.VOUCHERS) // Replace 'vouchers' with your actual collection name
-    const querySnapshot = await getDocs(vouchersCollection)
+    const vouchersCollection = collection(db, CollectionName.VOUCHERS);
+    let q = query(vouchersCollection);
 
-    const vouchersList: Voucher[] = []
+    // Apply the filter to the query
+    for (const [key, value] of Object.entries(filter)) {
+      q = query(q, where(key, "==", value));
+    }
+    // Apply the sort to the query
+    // if (sortField) {
+    //   q = query(q, orderBy(sortField, sortOrder));
+    // }
+
+    const querySnapshot = await getDocs(q);
+
+
+    const vouchersList: Voucher[] = [];
     querySnapshot.forEach((doc: DocumentSnapshot<DocumentData>) => {
-      const voucherData = { id: doc.id, ...(doc.data() as Voucher) }
-      vouchersList.push(voucherData)
-    })
-    // return vouchersList
+      const voucherData = { id: doc.id, ...(doc.data() as Voucher) };
+      vouchersList.push(voucherData);
+    });
+
     return new ResponseDto(
       ResponseCode.OK,
       'Render voucher list successfully',
       new SuccessResponseDto(vouchersList, '')
-    )
+    );
   } catch (error) {
-    return handleVoucherException(error, 'Fetching voucher list')
+    return handleVoucherException(error, 'Fetching voucher list');
   }
 }
 
-export const fetchVouchersInActiveState = async () => {
+export const fetchVouchersInActiveState = async (filter = {}, sortField = 'updatedAt', sortOrder: OrderByDirection = 'asc') => {
   try {
     const vouchersCollection = collection(db, CollectionName.VOUCHERS);
-    const currentDate = Timestamp.now()
-    const q = query(vouchersCollection, where("expireDate", ">", currentDate));
+    const currentDate = Timestamp.now();
+    let q = query(vouchersCollection, where("expireDate", ">", currentDate));
+
+    // Apply the filter to the query
+    for (const [key, value] of Object.entries(filter)) {
+      if (value)
+        q = query(q, where(key, "==", value));
+    }
+
+    // Apply the sort to the query
+    // if (sortField) {
+    //   q = query(q, orderBy(sortField, sortOrder));
+    // }
 
     const querySnapshot = await getDocs(q);
 
