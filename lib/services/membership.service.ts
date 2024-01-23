@@ -180,7 +180,7 @@ export async function deleteMembership(membershipId: string) {
   }
 }
 
-export async function getAllMemberships(sortBy: 'updatedDate' | 'minPoints' = 'minPoints', sortOrder: OrderByDirection = 'asc') {
+export async function getAllMemberships(sortBy: string = 'updatedAt', sortOrder: OrderByDirection = 'asc') {
   try {
     const membershipQuery = query(
       collection(db, CollectionName.MEMBERSHIPS),
@@ -188,7 +188,11 @@ export async function getAllMemberships(sortBy: 'updatedDate' | 'minPoints' = 'm
     );
     const membershipSnapshot = await getDocs(membershipQuery);
     const memberships = membershipSnapshot.docs.map((doc) => doc.data());
-    return new ResponseDto(ResponseCode.OK, 'Memberships fetched successfully', memberships);
+    console.log("Membshipsss", memberships);
+    if (memberships.length === 0) {
+      return new ResponseDto(ResponseCode.NO_CONTENT, 'No memberships found', new SuccessResponseDto(memberships, ''));
+    }
+    return new ResponseDto(ResponseCode.OK, 'Memberships fetched successfully', new SuccessResponseDto(memberships, ''));
   } catch (error) {
     console.error('Error fetching memberships:', error);
     return handleMembershipException(error, 'Fetching');

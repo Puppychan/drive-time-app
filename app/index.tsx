@@ -80,7 +80,6 @@ export default function App() {
         return
       }
       router.replace(`/customer/home`)
-      // router.replace(`/admin/membership`)
     }
     else {
       router.replace(`/signin`)

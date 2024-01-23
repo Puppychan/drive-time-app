@@ -65,6 +65,32 @@ export async function updateAvatar(userId: string, avatarUri: string | null) {
   }
 }
 
+export async function getAllUsers() {
+  try {
+    const userSnapshot = await getDocs(collection(db, CollectionName.ACCOUNTS));
+    const users = userSnapshot.docs.map((doc) => doc.data());
+    return new ResponseDto(ResponseCode.OK, 'Users fetched successfully', new SuccessResponseDto(users, ''));
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return handleUserException(error, 'Fetching');
+  }
+}
+
+export async function getUsersByRole(role: string) {
+  try {
+    const userQuery = query(
+      collection(db, CollectionName.ACCOUNTS),
+      where('role', '==', role)
+    );
+    const userSnapshot = await getDocs(userQuery);
+    const users = userSnapshot.docs.map((doc) => doc.data());
+    return new ResponseDto(ResponseCode.OK, 'Users fetched successfully', users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return handleUserException(error, 'Fetching');
+  }
+}
+
 
 export const addUserToDatabase = async (user: User, additionalUserInfo: AccountType) => {
   try {

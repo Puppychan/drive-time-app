@@ -3,5 +3,6 @@ export enum ResponseCode {
   BAD_REQUEST = 400,
   UNAUTHORIZED = 401,
   NOT_FOUND = 404,
-  BAD_GATEWAY = 502
+  BAD_GATEWAY = 502,
+  NO_CONTENT = 222
 }

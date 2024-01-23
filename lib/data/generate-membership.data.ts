@@ -7,7 +7,7 @@ function generateMembershipList() {
     {
       membershipId: '1',
       name: 'Bronze',
-      level: 1,
+      // level: 1,
       minPoints: 0,
       discount: 5, // 5% discount, for example
       createdAt: undefined,
@@ -16,7 +16,7 @@ function generateMembershipList() {
     {
       membershipId: '2',
       name: 'Silver',
-      level: 2,
+      // level: 2,
       minPoints: 100,
       discount: 10,
       createdAt: undefined,
@@ -25,7 +25,7 @@ function generateMembershipList() {
     {
       membershipId: '3',
       name: 'Gold',
-      level: 3,
+      // level: 3,
       minPoints: 500,
       discount: 15,
       createdAt: undefined,
@@ -34,7 +34,7 @@ function generateMembershipList() {
     {
       membershipId: '4',
       name: 'Platinum',
-      level: 4,
+      // level: 4,
       minPoints: 1000,
       discount: 20,
       createdAt: undefined,

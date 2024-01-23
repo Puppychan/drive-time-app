@@ -15,12 +15,12 @@ export default function _layout() {
           headerShown: false
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="(user)/driver"
         options={{
           headerShown: false
         }}
-      />
+      /> */}
       <Stack.Screen
         name="(user)/admin"
         options={{
