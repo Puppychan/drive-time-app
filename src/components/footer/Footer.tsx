@@ -8,7 +8,7 @@ const Footer = () => {
         <Appbar style={styles.bottom}>
             <Appbar.Action icon="home" onPress={() => { router.replace('/customer/home') }} />
             <Appbar.Action icon="ticket-confirmation" onPress={() => { router.replace('/customer/voucher') }} />
-            <Appbar.Action icon="ticket-confirmation" onPress={() => { router.replace('/admin/membership') }} />
+            {/* <Appbar.Action icon="ticket-confirmation" onPress={() => { router.replace('/admin/membership') }} /> */}
             {/* <Appbar.Action icon="bell" onPress={() => { router.push('/customer/history') }} /> */}
             <Appbar.Action icon="account" onPress={() => { router.replace('/customer/profile') }} />
         </Appbar>
