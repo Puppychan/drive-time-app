@@ -134,11 +134,27 @@ The team project re-builds taxi booking app using React Native - cross platform 
 <img width="416" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/afd8848f-0506-4599-b9bd-05bf09230f55">
 
 
-- The customer is required to input transaction information to pay before performing booking:
+- The customer is required to input transaction information to pay before performing booking. Inside this, we can also have card validation.
 <img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/84f58517-8d24-4e0e-976a-25e9d190b7ac">
 <img width="412" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/c54b8752-99c6-47b9-a4b1-0c8ae5ba78f6">
+<img width="422" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/0e027b1b-6e39-4794-952c-13e8a1fb108e">
+<img width="410" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/ae5bc0ef-c8eb-41d2-bb48-6234994f8ec0">
+<img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/ef40f9d9-d8bf-46ae-b1d5-cd15194a6773">
 
 
+- We skip the riding process. Then, click, `Done` to finish the drive. Now, we navigate to Review screen.
+
+#### Chat Screen
+- From Booking Screen, when found a driver, the customer can chat with driver by pressing `Chat with Driver`. The below screen is chat driver.
+<img width="401" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/870da09a-4257-48e6-98b6-42113d542eba">
+<img width="410" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/73e59eea-d473-4ec7-814f-13e60d5aa8c8">
+
+
+#### Review Screen
+- After finishing the drive, the customer now is in Review Screen.
+<img width="407" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/b0638c16-658f-4476-bcfc-9685bc840553">
+<img width="409" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/e5e7ec82-6111-452c-89e3-7b94c2eacda3">
+<img width="412" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/00f76b1d-6cb3-4988-b79a-da440a2af12e">
 
 
 #### Voucher Screen
@@ -155,8 +171,43 @@ The team project re-builds taxi booking app using React Native - cross platform 
 <img width="406" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/e238f7b9-2fad-43a9-9d4e-f15176f0e5ef">
 
 - Besides, they can also view their message history by clicking on `messages` section. 
+- We can navigate to About Us screen from this section.
+- Or can use SOS functionality after clicking `Safety Report`:
+<img width="402" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/af1760b5-9920-44d0-9dff-fa7ff8f2392b">
 
 
+- With 2 options, the first one `Edit/add SOS` to prompt user to input their Emergency contact information or edit the old contact one.
+<img width="420" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/757f5bb2-0673-4d81-865a-d4ccea66df79">
+
+
+- The second option is `Trigger SOS`, which counting down from 120 seconds to provide music for this feature:
+<img width="361" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/ebe824f5-5e55-45c8-8aa2-b4db3a915175">
+
+
+#### Admin Dashboard
+- To go to this, first the user has to logout and login as an admin account.
+<img width="422" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/03491d2c-40c1-4179-9fff-352f6f7509f0">
+
+
+- From this, they can view user list and perform CRUD action:
+<img width="410" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/2609d1c5-4ee7-4660-a433-fccc8995b173">
+
+
+- Or view and perform CRUD action on voucher list:
+<img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/03b274d2-ac45-4bdc-b627-880d05d144a5">
+
+
+- Or view and perform CRUD action on membership list:
+<img width="421" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/d57d0c7e-8860-403c-b7a6-1681e98d6922">
+
+
+
+
+#### About Us
+- This is navigated from Profile Screen. We can view team members, license, copyright, contact information and some statistics.
+<img width="419" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/69646934-ead6-4fb6-97ce-edf475202548"> 
+<img width="404" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/0dcb7bb6-df76-46da-ade1-e0c22b3d53e6">
+<img width="414" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/94a25ac3-8f58-406d-88b7-e2c989028b85">
 
 
 ## Installation
