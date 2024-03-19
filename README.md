@@ -184,7 +184,7 @@ The team project re-builds taxi booking app using React Native - cross platform 
 <img width="361" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/ebe824f5-5e55-45c8-8aa2-b4db3a915175">
 
 
-#### Admin Dashboard
+#### Admin Homepage
 - To go to this, first the user has to logout and login as an admin account.
 <img width="422" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/03491d2c-40c1-4179-9fff-352f6f7509f0">
 
@@ -193,15 +193,40 @@ The team project re-builds taxi booking app using React Native - cross platform 
 <img width="410" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/2609d1c5-4ee7-4660-a433-fccc8995b173">
 
 
-- Or view and perform CRUD action on voucher list:
+- Or view and perform CRUD action on voucher list. They can also filter the list based on vehicle category.
 <img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/03b274d2-ac45-4bdc-b627-880d05d144a5">
 
 
-- Or view and perform CRUD action on membership list:
+- Or view and perform CRUD action on membership list, or sort based on membership point, created data, etc.
 <img width="421" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/d57d0c7e-8860-403c-b7a6-1681e98d6922">
 
 
+- Next is navigating to Admin Dashboard:
 
+
+#### Admin Dashboard
+- This is navigating from admin section homepage.
+<img width="408" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/d9f80538-9471-4c0d-888d-7fa08d4025cf">
+<img width="410" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/b8886ec6-c469-43ab-a8cd-ea6e27496f66">
+
+
+- The admin can ban a driver:
+<img width="401" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/13ad5966-897b-427e-b384-2926d401c5b5">
+<img width="416" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/0ae4c2b0-1778-4ac9-98ab-6a2a7dd8dd2d">
+<img width="352" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/ecce5fde-5aa8-4dcd-833f-f8e857c60224">
+
+
+- Or view insight of users:
+<img width="405" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/8ee9d293-fc11-4198-a6a1-1897a509b8fa">
+<img width="416" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/b945e7f4-3f52-4044-b04c-91e5cffe2d71">
+
+
+- Or insight services:
+<img width="413" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/c2f22e9b-fcbb-4132-a428-614f6dd77081">
+
+
+- And insight finance:
+<img width="413" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/876bcf60-606b-48bb-8370-2589016c335f">
 
 #### About Us
 - This is navigated from Profile Screen. We can view team members, license, copyright, contact information and some statistics.
