@@ -12,6 +12,9 @@
     </li>
     <li><a href="#built-with">Built With</a></li>
     <li>
+      <a href="#features">Features</a>
+    </li>
+    <li>
       <a href="#installation">Installation</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
@@ -32,21 +35,129 @@
 </details>
 
 ## Description
-
+The team project re-builds taxi booking app using React Native - cross platform framework, and Firebase to store the database. For frontend, the team uses React Native Paper and Tailwind CSS to style following the available design from Uber app.
 ## Build With
 
 ![](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
 ### Backend
-
 ![](https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black)
 ![](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 
 ### Frontend
-
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 #### Others
-
 ![](https://img.shields.io/badge/Font_Awesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white)
+![Expo](https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37)
+- And stripe API for transaction performance.
+
+## Features
+### Boarding Screen
+- This boarding screen has 3 subpages. We can choose either `skip` to move to Home screen or `next` to explore the app.
+<img width="399" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/06df7282-dfd1-4f5a-af83-e37d5ab40db2">
+
+
+### Authentication Screen
+#### Signin Screen
+- In this screen, the user is required to input username or password to continue using the app. Besides, they can renew their password, login using Google account, or register a new account.
+<img width="417" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/2720ed2e-f24f-4f9b-9eba-39c4edfe428e">
+
+
+- Below screen is if they choose to login using Google account
+<img width="403" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/8c68c747-6efd-418d-882a-a4230947d95f">
+
+
+#### Signup Screen
+- From login screen, after clicking `register`, the current page now is Register Screen. Firstly, they need to register account with two input fields, including `email`, and `password` first.
+<img width="403" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/d5b5aabf-25b6-4c5c-a6ea-3586b5f71682">
+<img width="408" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/6a9bab6b-1286-468f-afe7-58bd05821ad4">
+
+
+- Then the user has to enter the rest information of the account, including: name, username, phone, data of birth, gender (because our system is in primary version, so there are not many choices for genders),
+<img width="410" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/b086a5ee-5244-46ec-8ca2-e08d371f77ba">
+
+
+#### Home Screen
+- We required the user location to ensure the app can track to get the customer to the driver.
+<img width="412" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/b571b3f5-711e-4d8f-82e5-870c3f23811d">
+
+
+- This is our home screen. In home screen, the user can search destinations through search bar, or perform booking actions through `Suggestions` section. 
+<img width="397" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/73e68a03-6d29-4c7e-af92-4cf208f12fb9">
+<img width="403" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/e274e51f-33a0-485f-9147-56947752f585">
+
+
+- They can also view nearby popular places through `Explore nearby`:
+<img width="404" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/d7dc3dac-386f-4717-abcb-f58d7b3177c3">
+
+
+- There is also instruction section where the customer can see how to book the app, or how to use the app.
+<img width="419" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/c1f35963-f0ef-45f2-adb4-15e80f858472">
+ 
+
+#### Explore Nearby Screen
+- This screen is navigated from Home Screen.
+- The users can view nearby popular places or filter the nearby places based on store types, and rating, and any other categories:
+<img width="397" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/6c65e155-122d-4ff3-afa0-d1cd9bb6dadc">
+<img width="406" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/15fddd2b-7678-483e-a011-2c5d66f01954"
+
+
+#### Booking Screen
+- This screen is navigated from Home Screen
+- In this screen, there are currently 2 input fields, icluding pick-up place and destination, and a displayed map rendered from Google Map API.
+<img width="400" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/3dc5bd10-9e6b-45a7-b5d0-8f359c08dc70">
+
+
+- When inputting a place, there is place suggestion section:
+<img width="415" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/eb601dc8-853f-497b-acdb-d6c847aa8216">
+<img width="409" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/85af6478-bf7b-47bf-a3cc-e7f23e27c67a">
+
+
+- Then the screen will display route from pick-up location to destination, and the distance between those places.
+- It also prompts the customer to choose car among the option, vouchers, and transaction method.
+- The customer can also interact with the map by dradding, zoom in, or zoom out.
+<img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/147d158e-8fac-4bf7-bd70-4f8500ec49c6">
+<img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/d6a605ac-ecea-4d21-b493-b42d92bf872a">
+
+
+- Here is the UI after choosing a vehicle option:
+<img width="409" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/f9a56143-1536-4947-b98a-d071b1449654">
+
+
+- After clicking to confirm booking, the screen displays `searching driver`.
+- There is also pulsing animation when searching a driver.
+<img width="412" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/0497af08-3e29-49a9-ba3e-f2aed2fd1843">
+
+
+- After found a driver:
+<img width="416" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/afd8848f-0506-4599-b9bd-05bf09230f55">
+
+
+- The customer is required to input transaction information to pay before performing booking:
+<img width="411" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/84f58517-8d24-4e0e-976a-25e9d190b7ac">
+<img width="412" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/c54b8752-99c6-47b9-a4b1-0c8ae5ba78f6">
+
+
+
+
+#### Voucher Screen
+- The user can view list of available vouchers, and filter these vouchers based on car category.
+<img width="397" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/fa27f8f8-ff69-427c-889f-d627c40232a0">
+
+
+#### Profile Screen
+- This is our profile screen.
+<img width="408" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/32c97dcb-269b-455c-8244-5e271ede6901">
+
+
+- The user can update their user profile information.
+<img width="406" alt="image" src="https://github.com/Puppychan/drive-time-app/assets/32950625/e238f7b9-2fad-43a9-9d4e-f15176f0e5ef">
+
+- Besides, they can also view their message history by clicking on `messages` section. 
+
+
+
 
 ## Installation
 
