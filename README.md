@@ -36,6 +36,10 @@
 
 ## Description
 The team project re-builds taxi booking app using React Native - cross platform framework, and Firebase to store the database. For frontend, the team uses React Native Paper and Tailwind CSS to style following the available design from Uber app.
+
+Inside this app, the user can login as an admin, or as a customer. 
+As an admin, the user can view the statistics of the app, perform CRUD actions to user list, membership list, or voucher list. The user can also filter or sort the list based on category, date, or any other values.
+As a customer, the user can perform booking, transaction action, view nearby places, SOS, and so on.
 ## Build With
 
 ![](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
